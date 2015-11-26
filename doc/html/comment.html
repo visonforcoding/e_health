@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=750,  user-scalable=no">
+	<meta name="format-detection" content="telphone=no, email=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="x5-page-mode" content="app">
+	<title>苗苗儿推-点评</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script type="text/javascript" src="js/zepto.js"></script>
+	<script type="application/javascript" src="js/fastclick.js"></script>
+</head>
+<body style="padding-bottom:0">
+	<div class="header">
+		<div class="goback">
+			<a href="javascript:history.go(-1)">
+				<i class="sprits"></i>
+			</a>
+		</div>
+		
+		<div class="title">点评</div>
+	</div>
+
+	<div class="comment-box">
+		<div class="zongti-pingjia">
+			<div class="zongti-pingjia-left">
+				<span>总体评价：</span>
+				<ul class="comment-start">
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+				</ul>
+			</div>
+			<span class="comment-level">惊喜</span>
+		</div>
+
+		<div class="comment-tag">
+			<ul>
+				<li>服务好</li>
+				<li>技术好</li>
+				<li>环境不错</li>
+				<li>时间长</li>
+				<li>效果不错</li>
+				<li>性价比高</li>
+				<li>服务态度一般</li>
+				<li class="add-tag-bnt">+添加标签</li>
+			</ul>
+		</div>
+
+		<div class="comment-textaera">
+			<textarea placeholder="亲，我们的服务您满意吗？环境怎么样？技术怎么样？"></textarea>
+		</div>
+
+		<a href="javascript:;" class="submit-comment">提交</a>
+	</div>
+	
+	<div class="add-tag-layer">
+		<div class="add-tag-con">
+			<input type="text" placeholder="请输入您的标签">
+			<a href="javascript:;" class="save-tag">添&nbsp;&nbsp;&nbsp;&nbsp;加</a>
+			<div class="close-bnt sprits"></div>
+		</div>
+	</div>
+
+	<script>
+		$(function(){
+			FastClick.attach(document.body);
+
+
+			var commentStart=function(){
+				var commentLevel=["极差","失望","一般","满意","惊喜"];
+
+				var $stratLi=$(".comment-start li");
+				var _index="";
+				var $levelText=$(".comment-level");
+
+				$stratLi.on("click",function(){
+					_index=$(this).index();
+					$stratLi.removeClass("current")
+					for(var i=0; i<=_index; i++){
+						$stratLi.eq(i).addClass("current");
+					}
+					$levelText.text(commentLevel[_index]);
+
+				})
+			}();
+
+			var textareaFocus=function(){
+
+				$(".comment-textaera textarea").focus(function(){
+					$(this).addClass("focus");
+					$(this).parent().addClass("focus");
+
+				});
+
+				$(".comment-textaera textarea").blur(function(){
+					$(this).removeClass("focus");
+					$(this).parent().removeClass("focus");
+
+				})
+
+			}();
+
+			var addTag=function(){
+				var _val="";
+				$(".add-tag-bnt").on("click",function(){
+					$(".add-tag-layer").show();
+				});
+
+				$(".close-bnt").on("click",function(){
+					$(".add-tag-layer").hide();
+				});
+
+				$(".save-tag").on("click",function(){
+					if($(this).prev("input").val().length>0){
+						var _html='<li>'+$(this).prev("input").val()+'</li>';
+						$(".add-tag-bnt").before(_html);
+						$(".add-tag-layer").hide();
+						$(this).prev("input").val('');
+					}
+
+				});
+
+			}();
+
+
+
+		});
+	</script>
+</body>
+</html>

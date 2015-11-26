@@ -1,0 +1,163 @@
+{#个人中心页#}
+{% extends "layout/front.twig" %}
+{% set page_tag = 'user'%}
+{% block title %}我的{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">我的</div>
+    <div class="user-message">
+        <a href="/home/user/message.html">
+        <i class="sprits"></i>
+        {% if msg_count > 0 %}<em>{{msg_count}}</em>{% else %} {% endif %}
+        </a>
+    </div>
+{% endblock %}
+{%block main %}
+    <ul class="user-center-ul">
+        <li>
+            <a href="/home/user/userInfo.html">
+                <div class="user-center-img">
+                    <img src="/static/home/images/touxiang.png" alt="">
+                </div>
+                <div class="user-cernte-text">
+                    <p class="user-name">{{user.nick|default('未设置昵称')}}</p>
+                    <p class="user-tel">{{user.tel}}</p>
+                </div>
+                <i class="sprits gonext"></i>
+            </a>
+        </li>
+    </ul>
+    <ul class="user-center-ul lht">
+        <li>
+            <a href="/home/order/orderList.html">
+                <i class="user-icon sprits order"></i>
+                <div class="user-center-text">我的订单</div>
+                <div class="user-center-right">
+                    <span>{{comment_order_count}}单待评价</span>
+                </div>
+                <i class="sprits gonext"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="/home/user/message.html">
+                <i class="user-icon sprits message"></i>
+                <div class="user-center-text">消息</div>
+                <div class="user-center-right">
+                    <span>{{msg_count}}条未读</span>
+                </div>
+                <i class="sprits gonext"></i>
+            </a>
+        </li>
+    </ul>
+    <ul class="user-center-ul lht">
+        <li>
+            <a href="/home/user/myFavorable.html">
+                <i class="user-icon sprits ticket"></i>
+                <div class="user-center-text">优惠劵</div>
+                <i class="sprits gonext"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="/home/user/myCollect.html">
+                <i class="user-icon sprits collect"></i>
+                <div class="user-center-text">收藏</div>
+                <i class="sprits gonext"></i>
+            </a>
+        </li>
+    </ul>
+    <ul class="user-center-ul invite-ul">
+        <li>
+            <a href="#">
+                <i class="user-icon sprits invite"></i>
+                <div class="user-center-text">邀请好友</div>
+                <div class="user-center-right">
+                    赢红包
+                </div>
+                <i class="sprits gonext"></i>
+            </a>
+        </li>
+    </ul>
+    <div class="zhezhao"></div>
+    <div class="share-group-layer">
+        <ul>
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share1"></i>
+                    <p>微信好友</p>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share2"></i>
+                    <p>朋友圈</p>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share3"></i>
+                    <p>QQ</p>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share4"></i>
+                    <p>短信</p>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share5"></i>
+                    <p>新浪微博</p>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share6"></i>
+                    <p>QQ空间</p>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share7"></i>
+                    <p>邮件</p>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share8"></i>
+                    <p>复制链接</p>
+                </a>
+            </li>
+        </ul>
+        <a href="javascript:;" class="cancle cancle-share">取消邀请</a>
+    </div>
+    <a href="/home/user/loginOut.html" class="detail-yuyue-bnt">退出</a>
+{% endblock %}
+{% block script %}
+    <script>
+        $(function () {
+            FastClick.attach(document.body);
+            var share = function () {
+                $(".invite-ul").on("click", function (event) {
+                    event.stopPropagation();
+                    $(".zhezhao, .share-group-layer").show();
+                })
+            }();
+            $(".zhezhao, .cancle-share").on("click", function () {
+                $(".zhezhao, .share-group-layer").hide();
+            });
+
+        })
+    </script>
+{% endblock %}

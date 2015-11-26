@@ -1,0 +1,194 @@
+{% extends "layout/front.twig" %}
+{% block title %}商家列表{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="header-center">
+        <ul class="shop-tab">
+            <li>
+                <a href="" class="current">全部商家</a>
+            </li>
+            <li>
+                <a href="/home/store/promoStore.html">优惠商家</a>
+            </li>
+        </ul>
+    </div>
+    <div class="header-search">
+        <a href="shop-search.html">
+            <i class="sprits"></i>
+        </a>
+    </div>
+{% endblock %}
+{%block main %}
+    <div class="shop-location">
+        <a href="/home/map/getPos.html">
+            <i class="sprits location"></i>
+            <p>{{pos_address}}</p>
+            <i class="sprits go-next"></i>
+        </a>
+    </div>
+
+    <div class="goods-kinds">
+        <ul class="goods-kinds-ul">
+            <li data-kinds="all-kinds">
+                <a href="javascript:;">
+                    <div class="all-kinds">
+                        全部分类
+                        <i class="sprits"></i>
+                    </div>
+                </a>
+            </li>
+            <li data-kinds="all-city">
+                <a href="javascript:;">
+                    <div class="all-city">
+                        {{search_area|default('全城')}}
+                        <i class="sprits"></i>
+                    </div>
+                </a>
+            </li>
+            <li data-kinds="all-zhineng">
+                <a href="javascript:;" class="nob">
+                    <div class="zhineng">
+                        智能排序
+                        <i class="sprits"></i>
+                    </div>
+                </a>
+            </li>
+        </ul>
+        <div class="select-kinds-layer" data-kinds="all-kinds">
+            <ol class="select-condition">
+                <li class="current">
+                    <a href="javascript:;"><i class="sprits condition1"></i>全部分类</a>
+                </li>
+                {% for service in services %}
+                    <li>
+                        <a data-type="service" data-val="{{service.id}}" >
+                            <i class="sprits condition2"></i>{{service.name}}</a>
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+
+        <div class="select-kinds-layer" data-kinds="all-city">
+            <ol class="select-condition">
+                <li class="current">
+                    <a href="/home/store/index">全城</a>
+                </li>
+                {% for area in areas %}
+                    <li>
+                        <a data-type="area" data-val="{{area.id}}" >{{ area.name}}</a>
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+
+        <div class="select-kinds-layer" data-kinds="all-zhineng">
+            <ol class="select-condition">
+                <li class="current">
+                    <a href="javascript:;">智能排序</a>
+                </li>
+                <li>
+                    <a href="?sortType=dist">离我最近</a>
+                </li>
+                <li>
+                    <a href="javascript:;">人气最高</a>
+                </li>
+                <li>
+                    <a href="javascript:;">评价最好</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div class="goods-list-box">
+        <ul class="goods-list-ul">
+            {% for store in stores %}
+                <li>
+                    <a href="/home/store/storeDetail/id/{{store.id}}">
+                        <div class="goods-img-box">
+                            <img src="{{store.cover}}" alt="">
+{#                            <i class="sprits"></i>#}
+                        </div>
+                        <div class="goods-inf-con">
+                            <div class="goods-name">
+                                {{store.storeName}}
+                            </div>
+                            <p class="goods-jianjie">[{{store.name}}]{{store.services}} </p>
+
+                            <div class="goods-score">
+                                <div class="score-start sprits">
+                                    <div class="current-score sprits"></div>
+                                </div>
+                                <span class="comment-count">{{store.commentNums}}评价</span>
+                            </div>
+
+                            <div class="distance">{{(store.distance/1000)|round(1,'floor')}}km</div>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <script>
+        $(function () {
+            console.info(GetRequest());
+            $('.select-condition a').click(function () {
+                //多条件筛选
+                var type = $(this).data('type');
+                var val = $(this).data('val');
+                var search = GetRequest();
+                if ($.isEmptyObject(search)) {
+                    window.location.href = '/home/store/index?' + type + '=' + val;
+                } else {
+                    search[type] = val;
+                    var params = $.param(search);
+                    window.location.href = '/home/store/index?' + params;
+                }
+            });
+            FastClick.attach(document.body);
+            var selectKinds = function () {
+                var $selectHandle = $(".goods-kinds-ul li"),
+                        _target = "",
+                        $showOption = $(".select-kinds-layer");
+                $selectHandle.on("click", function () {
+                    if (!$(this).hasClass("current")) {
+                        $(this).addClass("current").siblings().removeClass("current");
+                        _target = $(this).data("kinds");
+
+                        for (var i = 0; i < $showOption.length; i++) {
+                            var _point = $showOption.eq(i).data("kinds");
+                            if (_point == _target) {
+                                $showOption.hide();
+                                $showOption.eq(i).show();
+                                $showOption.eq(i).height($("body").height() - 170);
+                            }
+                        }
+                    } else {
+                        $(this).removeClass("current");
+                        $showOption.hide();
+                    }
+
+                });
+                $showOption.on("click", "li", function () {
+                    $showOption.hide();
+                    $selectHandle.removeClass("current")
+                })
+            }()
+        })
+
+        function GetRequest() {
+            var url = location.search; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
+                }
+            }
+            return theRequest;
+        }
+    </script>
+{% endblock %}

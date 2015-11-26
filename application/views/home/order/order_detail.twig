@@ -1,0 +1,117 @@
+{% extends "layout/front.twig" %}
+{% set page_tag = 'order' %}
+{% block title %}项目详情{% endblock%}
+{% block static %}
+    <style>
+        .submit-link {
+            background-color: #666666;
+            color: #fff;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+        .wait-comment-order{
+            background-color: #E74D41;
+        }
+    </style>
+{% endblock %}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">订单详情</div>
+{% endblock %}
+{%block main %}
+    <div class="wait-order-head">
+        <div class="wait-order-jishi">
+            <img src="{{order.cover}}" alt="">
+        </div>
+        <div class="wait-order-inf">
+            <div class="wait-jishi-name">{% if order.type == '1' %}店铺：{% else %}技师：{% endif %}{{order.provider}}</div>
+            <div class="wait-order-server">服务项目：{{order.name}}</div>
+            <div class="wait-order-price">￥{{order.price}}</div>
+        </div>
+    </div>
+    <ul class="wait-order-ul">
+        <li>
+            <div class="wait-order-left">
+                <h4>订单详情</h4>
+            </div>
+            <div class="wait-order-right">
+                <span>订单号：{{order.orderNo}}</span>
+            </div>
+        </li>
+        <li>
+            <div class="wait-order-left">
+                服务时间
+            </div>
+            <div class="wait-order-right">
+                {{order.serviceTime}}
+            </div>
+        </li>
+        <li>
+            <div class="wait-order-left">
+                服务地址
+            </div>
+            <div class="wait-order-right">
+                {{order.address}}
+            </div>
+        </li>
+        <li>
+            <div class="wait-order-left">
+                使用抵扣
+            </div>
+            <div class="wait-order-right">
+                50元优惠券
+            </div>
+        </li>
+        <li>
+            <div class="wait-order-left">
+                下单时间
+            </div>
+            <div class="wait-order-right">
+                {{order.ctime}}
+            </div>
+        </li>
+        {% if orderType == 'cancel' %}
+            <li>
+                <div class="wait-order-left">
+                    订单状态
+                </div>
+                <div class="wait-order-right">
+                    <font style="color: #ff9999"> 已取消</font>
+                </div>
+            </li>
+        {% endif %}
+    </ul>
+    {% if orderType == 'waitPay' %}
+        <a href="/home/order/orderPay?id={{order.id}}.html" class="wait-order-bnt wait-comment-order">去支付</a>
+        <a data-id="{{order.id}}" data-url="/home/order/cancelOrder" class="wait-order-bnt submit-link">取消订单</a>
+    {% elseif orderType == 'waitService' %}
+        <a data-id="{{order.id}}" data-url="/home/order/confirmService" class="wait-order-bnt submit-link-2 wait-comment-order">完成服务</a>
+        <a data-id="{{order.id}}" data-url="/home/order/refund" class="wait-order-bnt submit-link">申请退款</a>
+    {% endif %}
+{%endblock%}
+{% block script %}
+    <script>
+        $(function () {
+            $('.submit-link,.submit-link-2').click(function () {
+                var id = $(this).data('id');
+                var url = $(this).data('url');
+                $.ajax({
+                    url: url,
+                    data: {'id': id},
+                    type: 'post',
+                    dataType: 'json',
+                    success: function (res) {
+                        alert(res.msg);
+                        if (res.status === true) {
+                            window.location.href = res.url;
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

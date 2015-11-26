@@ -1,0 +1,15 @@
+SELECT count(1) as ordercount, sum(price*nums) as totalprice, year(ctime) as year, month(ctime) as month, day(ctime) as day
+FROM (`order`)
+WHERE year(ctime) = '2015' and month(ctime) = '9' and `order`.`sid` = '1' and `order`.`type` = '1'
+GROUP BY day(ctime)
+SELECT count(1) as ordercount, sum(price*nums) as totalprice, year(ctime) as year, month(ctime) as month, day(ctime) as day
+FROM (`order`)
+WHERE year(ctime) = '2015' and month(ctime) = '9' and `order`.`sid` = '1' and `order`.`type` = '1'
+GROUP BY day(ctime)
+SELECT count(1) as ordercount, sum(price*nums) as totalprice, year(ctime) as year, month(ctime) as month, day(ctime) as day
+FROM (`order`)
+WHERE year(ctime) = '2015' and month(ctime) = '9' and `order`.`sid` = '1' and `order`.`type` = '1'
+GROUP BY day(ctime)
+SELECT COUNT(*) AS `numrows`
+FROM (`order`)
+WHERE year(ctime) = '2015' and month(ctime) = '9' and isVisit = '1' and `order`.`sid` = '1' and `order`.`type` = '1'

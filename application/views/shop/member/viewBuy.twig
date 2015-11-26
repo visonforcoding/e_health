@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{page_title|default('灸疗管理后台')}}</title>
+        <!-- zui -->
+        <link href="/static/zui/css/zui.min.css" rel="stylesheet">
+        <link href="/static/shop/css/base.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/static/lib/jqgrid/css/ui.jqgrid.css">
+        <link rel="stylesheet" type="text/css" href="/static/lib/jqgrid/css/ui.ace.css">
+        <style>
+            table tr td:first-child{
+                text-align: right;
+                width:120px;
+            }
+            #flowing-box{
+                height:400px;
+                overflow-y: scroll;
+                overflow-x: hidden;
+            }
+            .col-md-2{
+                width:200px;
+                display: inline-block;
+            }
+            .col-md-1{
+                width:100px;
+                display: inline-block;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="example">
+            <div class="work-copy">
+                <div class="table-toolbar col-xs-12" style=" margin-bottom:10px;">
+                    <div class="infobox infobox-green">
+                        <div class="infobox-icon">
+                            <i class="icon icon-shopping-cart fa fa-comments"></i>
+                        </div>
+                        <div class="infobox-data">
+                            <span class="infobox-data-number">{{info.nums}}</span>
+                            <div class="infobox-content">消费记录总数</div>
+                        </div>
+                        <!-- #section:pages/dashboard.infobox.stat -->
+                        <div class="stat stat-success">
+                            {#                            <i class="icon-long-arrow-up"></i>#}
+                        </div>
+                        <!-- /section:pages/dashboard.infobox.stat -->
+                    </div>
+                    <div class="infobox infobox-green">
+                        <div class="infobox-icon">
+                            <i class="icon icon-yen fa fa-comments"></i>
+                        </div>
+                        <div class="infobox-data">
+                            <span class="infobox-data-number">{{info.total}}</span>
+                            <div class="infobox-content">消费总金额</div>
+                        </div>
+                        <!-- #section:pages/dashboard.infobox.stat -->
+                        <div class="stat stat-success">
+                            {#                            <i class="icon-long-arrow-up"></i>#}
+                        </div>
+                        <!-- /section:pages/dashboard.infobox.stat -->
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="list">
+                        <header>
+                            <h3><i class="icon-list-ul icon-border-circle"></i> 交易明细 &nbsp;<small>{{info.nums|default('0')}}条记录</small></h3>
+                        </header>
+                        <section id="flowing-box" class="items items-hover">
+                            {% for following in followings %}
+                                <div class="item row">
+                                    <div class="col-md-2">{{following.ctime}}</div>
+                                    <div class="col-md-1">
+                                        {% if following.income == '1'%}
+                                            <i class="icon  icon-long-arrow-up green">(收入)</i>
+                                        {% else %}
+                                            <i class="icon  icon-long-arrow-down red">(支出)</i>
+                                        {% endif %}
+                                        {{following.amount}}
+                                    </div>
+                                    <div class="col-md-2">{{following.remark}}</div>
+                                </div>
+                            {% endfor %}
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 在此处挥洒你的创意 -->
+        <!-- jQuery (ZUI中的Javascript组件依赖于jQuery) -->
+        <script src="/static/Js/jquery.js"></script>
+        <!-- ZUI Javascript组件 -->
+        <script src="/static/zui/js/zui.min.plus.js"></script>
+        {#layer弹出层组件#}
+        <script src="/static/layer/layer.js"></script>
+        <script src="/static/lib/jqgrid/js/jquery.jqGrid.min.js"></script>
+        <script src="/static/lib/jqgrid/js/i18n/grid.locale-cn.js"></script>
+        {#        <script src="/static/shop/js/global.js"></script>#}
+        <script>
+            $(function () {
+
+            });
+        </script>
+    </body>
+</html>

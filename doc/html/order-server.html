@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=750,  user-scalable=no">
+	<meta name="format-detection" content="telphone=no, email=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="x5-page-mode" content="app">
+	<title>苗苗儿推-订单-待服务</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script type="text/javascript" src="js/zepto.js"></script>
+	<script type="application/javascript" src="js/fastclick.js"></script>
+</head>
+<body>
+	<div class="header">
+		<div class="goback">
+			<a href="javascript:history.go(-1)">
+				<i class="sprits"></i>
+			</a>
+		</div>
+		
+		<div class="title">订单</div>
+	</div>
+
+	
+	<div class="goods-kinds order">
+		<ul class="goods-kinds-ul shangmen">
+			<li data-kinds="all-kinds">
+				<a href="javascript:;">
+					<div class="all-kinds">
+						上门
+						<i class="sprits"></i>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a href="order-payfor.html">
+					<div class="all-city">
+						待支付
+					</div>
+				</a>
+			</li>
+			<li class="current">
+				<a href="order-server.html">
+					<div class="zhineng">
+						待服务
+					</div>
+				</a>
+			</li>
+			<li>
+				<a href="order-close.html" class="nob">
+					<div class="zhineng">
+						已完成
+					</div>
+				</a>
+			</li>
+		</ul>
+
+		<div class="select-kinds-layer" data-kinds="all-kinds">
+			<ol class="select-condition">
+				<li class="current">
+					<a href="javascript:;">到店服务</a>
+				</li>
+				<li>
+					<a href="javascript:;">上门服务</a>
+				</li>
+			</ol>
+		</div>
+	</div>
+
+	<ul class="order-wait-server">
+		<li>
+			<div class="goods-img-box">
+				<img src="images/img1.jpg" alt="">
+			</div>
+			<div class="order-wait-text">
+				<h4>轻松头面肩（上门服务）</h4>
+				<p>预约时间：2015-05-13  10:00</p>
+				<p>服务技师：李江南</p>
+				<p>服务地址：新豪方大厦5F</p>
+			</div>
+			<a href="javascript:;" class="order-wait-bnt">待服务</a>
+		</li>
+
+		<li>
+			<div class="goods-img-box">
+				<img src="images/img1.jpg" alt="">
+			</div>
+			<div class="order-wait-text">
+				<h4>轻松头面肩（上门服务）</h4>
+				<p>预约时间：2015-05-13  10:00</p>
+				<p>服务技师：李江南</p>
+				<p>服务地址：新豪方大厦5F</p>
+			</div>
+			<a href="javascript:;" class="order-wait-bnt">待服务</a>
+		</li>
+
+		<li>
+			<div class="goods-img-box">
+				<img src="images/img1.jpg" alt="">
+			</div>
+			<div class="order-wait-text">
+				<h4>轻松头面肩（上门服务）</h4>
+				<p>预约时间：2015-05-13  10:00</p>
+				<p>服务技师：李江南</p>
+				<p>服务地址：新豪方大厦5F</p>
+			</div>
+			<a href="javascript:;" class="order-wait-bnt">待服务</a>
+		</li>
+	</ul>
+
+
+
+
+	<ul class="footer-menu">
+		<li>
+			<a href="index.html">
+				<i class="sprits footer-menu1"></i>
+				<p>首页</p>
+			</a>
+		</li>
+
+		<li>
+			<a href="order-server.html" class="current">
+				<i class="sprits footer-menu2"></i>
+				<p>订单</p>
+			</a>
+		</li>
+
+		<li>
+			<a href="user-center.html">
+				<i class="sprits footer-menu3"></i>
+				<p>我的</p>
+			</a>
+		</li>
+
+		<li>
+			<a href="more-set.html">
+				<i class="sprits footer-menu4"></i>
+				<p>更多</p>
+			</a>
+		</li>
+	</ul>
+
+
+	<script>
+	     $(function(){
+	     	FastClick.attach(document.body);
+	     
+		    var selectKinds=function(){
+		     	var $selectHandle=$(".goods-kinds-ul li"),
+		     		_target="",
+		     		$showOption=$(".select-kinds-layer");
+		     	$selectHandle.on("click",function(){
+		     		if(!$(this).hasClass("current") && $(this).index()==0){
+		     			$(this).addClass("current");
+		     			_target=$(this).data("kinds");
+
+		     			for(var i=0; i<$showOption.length; i++){
+		     				var _point=$showOption.eq(i).data("kinds");
+		     				if(_point==_target){
+		     					$showOption.hide();
+		     					$showOption.eq(i).show();
+		     					$showOption.eq(i).height($("body").height()-170);
+		     				}
+		     			}
+		     		}else{
+		     			$(this).removeClass("current");
+		     			$showOption.hide();
+		     		}
+
+		     	});
+		     	$showOption.on("click","li",function(){
+		     		$showOption.hide();
+		     		$selectHandle.removeClass("current")
+		     	})
+		     }()
+	     })
+
+	 </script>
+</body>
+</html>

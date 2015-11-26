@@ -1,0 +1,60 @@
+{% extends "layout/back.twig" %}
+{% block main %}
+    <form class="form-inline definewidth m20" action="" method="post">
+        用户手机号码：
+        <input type="text" name="rolename" id="rolename" class="abc input-default" placeholder="" value="">&nbsp;&nbsp;
+        <button type="submit" class="btn btn-primary">查询</button>
+        &nbsp;&nbsp;
+    </form>
+    <table class="table table-bordered table-hover definewidth m10">
+        <thead>
+            <tr>
+                <th>用户ID</th>
+                <th>手机号</th>
+                <th>昵称</th>
+                <th>性别</th>
+                <th>地址</th>
+                <!--   <th>坐标</th>
+                  <th>头像</th>
+                  <th>地址2</th> -->
+                <th>用户状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{user.tel}}</td>
+                    <td>{{user.nick}}</td>
+                    <td>
+                        {% if user.gender == '1'%}
+                            男
+                        {% else %}
+                            女
+                        {% endif%}
+                    </td>
+                    <td>{{user.address}}</td>
+                    <td>
+                        {% if user.status == '1'%}
+                            启用
+                        {% else %}
+                            禁用
+                        {% endif%}
+                    </td>
+                    <td>                 
+                        {% if user.status == '1'%}
+                        <a href="/admin/user/on_off_user/<?php echo $news_item->phoneNo; ?>/0">禁用</a>
+                           {% else %}
+                        <a href="/admin/user/on_off_user/<?php echo $news_item->phoneNo; ?>/1">启用</a>
+                        {% endif%}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+    <div class="inline pull-right page">
+        <td>{{page}}   共<?php echo $num_pages; ?>页</td>
+    </div>
+{% endblock main %}

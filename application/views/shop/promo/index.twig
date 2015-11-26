@@ -1,0 +1,135 @@
+{%  extends "/shop/layout/layout.twig"  %}
+{% set page_bread_top = '工作中心' %}
+{% set page_bread_sub = '活动管理' %}
+{% set page_header_title = '活动管理' %}
+{% set page_tag = 'shop_promo_index' %}
+{% block static %}
+    {#    <link rel="stylesheet" type="text/css" href="/static/lib/jqgrid/css/ui.jqgrid-bootstrap.css">#}
+    <link rel="stylesheet" type="text/css" href="/static/lib/jqgrid/css/ui.jqgrid.css">
+    <link rel="stylesheet" type="text/css" href="/static/lib/jqgrid/css/ui.ace.css">
+{% endblock %}
+{% block main %}
+    <div class="col-xs-12">
+        <table id="list"><tr><td></td></tr></table> 
+        <div id="pager"></div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="/static/lib/jqgrid/js/jquery.jqGrid.min.js"></script>
+    <script src="/static/lib/jqgrid/js/i18n/grid.locale-cn.js"></script>
+    <script>
+        $(function () {
+            $("#list").jqGrid({
+                url: "/shop/promo/getPromoData",
+                datatype: "json",
+                mtype: "POST",
+                colNames: ["cid","优惠名称", "优惠服务", "原价", "优惠价", "开始时间", "结束时间", "状态","操作"],
+                colModel: [
+                    {name: "cid", index:'cid',editable: true, align: "center",hidden:true,key:true},
+                    {name: "title", editable: true, align: "center",editrules:{required:true}},
+                    {name: "service", index:'service',editable: true, edittype:"select",editoptions:{value:"{{ serviceStr }}" },editselected:'service'},
+                    {name: "mprice",  align: "center"},
+                    {name: "price",  editable: true, align: "center",editrules:{required:true,number:true,custom:true, custom_func:mypricecheck}},
+                    {name: "begintime",  editable: true, editoptions:{
+                        dataInit:function(el){
+                           
+                               $(el).datetimepicker({
+                                    language: "zh-CN",
+                                    weekStart: 1,
+                                    todayBtn: 1,
+                                    autoclose: 1,
+                                    todayHighlight: 1,
+                                    startView: 2,
+                                    showMeridian: 1,
+                                    forceParse: 1,
+                                    format: "yyyy-mm-dd hh:ii:ss"
+                                });
+                        }
+                    },editrules:{required:true}},
+                    {name: "endtime",viewable:false, editable: true,editoptions:{
+                            dataInit:function(el){
+                                   $(el).datetimepicker({
+                                        language: "zh-CN",
+                                        weekStart: 1,
+                                        todayBtn: 1,
+                                        autoclose: 1,
+                                        todayHighlight: 1,
+                                        startView: 2,
+                                        showMeridian: 1,
+                                        forceParse: 1,
+                                        format: "yyyy-mm-dd hh:ii:ss"
+                                    });
+                            }
+                       },editrules:{required:true}
+                    },
+                    {name: "status",fixed:true,iddex:'status',viewable:false,  editable: true,sortable: false,edittype:"select",editoptions:{value:"1:启用;0:关闭"},editselected:'status'},
+                    {name: "operator", editrules:{ edithidden: true }, formatter: "actions" },
+                ],
+                pager: "#pager",
+                rowNum: 10,
+                rowList: [10, 20, 30],
+                sortname: "ctime",
+                sortorder: "desc",
+                viewrecords: true,
+                gridview: true,
+                autoencode: true,
+                caption: '优惠列表',
+                autowidth: true,
+                height: 'auto',
+                rownumbers: true,
+                jsonReader: {
+                    root: "rows",
+                    page: "page",
+                    total: "total",
+                    records: "records",
+                    repeatitems: false,
+                },
+                editurl:"/shop/promo/edit",
+
+            }).navGrid('#pager', {search:false,add: true,  edit:true,view: true,del: true,}, searchFn, editFn, addFn, delFn, viewFn);
+        });
+         var searchFn = {         
+        };
+        var editFn = {
+            //jqModal: true,
+            //reloadAfterSubmit: true,
+            //closeAfterEdit:true,
+            //closeOnEscape: true,
+           // savekey: [true, 13],
+            afterSubmit: function (response) {
+                var responseText = $.parseJSON(response.responseText);
+                var success = responseText.success;
+                var message = responseText.message;
+                return [success, message];
+            }
+       
+        };
+        var delFn={
+
+        }
+        function addFn(){
+            closeAfterAdd:true;
+        }
+        function edit() {
+
+        }
+        function delFn() {
+            console.log('add');
+        }
+        function viewFn() {
+            console.log('view');
+        }
+
+        function mypricecheck(value, colname){
+            if(value<0){
+               return [false,'优惠价不能小于0'];
+            }else{
+               return [true,''];
+            }
+           
+        }
+      
+    
+
+    </script>
+{% endblock %}

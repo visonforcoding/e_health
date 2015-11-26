@@ -1,0 +1,63 @@
+{# empty Twig template #}
+{% extends "layout/esui.twig" %}
+{% block main %}
+    <div class="easyui-panel" title="添加服务" data-options="iconCls:'icon-user2',collapsible:true,fit:true,border:false" >
+        <div style="margin: 10px 0;"></div>
+        <div class="form-box" style="padding: 10px 0 10px 20px">
+            <form id="node-form"  action="" method="post" enctype="multipart/form-data">
+                <div class="input-group">
+                    <span class="input-group-addon">优惠劵名称</span>
+                    <select name='cid' class="easyui-combobox" style="width:143px;" >
+                        {% for coupon in coupons %}
+                          <option value='{{ coupon.id }}'>{{ coupon.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" >会员手机号</span>
+                    <input type="text" name="phone" class="easyui-validatebox"  data-options="required:true"  aria-describedby="basic-addon1"><span>(输入0为全部用户)</span>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">开始时间</span>
+                    <input type="text" name="beginTime" class="easyui-datetimebox"   aria-describedby="basic-addon1"><span>(无则不填)</span>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">结束时间(无则不填)</span>
+                    <input type="text" name="endTime" class="easyui-datetimebox"  aria-describedby="basic-addon1"><span>(无则不填)</span>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon"></span>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm('node-form');">提交</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm();">返回列表</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+
+        function submitForm(id) {
+            var $form = $('#' + id);
+            if(!$form.form('validate')){
+                return false;
+            }
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                dataType: 'json',
+                success: function (msg) {
+                    if (typeof msg === 'object') {
+                        if (msg.status) {
+                           alert(msg.msg);
+                            window.location.href = msg.url;
+                        } else {
+                           alert(msg.msg);
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}

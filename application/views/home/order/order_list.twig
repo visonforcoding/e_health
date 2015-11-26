@@ -1,0 +1,129 @@
+{% extends "layout/front.twig" %}
+{% set page_tag = 'order'%}
+{% block title %}项目详情{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">订单</div>
+{% endblock %}
+{%block main %}
+    <div class="goods-kinds order">
+        <ul class="goods-kinds-ul shangmen">
+            <li {% if type == 'visit' %}class="current" {% endif %} data-kinds="all-kinds">
+                <a href="javascript:;">
+                    <div class="all-kinds">
+                        {{isVisitStr|default('上门')}}
+                        <i class="sprits"></i>
+                    </div>
+                </a>
+            </li>
+            <li {% if ordertype == 'pay' %} class="current" {% endif %} >
+                <a href="/home/order/orderList/orderType/pay">
+                    <div class="all-city">
+                        待支付
+                    </div>
+                </a>
+            </li>
+            <li {% if ordertype == 'service' %}class="current" {% endif %}>
+                <a href="/home/order/orderList/orderType/service">
+                    <div class="zhineng">
+                        待服务
+                    </div>
+                </a>
+            </li>
+            <li {% if ordertype == 'close' %}class="current" {% endif %}>
+                <a href="/home/order/orderList/orderType/close" class="nob">
+                    <div class="zhineng">
+                        已完成
+                    </div>
+                </a>
+            </li>
+        </ul>
+
+        <div class="select-kinds-layer" data-kinds="all-kinds">
+            <ol class="select-condition">
+                <li data-text="上门" class="current">
+                    <a href="?isVisit=yes">上门服务</a>
+                </li>
+                <li data-text="到店" >
+                    <a href="?isVisit=no">到店服务</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+    <ul class="order-wait-server">
+        {% for order in orders %}
+            <li>
+                <a href="/home/order/orderDetail/type/{{order.type}}/oid/{{order.id}}.html">
+                    <div class="goods-img-box">
+                        <img src="{{order.cover}}" alt="">
+                    </div>
+                    <div class="order-wait-text">
+                        <h4>{{order.name}}({% if order.isVisit == '1' %}上门服务{% else %}预约到店{% endif %})</h4>
+                        <p>预约时间：{{order.serviceTime}}</p>
+                        <p>{% if order.type == '1'%}服务店铺{% else %}服务技师{% endif %}：{{order.provider}}</p>
+                        <p>服务地址：{{order.address}}</p>
+                    </div>
+                    <a href="javascript:;" class="order-wait-bnt">
+                        {% if buttonText is not empty %}
+                            {{buttonText}}
+                        {%else%}
+                            {% if order.orderStatus == '2'%}
+                                已取消
+                            {% elseif order.orderStatus == '4' %}
+                                退款中
+                            {% elseif order.orderStatus == '41' %}
+                                退款完成
+                            {% elseif order.orderStatus == '42' %}
+                                退款失败
+                            {% elseif order.orderStatus == '5'%}
+                                待评价
+                            {% elseif order.orderStatus == '6'%}
+                                完成
+                            {% elseif order.orderStatus == '40'%}
+                                退款申请中
+                            {% endif %}
+                        {%endif%}
+                    </a>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{%endblock%}
+{% block script %}
+    <script>
+        $(function () {
+            FastClick.attach(document.body);
+            var selectKinds = function () {
+                var $selectHandle = $(".goods-kinds-ul li"),
+                        _target = "",
+                        $showOption = $(".select-kinds-layer");
+                $selectHandle.on("click", function () {
+                    if (!$(this).hasClass("current") && $(this).index() == 0) {
+                        $(this).addClass("current");
+                        _target = $(this).data("kinds");
+                        for (var i = 0; i < $showOption.length; i++) {
+                            var _point = $showOption.eq(i).data("kinds");
+                            if (_point == _target) {
+                                $showOption.hide();
+                                $showOption.eq(i).show();
+                                $showOption.eq(i).height($("body").height() - 170);
+                            }
+                        }
+                    } else {
+                        $(this).removeClass("current");
+                        $showOption.hide();
+                    }
+
+                });
+                $showOption.on("click", "li", function () {
+                    $showOption.hide();
+                    $selectHandle.removeClass("current")
+                });
+            }();
+        });
+    </script>
+{% endblock %}

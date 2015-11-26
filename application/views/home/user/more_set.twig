@@ -1,0 +1,54 @@
+{% extends "layout/front.twig" %}
+{% set page_tag = 'more' %}
+{% block title %}更多{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">更多</div>
+{% endblock %}
+{%block main %}
+    <ul class="more-set-ul">
+        <li>
+            <div class="more-set-left">消息提醒</div>
+            <div class="more-set-right">
+                <div class="accept-bnt">
+                    <i class="sprits"></i>
+                </div>
+            </div>
+        </li>
+        <li>
+            <a href="#">
+                意见反馈
+            </a>
+        </li>
+        <li>
+            <div class="more-set-left">检测更新</div>
+            <div class="more-set-right">当前版本V4.2.1</div>
+        </li>
+        <li>
+            <a href="#">关于苗苗推</a>
+        </li>
+    </ul>
+{% endblock %}
+{% block script %}
+    <script>
+        $(function () {
+            FastClick.attach(document.body);
+
+            var setAccept = function () {
+
+                $(".accept-bnt").on("click", function () {
+
+                    if ($(this).hasClass("accepted")) {
+                        $(this).removeClass("accepted")
+                    } else {
+                        $(this).addClass("accepted")
+                    }
+                })
+            }();
+        });
+    </script>
+{% endblock %}

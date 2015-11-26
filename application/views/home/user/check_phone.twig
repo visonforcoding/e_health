@@ -1,0 +1,86 @@
+{% extends "layout/front.twig" %}
+{% block title %}验证手机{% endblock %}
+{% block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">验证手机</div>
+{% endblock %}
+{% block main %}
+	<form action="#" method='post'>
+		<ul class="change-phone-box">
+			<li>
+				<a href="#">
+					中国（+86）
+					<i class="sprits gonext"></i>
+				</a>
+			</li>
+			<li>
+				<input type="text" placeholder="请输入手机号码" value='{{phone }}' id='phone' name='phone' readonly="true">
+				<a href="javascript:;" class="get-phne-code geting" id='get-yanzheng'>获取验证码</a>
+			</li>
+			<li>
+				<input type="text"  id='code' name='code' placeholder="请输入验证码">
+			</li>
+		</ul>
+
+
+		<input type="submit" class="confrim-password" value="验证">
+	</form>
+	
+{% endblock %}
+{% block script %}
+	<script type="text/javascript">
+		$(function(){
+			//获取验证码
+			$('#get-yanzheng').click(function() {
+				var phone=$('#phone').val();
+				 $.ajax({
+                    type: "POST",
+                    url: "/home/user/getCode.html",
+                    data: {'phone': phone},
+                    success: function (msg) {
+                        alert("发送成功" );
+                    }
+                });
+			
+			});
+
+			//验证验证码的合理性
+			$('.confrim-password').click(function() {
+				var code=$('#code').val();
+				if(code==''){
+					alert('请填写验证码');
+					return false;
+				}
+
+				//验证用户名
+				$form = $(this).parents('form');
+                $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    success: function (msg) {
+                        if (typeof msg === 'object') {
+                            if (msg.status) {
+                                
+                                window.location.href = msg.url;
+                            } else {
+                                alert(msg.msg);
+                            }
+                        }
+                    }
+                });
+                return false;
+				
+			});
+
+
+		});
+
+
+	</script>
+{% endblock %}

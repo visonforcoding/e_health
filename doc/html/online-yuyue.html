@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=750,  user-scalable=no">
+	<meta name="format-detection" content="telphone=no, email=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="x5-page-mode" content="app">
+	<title>苗苗儿推-在线预约</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script type="text/javascript" src="js/zepto.js"></script>
+	<script type="application/javascript" src="js/fastclick.js"></script>
+</head>
+<body style="padding-bottom:0">
+	<div class="header">
+		<div class="goback">
+			<a href="javascript:history.go(-1)">
+				<i class="sprits"></i>
+			</a>
+		</div>
+		
+		<div class="title">在线预约</div>
+	</div>
+
+	<div class="shop-detail-box online">
+		<div class="online-name">
+			<div class="online-name-left">美丽人生</div>
+			<div class="online-name-right">
+				服务项目：<span>轻松头面肩</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="shop-detail-box online">
+		<ul class="online-inner-box">
+			<li>
+				<div class="online-left">预约人数</div>
+				<div class="online-right">
+					2人<i class="sprits gonext"></i>
+				</div>
+			</li>
+			<li class="nob" id="select-time">
+				<div class="online-left">预约时间</div>
+				<div class="online-right" id="yuyue-time">
+					<span style="color:#ccc">请您选择预约时间</span><i class="sprits gonext"></i>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<div class="shop-detail-box online">
+		<ul class="online-inner-box">
+			<li>
+				<div class="online-left">
+					<input type="text" class="guixing" placeholder="您贵姓">
+				</div>
+				<div class="online-right">
+					<div class="radiobox-gorup">
+						<div class="radio-box">
+							<input type="radio" name="sex">
+							<i class="sprits"></i>
+						</div>
+						先生
+					</div>
+					<div class="radiobox-gorup">
+						<div class="radio-box">
+							<input type="radio" name="sex" checked="checked">
+							<i class="sprits checked"></i>
+						</div>
+						女士
+					</div>
+				</div>
+			</li>
+			<li class="nob">
+				<input type="text" class="input-tel" placeholder="请输入您的手机号码">
+			</li>
+		</ul>
+	</div>
+
+	<div class="shop-detail-box online">
+		<div class="online-quan">
+			<div class="online-quan-left">优惠券</div>
+			<div class="onlone-quan-right">
+				50元现金券<i class="sprits gonext"></i>
+			</div>
+		</div>
+	</div>
+
+	<div class="shop-detail-box online">
+		<input type="text" class="teshu-yaoqiu" placeholder="如果您有什么特殊要求，请告知我们">
+	</div>
+
+	<div class="shop-detail-box online">
+		<div class="online-help">
+			<div class="online-help-left">帮他人预定</div>
+			<div class="help-bnt">
+				<i class="sprits"></i>
+			</div>
+		</div>
+	</div>
+	<a href="#" class="detail-yuyue-bnt">提交订单</a>
+
+
+	<div class="zhezhao"></div>
+	<div class="select-time">
+		<p>请选择开始时间，灰色表示已被他人预约</p>
+		
+		<div class="select-day">
+			<ul>
+				<li><span></span><i class="sprits"></i></li>
+				<li><span></span><i class="sprits"></i></li>
+				<li><span></span><i class="sprits"></i></li>
+				<li><span></span><i class="sprits"></i></li>
+				<li><span></span><i class="sprits"></i></li>
+				<li><span></span><i class="sprits"></i></li>
+				<li><span></span><i class="sprits"></i></li>
+			</ul>
+		</div>
+
+		<div class="select-hour">
+			<ul>
+				<li>09:00</li>
+				<li>10:00</li>
+				<li>11:00</li>
+				<li>12:00</li>
+				<li>13:00</li>
+				<li>14:00</li>
+				<li>15:00</li>
+				<li>16:00</li>
+				<li>17:00</li>
+				<li>18:00</li>
+				<li>19:00</li>
+				<li>20:00</li>
+				<li>21:00</li>
+				<li>22:00</li>
+				<li>23:00</li>
+				<li>24:00</li>
+			</ul>
+		</div>
+
+	</div>
+
+	<script>
+		$(function(){
+			FastClick.attach(document.body);
+
+
+			var selectRadio=function(){
+				$(".radiobox-gorup").on("click",function(){
+
+					$(".radiobox-gorup").find("i").removeClass("checked");
+					$(".radiobox-gorup").find("input").prop("checked","");
+					$(this).find("i").addClass("checked");
+					$(this).find("input").prop("checked","checken");
+				})
+			}();
+
+			var helpHandle=function(){
+				$(".help-bnt").on("click",function(){
+					if(!$(this).hasClass("help")){
+						$(this).addClass("help");
+					}else{
+						$(this).removeClass("help");
+					}
+				})
+
+			}();
+
+			var selectTime=function(){
+				var myDate=new Date();
+				var currentYear=myDate.getFullYear();
+				var currentMonth=myDate.getMonth()+1;
+				var currentDay=myDate.getDate();
+				var currentHour=myDate.getHours();
+				var _targetDay="";
+
+				$(".select-day ul").width(167*$(".select-day li").length+60);
+
+				if(currentMonth==2){
+					if((currentYear%4==0 && currentYear%100!=0)||(currentYear%100==0 && currentYear%400==0)){
+						_targetDay=29
+					}else{
+						_targetDay=28
+					}
+				}
+				if(currentMonth==1 || currentMonth==3 || currentMonth==5 || currentMonth==7 || currentMonth==8 || currentMonth==10 || currentMonth==12){
+					_targetDay=31
+				}
+				if(currentMonth==4 || currentMonth==6 || currentMonth==9 || currentMonth==11){
+					_targetDay=30;
+				}
+
+				for(var i=0; i<7; i++){//初步设置可预定天数为一周内
+					currentDay++;
+					if(currentDay>_targetDay){
+						currentDay=1;
+						currentMonth++;
+						if(currentMonth<=9){
+							currentMonth="0"+currentMonth;
+						}
+					}
+					$(".select-day span").eq(i).text(currentMonth+"-"+parseInt(currentDay-1));
+				}//初始化
+
+				$("#select-time").on("click",function(){
+					$(".zhezhao, .select-time").show();
+					creatHour();
+				});
+
+				$(".select-day").on("click","li",function(event){
+					event.stopPropagation();
+					$(this).addClass("selected").siblings().removeClass("selected");
+					if($(this).index()>0){
+						$(".select-hour li").addClass("able");
+					}else{
+						creatHour();
+					}
+					$(".select-hour").show();
+				});
+
+				$(".select-hour li").on("click",function(event){
+					event.stopPropagation();
+					var _yuyue_hour=$(this).text();
+					var _yuyue_day=$(".select-day").find(".selected").text();
+					var _yuyue_day_array=_yuyue_day.split("-");
+					var _time_text=_yuyue_day_array[0]+"月"+_yuyue_day_array[1]+"日"+_yuyue_hour+'<i class="sprits gonext"></i>';
+					$("#yuyue-time").html(_time_text);
+					$(".zhezhao, .select-time").hide();
+				});
+
+
+				function creatHour(){
+					$(".select-day li").eq(0).addClass("selected").siblings().removeClass("selected");
+					$(".select-hour li").removeClass("able");
+
+					for(var i=0; i<$(".select-hour li").length; i++){
+						if(parseInt($(".select-hour li").eq(i).text()+1)>currentHour){
+							$(".select-hour li").eq(i).addClass("able");
+						}
+
+					}
+				}
+				$(".zhezhao").on("click",function(){
+					$(".zhezhao, .select-time").hide();
+				})
+
+
+			}();
+		});
+	</script>
+</body>
+</html>

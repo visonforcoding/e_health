@@ -1,0 +1,48 @@
+{#个人中心页#}
+{% extends "layout/front.twig" %}
+{% set page_tag = 'user'%}
+{% block title %}我的{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1);">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">优惠劵</div>
+{% endblock %}
+{%block main %}
+    <ul class="youhuijuan-kind">
+        <li class="current">
+            <a href="#">未使用</a>
+        </li>
+        <li>
+            <a href="#">已使用</a>
+        </li>
+        <li>
+            <a href="#">已过期</a>
+        </li>
+    </ul>
+    <ul class="youhuijuan-list">
+        {% for mycoupon in mycoupons%}
+            <li class="sprits {% if date(mycoupon.endTime) < date() %} yiguoqi {%else%} weishiyong {% endif %}">
+                <div class="youhuijuan-money">
+                    <span>￥</span>{{mycoupon.amount2}}
+                </div>
+                <ul class="youhuijuan-inf">
+                    <li>
+                        满<span>{{mycoupon.amount1}}</span>元可使用
+                    </li>
+                    <li>
+                        限尾号<span>{{mycoupon.tel|slice(-4,4)}}</span>的手机使用
+                    </li>
+                    <li>
+                        {{mycoupon.beginTime}} 至 {{mycoupon.endTime}}
+                    </li>
+                </ul>
+            </li>
+        {% endfor%}
+    </ul>
+{% endblock %}
+{% block footer %}{% endblock %}
+{% block script %}
+{% endblock %}

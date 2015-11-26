@@ -1,0 +1,99 @@
+{% extends "layout/front.twig" %}
+{% block title %}项目详情{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">订单支付</div>
+{% endblock %}
+{%block main %}
+    <div class="shop-detail-box" style="margin-top:20px;">
+        <ul class="payfor-order">
+            <li>
+                <div class="payfor-order-left">
+                    订单名称：
+                </div>
+                <div class="payfor-order-text">
+                    {{order_name}}
+                </div>
+            </li>
+            <li>
+                <div class="payfor-order-left">
+                    订单金额：
+                </div>
+                <div class="payfor-order-text">
+                    <span class="orange">￥{{amount}}元</span>
+                </div>
+            </li>
+            <li>
+                <div class="payfor-order-left">
+                    优惠券：
+                </div>
+                <div class="payfor-order-text">
+                    <span class="orange">
+                    <select name="coupon">
+                        {% for coupon in coupons %}
+                        <option value="{{coupon.id}}">{{coupon.amount2}}元优惠券</option>
+                        {% endfor %}
+                    </select>
+                    </span>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="shop-detail-box">
+        <ul class="payfor-order payfor-order-way">
+            <li>
+                <div class="payfor-order-left">
+                    <i class="sprits pay-way zhifubao"></i>
+                </div>
+                <div class="payfor-order-text">
+                    <p class="big-p">支付宝支付</p>
+                    <p class="small-p">推荐有支付宝账号的用户使用</p>
+                </div>
+                <div class="payfor-way-selected sprits select"></div>
+            </li>
+            <li>
+                <div class="payfor-order-left">
+                    <i class="sprits pay-way yinhangka"></i>
+                </div>
+                <div class="payfor-order-text">
+                    <p class="big-p">银行卡支付</p>
+                    <p class="small-p">支持储蓄卡信用卡，无需开通网银</p>
+                </div>
+                <div class="payfor-way-selected sprits"></div>
+            </li>
+            <li>
+                <div class="payfor-order-left">
+                    <i class="sprits pay-way zhifubao"></i>
+                </div>
+                <div class="payfor-order-text">
+                    <p class="big-p">微信支付</p>
+                    <p class="small-p">推荐安装微信5.0及以上版本的使用</p>
+                </div>
+                <div class="payfor-way-selected sprits"></div>
+            </li>
+        </ul>
+    </div>
+    <a href="online-yuyue.html" class="detail-yuyue-bnt">去支付</a>
+{%endblock%}
+{%block footer %}
+{% endblock %}
+{% block script %}
+    <script>
+        $(function () {
+            FastClick.attach(document.body);
+            var tabSelect = function () {
+                var _index = "";
+                $(".server-inf-option").on("click", "li", function () {
+                    _index = $(this).index();
+                    $(this).addClass("current").siblings().removeClass("current");
+                    $(".select-tab-option").hide();
+                    $(".select-tab-option").eq(_index).show();
+                });
+            }();
+        });
+    </script>
+{% endblock %}

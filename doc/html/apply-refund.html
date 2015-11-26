@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=750,  user-scalable=no">
+	<meta name="format-detection" content="telphone=no, email=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="x5-page-mode" content="app">
+	<title>苗苗儿推-申请退款</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script type="text/javascript" src="js/zepto.js"></script>
+	<script type="application/javascript" src="js/fastclick.js"></script>
+</head>
+<body style="padding-bottom:0">
+	<div class="header">
+		<div class="goback">
+			<a href="javascript:history.go(-1)">
+				<i class="sprits"></i>
+			</a>
+		</div>
+		
+		<div class="title">申请退款</div>
+	</div>
+	
+	<div class="wait-order-head">
+		<div class="wait-order-jishi">
+			<img src="images/img1.jpg" alt="">
+		</div>
+		<div class="wait-order-inf">
+			<div class="wait-jishi-name">技师：李江南</div>
+			<div class="wait-order-server">服务项目：轻松头面肩</div>
+			<div class="wait-order-price">￥110</div>
+		</div>
+	</div>
+
+
+	<ul class="wait-order-ul">
+		<li>
+			<div class="wait-order-left">
+				服务时间
+			</div>
+			<div class="wait-order-right">
+				2015-05-13  10:00
+			</div>
+		</li>
+		<li>
+			<div class="wait-order-left">
+				服务店家
+			</div>
+			<div class="wait-order-right">
+				美丽人生
+			</div>
+		</li>
+	</ul>
+
+	<ul class="wait-order-ul">
+		<li>
+			<div class="wait-order-left">
+				退款金额
+			</div>
+			<div class="wait-order-right">
+				<div class="wait-order-price">￥110</div>
+			</div>
+		</li>
+	</ul>
+
+	<p class="apply-refund-title">退款方式</p>
+	<ul class="apply-refund-ul">
+		<li>
+			<h4>原路退回</h4>
+			<p>3-10个工作日到账，无手续费</p>
+			<i class="sprits refund-checkbox selected"></i>
+		</li>
+		<li>
+			<h4>退回到钱包</h4>
+			<p>1-3个工作日到账，无手续费</p>
+			<i class="sprits refund-checkbox"></i>
+		</li>
+	</ul>
+
+	<p class="apply-refund-title">退款原因</p>
+	<ul class="apply-refund-ul">
+		<li>
+			预约错
+			<i class="sprits refund-checkbox selected"></i>
+		</li>
+		<li>
+			计划有变
+			<i class="sprits refund-checkbox"></i>
+		</li>
+		<li>
+			评价不好
+			<i class="sprits refund-checkbox"></i>
+		</li>
+		<li>
+			其他
+			<i class="sprits refund-checkbox"></i>
+		</li>
+	</ul>
+
+	<a href="javascript:;" class="wait-order-bnt wait-comment-order">确认退款</a>
+
+	<script>
+		 $(function(){
+		 	FastClick.attach(document.body);
+
+		 	var selectCheckbox=function(){
+
+		 		$(".apply-refund-ul li").on("click",function(){
+
+		 			$(this).find(".refund-checkbox").addClass("selected");
+		 			$(this).siblings().find(".refund-checkbox").removeClass("selected")
+
+		 		})
+
+		 	}();
+		 	
+		 })
+	 </script>
+</body>
+</html>

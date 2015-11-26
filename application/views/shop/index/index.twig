@@ -1,0 +1,109 @@
+{%  extends "/shop/layout/layout.twig" %}
+{% block page_header %}
+{% endblock %}
+{% block main %}
+    <div class="row" id="welcome_box">
+        <div class="col-xs-12">
+            <div style="padding:20px;" class="alert alert-success with-icon">
+{#                <i class="icon-ok-sign" ></i>#}
+                <div class="content"><h3>欢迎您，{{store.storeName}}</h3></div>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="summary_infobox" style="margin-top: 10px;">
+        <div class="space-6"></div>
+        <div class="col-sm-7 infobox-container">
+            <!-- #section:pages/dashboard.infobox -->
+            <div class="infobox infobox-green">
+                <div class="infobox-icon">
+                    <i class="icon icon-shopping-cart fa fa-comments"></i>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number">{{new_order_nums}}</span>
+                    <div class="infobox-content">新增订单数</div>
+                </div>
+
+                <!-- #section:pages/dashboard.infobox.stat -->
+                <div class="stat stat-success">
+                    <i class="icon-long-arrow-up"></i>
+                </div>
+
+                <!-- /section:pages/dashboard.infobox.stat -->
+            </div>
+
+            <div class="infobox infobox-blue">
+                <div class="infobox-icon">
+                    <i class="icon icon-comments fa fa-twitter"></i>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number">{{new_comment_nums}}</span>
+                    <div class="infobox-content">新评论</div>
+                </div>
+
+            </div>
+
+            <div class="infobox infobox-pink">
+                <div class="infobox-icon">
+                    <i class="icon icon-line-chart"></i>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number">{{today_income|default('0')}}</span>
+                    <div class="infobox-content">今日营业额</div>
+                </div>
+            </div>
+
+            <div class="infobox infobox-red">
+                <div class="infobox-icon">
+                    <i class="icon icon-yen"></i>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number">{{total_income|default('0')}}</span>
+                    <div class="infobox-content">总营业额</div>
+                </div>
+            </div>
+                    
+            <div class="infobox infobox-red">
+                <div class="infobox-icon">
+                    <i class="icon icon-yen"></i>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number">{{total_income_row.avg_price|default('0')}}</span>
+                    <div class="infobox-content">客均价</div>
+                </div>
+            </div>
+
+
+
+            <!-- /section:pages/dashboard.infobox.dark -->
+        </div>
+        <div class="col-sm-5">
+            <div class="panel" data-url='http://baidu.com'>
+                <div class="panel-heading">
+                    <i class="icon-list-ul"></i> 我的店铺
+                </div>
+                <div class="panel-body">
+                    <div class="center-block">
+                        <img alt="{{store.cover}}" class="img-rounded center-block"  style="width: 200px;" src="{{store.cover}}"/>
+                        <span class="center-block mt10 label label-badge" style="display: block;width:120px;">{{store.storeName}}</span>
+                        <div class="row mt10" >
+                            <div class="col-sm-3" style="text-align:right" >综合评价：</div>
+                            <div class="score progress" >
+                                <div class="progress-bar col-sm-9" role="progressbar"  aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{store.score*10}}%">
+                                    {{store.score}} 分
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div style="height: 1000px;"></div>
+{% endblock %}

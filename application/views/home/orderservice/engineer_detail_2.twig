@@ -1,0 +1,63 @@
+{% extends "layout/front.twig" %}
+{% block title %}项目详情{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">技师-{{engineer.name}}</div>
+{% endblock %}
+{%block main %}
+    <div class="shop-detail-box">
+        <div class="order-server-option">
+            <div class="order-option-img">
+                <img src="{{engineer.cover}}" alt="">
+            </div>
+            <div class="detail-jishi-inf">
+                <div class="detail-jishi-name">{{engineer.name}}</div>
+                <div class="detail-jishi-zhizhao"><span>{% if engineer.sex == '1'%}男{% else %}女{% endif %}</span><span>职业医师</span></div>
+                <div class="detail-jishi-code sprits">
+                    <div class="detail-code-length sprits"></div>
+                </div>
+            </div>
+        </div>
+        <div class="detail-jishi-jianjie">
+            <h4>【简介】</h4>
+            <p>{{engineer.desc}}</p>
+            <h4>【擅长】</h4>
+            <p>{{engineer.skilled}}</p>
+            <h4>【服务宣言】</h4>
+            <p>{{engineer.manifesto}}</p>
+        </div>
+    </div>
+
+    <div class="shop-detail-box">
+        <div class="detail-yuyue-title">
+            <p>【已预约的项目】</p>
+        </div>
+
+        <ul class="yueyued-option">
+            <li>
+                <div class="yuyued-option-name">
+                    {{service.name}}
+                </div>
+                <div class="yuyued-option-time">
+                    {{service.stime}}分钟
+                </div>
+                <div class="yuyued-option-price">
+                    {{service.price}}元
+                </div>
+            </li>
+        </ul>
+    </div>
+    <a href="" class="detail-yuyue-bnt">立即预约</a>
+{%endblock%}
+{%block footer %}
+{% endblock %}
+{% block script %}
+    <script>
+        $(function () {
+        });
+    </script>
+{% endblock %}

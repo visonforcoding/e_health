@@ -1,0 +1,45 @@
+{%  extends "/shop/layout/layout.twig"  %}
+{% set page_bread_top = '工作中心' %}
+{% set page_bread_sub = '服务区域管理' %}
+{% set page_header_title = '服务区域管理' %}
+{% set page_tag = 'shop_user_serviceArea' %}
+{% block  static %}
+	<style>
+	     #list ul {list-style:none;margin:0px}
+	      #list ul li {float:left;width:80px;} 
+
+	</style>
+{% endblock %}
+{% block main %}
+	<article>
+		<section>
+			{% for key,city in areaData %}
+		    <header><h3>{{key}}</h3></header>
+			<article>
+			    <div class="example" contenteditable="true">
+			      <div class="panel">
+			      	{% for k1,district in city %}
+			        <div class="panel-heading">{{k1}}   <button style='float:right;cursor:pointer;margin-left:10px;' onClick='javascript:window.location.href="/shop/user/editArea?area={{k1}}&type=edit"' class="grid-btn btn btn-primary btn-mini del-record"><i class="icon icon-pencil"></i> 修改</button>
+
+			        <button style='float:right;cursor:pointer;margin-left:10px;' onClick='javascript:window.location.href="/shop/user/editArea?area={{k1}}&type=del"' class="grid-btn btn btn-primary btn-mini del-record"><i class="icon icon-trash">删除</i> </button>
+
+			        </div>
+			        <div class="panel-body" id='list'>
+				        <ul >
+				        	{% for k2,area in district %}
+				        	<li>{{ area }}</li>
+				            {% endfor %}
+				        </ul>
+			    	</div>
+			       {% endfor %}
+			      </div>
+			    </div>
+		    </article>
+		    {% endfor %}
+		    <button onClick='javascript:window.location.href="/shop/user/editArea"' class="grid-btn btn btn-primary btn-mini del-record"><i class="icon icon-plus-sign"></i> 添加</button>
+		</section>
+	<article>
+	
+{% endblock %}
+{% block script %}
+{% endblock %}

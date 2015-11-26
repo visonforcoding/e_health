@@ -1,0 +1,71 @@
+{% extends "layout/front.twig" %}
+{% block title %}登录{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">密码重置</div>
+{% endblock %}
+{%block main %}
+    <div class="login-sbox">
+        <form action="#">
+            <div class="login-input-group">
+                <input type="text" id="phone" name="phone" placeholder="请输入手机号">
+            </div>
+            <div class="login-input-group">
+                <input type="text" name="code" class="input-yanzheng" placeholder="请输入验证码">
+                <a href="javascript:;" class="get-yanzheng">立即获取</a>
+            </div>
+            <div class="login-input-group">
+                <input type="password" name="pwd" placeholder="请输入新密码">
+            </div>
+
+            <div class="login-input-group">
+                <input type="submit" id="submit-form" value="完成" class="able">
+            </div>
+        </form>
+        <p class="lianxi-kefu">如遇到手机丢失，账号被盗等问题请联系客服QQ:4490056</p>
+    </div>
+{% endblock %}
+{% block  footer %}
+{% endblock %}
+{% block script %}
+    <script>
+        $(function () {
+            FastClick.attach(document.body);
+            $('.get-yanzheng').click(function () {
+                var phone = $('#phone').val();
+                $.ajax({
+                    type: "POST",
+                    url: "/home/user/getCode.html",
+                    data: {'phone': phone},
+                    success: function (msg) {
+                        alert("Data Saved: " + msg);
+                    }
+                });
+            });
+            $('#submit-form').click(function () {
+                $form = $(this).parents('form');
+                $.ajax({
+                    type:'post',
+                    url: '/home/user/resetPwd.html',
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    success: function (msg) {
+                        if (typeof msg === 'object') {
+                            if (msg.status) {
+                                alert(msg.msg);
+                                //window.location.href = msg.url;
+                            } else {
+                                alert(msg.msg);
+                            }
+                        }
+                    }
+                });
+                return false;
+            });
+        })
+    </script>
+{% endblock %}

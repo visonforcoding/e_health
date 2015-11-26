@@ -1,0 +1,220 @@
+{% extends "layout/front.twig" %}
+{% block title %}预约店面详情{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+
+    <div class="title">预约店面详情</div>
+    <div class="header-right">
+        <a href="javascript:;" class="header-like {% if collect %}liked{% endif %}">
+            <i class="sprits"></i>
+        </a>
+        <a href="javascript:;" class="header-share">
+            <i class="sprits"></i>
+        </a>
+    </div>
+{% endblock %}
+{%block main %}
+    <div class="shop-detail-banner">
+        <img src="{{store.cover}}" alt="">
+    </div>
+    <div class="shop-detail-box">
+        <div class="yuyue-deail-name">
+            <p><span>{{store.storeName}}</span>您的专业养生基地</p>
+        </div>
+        <div class="yuyue-option">
+            <p>预约服务项目</p>
+            <ul class="select-server">
+                {% for service in services %}
+                    <li data-sid="{{service.id}}" {% if loop.first and service_id is empty %} class="selected"{% elseif service.id == service_id%}class="selected" {% endif %}> 
+                        <i class="sprits"></i>{{ service.name }}</li>
+                    {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="shop-detail-box">
+        <div class="detail-yuyue-title">
+            <p>【项目描述】</p>
+        </div>
+        {% for service in services %}
+            <ul class="detail-yuyue-price">
+                <li style="width:50%">{{service.name}}</li>
+                <li style="width:50%;text-align: right;"><span>{{service.price}}元</span></li>
+            </ul>
+
+            <ul class="detail-server-list">
+                <li>
+                    服务时长：<span>{{service.stime}}分钟</span>
+                </li>
+                <li>理疗功效：<p>{{service.efficacy|striptags}}</p></li>
+            </ul>
+        {% endfor %}
+    </div>
+
+    <div class="shop-detail-box">
+        <div class="detail-yuyue-title">
+            <p>【服务范围】</p>
+        </div>
+
+        <div class="server-limit">
+            <p>{{service_area}}</p>
+        </div>
+    </div>
+
+    <div class="shop-detail-box">
+        <div class="detail-yuyue-title">
+            <p>【服务前须知】</p>
+        </div>
+
+        <ul class="server-notic-ul">
+            {{store.serviceNotice|raw}}
+        </ul>
+    </div>
+
+    <div class="shop-detail-box">
+        <div class="detail-yuyue-title">
+            <p>【订单修改/取消】</p>
+        </div>
+
+        <div class="server-limit">
+            {{store.orderNotice|raw}}
+        </div>
+    </div>
+    <a href="/home/orderservice/submitOrder/store_id/{{store.id}}/sid/{{services.0.id}}" class="detail-yuyue-bnt">立即预约</a>
+{%endblock%}
+{%block footer %}
+    <div class="zhezhao"></div>
+    <div class="share-group-layer">
+        <ul>
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share1"></i>
+                    <p>微信好友</p>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share2"></i>
+                    <p>朋友圈</p>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share3"></i>
+                    <p>QQ</p>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share4"></i>
+                    <p>短信</p>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share5"></i>
+                    <p>新浪微博</p>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share6"></i>
+                    <p>QQ空间</p>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share7"></i>
+                    <p>邮件</p>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share8"></i>
+                    <p>复制链接</p>
+                </a>
+            </li>
+        </ul>
+        <a href="javascript:;" class="cancle cancle-share">取消分享</a>
+    </div>
+    <div class="liked-notic">
+        收藏成功
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        $(function () {
+            FastClick.attach(document.body);
+            var jiuCuo = function () {
+
+                $("#jiucuo").on("click", function () {
+                    $(".zhezhao").show();
+                    $(".jiucuo-layer-con").addClass("show");
+                });
+
+                $(".cancle").on("click", function () {
+                    $(".zhezhao").hide();
+                    $(".jiucuo-layer-con, .share-group-layer").removeClass("show");
+                })
+
+            }();
+            var share = function () {
+                $(".header-share").on("click", function () {
+                    $(".zhezhao").show();
+                    $(".share-group-layer").addClass("show");
+                });
+            }();
+
+            /**
+             * 收藏按钮点击事件
+             * @type Function|undefined
+             */
+            var likeBnt = function () {
+                var sid = '{{store.id}}';
+                var is_login = '{{is_login}}';
+                $(".header-like").on("click", function () {
+                    var obj = $(this);
+                    if (is_login) {
+                        $.ajax({
+                            url: '/home/useraction/collect.html',
+                            type: 'post',
+                            dataType: 'json',
+                            data: {'sid': sid},
+                            success: function (msg) {
+                                if (msg.status === true) {
+                                    obj.toggleClass('liked');
+                                    layer.open({
+                                        content: msg.msg,
+                                        style: 'padding:30px 40px;width:200px;font-size:15px;border:none;',
+                                        time: 2
+                                    });
+                                }
+                            }
+                        });
+                    } else {
+                        window.location.href = '/home/user/login.html';
+                    }
+                });
+            }();
+
+            var selectServer = function () {
+                $(".select-server").on("click", "li", function () {
+                    $('ul.select-server li').removeClass('selected');
+                    $(this).addClass("selected");
+                    var sid = $(this).data('sid');
+                    var store = '{{store.id}}';
+                    var url = '/home/orderservice/submitOrder/store_id/' + store + '/sid/' + sid;
+                    $('.detail-yuyue-bnt').attr('href', url);
+                });
+            }();
+        })
+    </script>
+{% endblock %}

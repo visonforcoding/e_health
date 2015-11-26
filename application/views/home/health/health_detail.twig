@@ -1,0 +1,84 @@
+{# empty Twig template #}
+{% extends "layout/front.twig" %}
+{% block title %}苗苗儿推-养生知识{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">{{ health.title}}</div>
+{% endblock %}
+{%block main %}
+    <div class="yangsheng-detail-box">
+        <div class="yangsheng-contant">
+            <h2 class="yangsheng-title">{{ health.title}}</h2>
+            <p class="yangsheng-inf">
+            发表日期：<span>{{ health.ctime|date("Y-m-d")}}</span> | 来源 ：<span>{{ health.from}}</span> | 点击数：<span>{{ health.hit}}</span>次</p>
+            <div class="yangsheng-text">
+                <p>{{ health.detail|raw}}</p>
+            </div>
+        </div>
+        <div class="comment-yangsheng">
+            <p>我要留言</p>
+            <form action="#">
+                <textarea id="desc" name="comment"></textarea>
+                <input id="doComment" type="button" value="发送">
+            </form>
+        </div>
+        <div class="hot-comment-yangsheng">
+            <p class="hot-comment-title">热门评论</p>
+            <ul class="jishi-comment-list">
+                {% for comment in comments %}
+                    <li>
+                        <div class="commenter-inf">
+                            <div class="commenter-img">
+                                <img src="{{ comment.avatar|default('/static/home/images/touxiang.png')}}" alt="">
+                            </div>
+                            <div class="commenter-inf-text">
+                                <p class="commenter-name">{{ comment.tel}}</p>
+                            </div>
+                            <div class="commented-time">
+                                {{ comment.ctime}}
+                            </div>
+                        </div>
+                        <div class="commented-text">
+                            <p>{{ comment.desc}}</p>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+{#    <div class="loading">正在加载......</div>#}
+{% endblock %}
+{% block  footer %}
+{% endblock %}
+{% block script %}
+    <script>
+        $(function(){
+           $('#doComment').click(function(){
+               var id = {{health.id}};
+               var desc = $('#desc').val();
+               $.ajax({
+                   url:'/home/health/doComment',
+                   type:'post',
+                   data:{'id':id,'desc':desc},
+                   dataType:'json',
+                   success:function(res){
+                       alert(res.msg);
+                       if(res.url != undefined){
+                           window.location.href = res.url;
+                       }else{
+                           if(res.status===true){
+                               window.location.reload();
+                           }
+                       }
+                   }
+               }) 
+           })
+        });
+    </script>
+
+{% endblock%}

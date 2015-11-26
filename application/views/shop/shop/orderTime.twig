@@ -1,0 +1,80 @@
+{%  extends "/shop/layout/layout.twig" %}
+{% set page_bread_top = '我的店铺' %}
+{% set page_bread_sub = '预约时间管理' %}
+{% set page_header_title = '预约时间管理' %}
+{% set page_tag = 'shop_shop_orderTime' %}
+{% block static %}
+    <style>
+        #time-set-box{
+            width:500px;
+        }
+        #time-set-box .btn{
+            width: 100px;
+            margin: 1px;
+        }
+    </style>
+{% endblock %}
+{% block main %}
+    <div class="row">
+        <div id="time-set-box" class="col-lg-12 ">
+            {% for time in orderTime.timeArr %}
+                <div class="col-lg-3 ">
+                    <button data-index="{{loop.index0}}" data-val="{{time}}" class="btn btn-lg  {% if time == 1 %}btn-primary active{% endif %}">{{loop.index0+8}}:00</button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <h3>设置每个时间点的预约容量</h3>
+    <div class="row" style="margin-top:10px;">
+        <div class="col-lg-2 col-lg-offset-1">
+            <div class="input-group">
+                <span class="input-group-btn minus-btn"><button class="btn"><i class="icon icon-minus"></i></button></span>
+                <input class="form-control" id="nums"  value="{{orderTime.nums}}" type="text">
+                <span  class="input-group-btn plus-btn"><button class="btn"><i class="icon icon-plus"></i></button></span>
+            </div>
+        </div>
+    </div>
+    <div class="row mt10">
+        <div class="col-lg-4 col-lg-offset-2">
+            <div class="input-group">
+                <button id="submit" class="btn" >确认修改</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        $(function () {
+            $('#time-set-box .btn').click(function () {
+                $(this).toggleClass('btn-primary active');
+                $(this).data('val',($(this).data('val')*1)^1);
+            });
+            $('.plus-btn').click(function(){
+                $obj = $(this).prev('input');
+                $obj.val($obj.val()*1+1);
+            });
+            $('.minus-btn').click(function(){
+                $obj = $(this).next('input');
+                if($obj.val()>1){
+                    $obj.val($obj.val()*1-1);
+                }
+            });
+            $('#submit').click(function(){
+                var nums = $('#nums').val();
+                var timeArr = [];
+                $('#time-set-box .btn').each(function(index,domEle){
+                    var timeOpen = $(domEle).data('val');
+                    timeArr.push(timeOpen);
+                });
+                $.ajax({
+                    type:'post',
+                    dataType:'json',
+                    data:{timeArr:timeArr,nums:nums},
+                    success:function(res){
+                        layer.msg(res.msg,{icon:1});
+                    }
+                });
+            })
+        });
+    </script>
+{% endblock %}

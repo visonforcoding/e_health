@@ -1,0 +1,47 @@
+{# 我的收藏 #}
+{% extends "layout/front.twig" %}
+{% block title %}我的{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">消息</div>
+{% endblock %}
+{%block main %}
+    <ul class="yangsheng-list message">
+        {% for message in messages %}
+            <li{% if message.isRead == '1'%}{% else %} class="new" {% endif %} data-id="{{message.id}}">
+                <a href="#">
+                    <p class="big-p">{{message.title}}<span>{{message.ctime}}</span></p>
+                    <p class="small-p">{{message.content}}</p>
+                </a>
+               {% if message.isRead == '1'%}{% else %} <em class="new-message"></em>{% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+{% block footer %}
+{% endblock %}
+{% block script %}
+    <script>
+        $(function(){
+           $('ul.message li.new').click(function(){
+            var id = $(this).data('id');
+            $this = $(this);
+            $.ajax({
+                url:'/home/user/readMsg',
+                type:'post',
+                data:{'mid':id},
+                dataType:'json',
+                success:function(res){
+                    if(res.status === true){
+                        $this.find('.new-message').remove();
+                    }
+                }
+            });
+           }) ;
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=750,  user-scalable=no">
+	<meta name="format-detection" content="telphone=no, email=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="x5-page-mode" content="app">
+	<title>苗苗儿推-提交订单</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script type="text/javascript" src="js/zepto.js"></script>
+	<script type="application/javascript" src="js/fastclick.js"></script>
+</head>
+<body  style="padding-bottom:0">
+	<div class="header">
+		<div class="goback">
+			<a href="javascript:history.go(-1)">
+				<i class="sprits"></i>
+			</a>
+		</div>
+		
+		<div class="title">提交订单</div>
+	</div>
+
+	<div class="daijinjuan-money">
+		<p>价值100元代金券</p>
+	</div>
+
+	<div class="shop-detail-box">
+		<ul class="submit-order-inf">
+			<li>
+				<div class="submit-order-infleft">
+					单价
+				</div>
+				<div class="submit-order-infright">
+					￥79元
+				</div>
+			</li>
+
+			<li>
+				<div class="submit-order-infleft">
+					数量
+				</div>
+				<div class="submit-order-infright">
+					<div class="count-num-box">
+						<a href="javascript:;" class="jian-handle">
+							<i class="sprits"></i>
+						</a>
+						<input type="text" class="count-num-input" value="0">
+						<a href="javascript:;" class="jia-handle">
+							<i class="sprits"></i>
+						</a>
+					</div>
+				</div>
+			</li>
+
+			<li>
+				<div class="submit-order-infleft">
+					总计
+				</div>
+				<div class="submit-order-infright">
+					<span>￥158元</span>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<div class="shop-detail-box">
+		<ul class="submit-order-inf">
+			<li>
+				<div class="submit-order-infleft">
+					抵用卷/优惠劵
+				</div>
+				<div class="submit-order-infright">
+					<a href="javascript:;">
+						未使用
+						<i class="sprits gonext"></i>
+					</a>
+				</div>
+			</li>
+
+			<li>
+				<div class="submit-order-infleft">
+					订单总价
+				</div>
+				<div class="submit-order-infright">
+					<span>￥158元</span>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<div class="daijinjuan-money">
+		<p>您绑定的手机号码</p>
+	</div>
+
+	<div class="shop-detail-box">
+		<ul class="submit-order-inf">
+			<li>
+				<div class="submit-order-infleft">
+					139****0021
+				</div>
+				<div class="submit-order-infright">
+					<a href="#">
+						绑定新号码<i class="sprits gonext"></i>
+					</a>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<a href="online-yuyue.html" class="detail-yuyue-bnt">提交订单</a>
+
+	<script>
+		$(function(){
+
+			FastClick.attach(document.body);
+
+			var countNum=function(){
+				var $jian=$(".jian-handle"),
+					$jia=$(".jia-handle"),
+					$count=$(".count-num-input");
+
+					var _val="";
+
+					$jian.on("click",function(){
+						_val=$count.val();
+						if(_val>0){
+							$count.val(--_val)
+						}
+					});
+
+					$jia.on("click",function(){
+						_val=$count.val();
+						$count.val(++_val)
+					});
+
+
+
+			}();
+
+		})
+	</script>
+</body>
+</html>

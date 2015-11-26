@@ -1,0 +1,273 @@
+{% extends "layout/front.twig" %}
+{% block title %}商家详情{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">商家详情</div>
+    <div class="header-right">
+        <a href="javascript:;" class="header-like {% if collect %}liked{% endif %}">
+            <i class="sprits"></i>
+        </a>
+        <a href="javascript:;" class="header-share">
+            <i class="sprits"></i>
+        </a>
+    </div>
+{% endblock %}
+{%block main %}
+    <div class="shop-detail-banner">
+        <img src="{{store.cover}}" alt="">
+    </div>
+    <div class="shop-detail-box">
+        <div class="shop-detail-inf">
+            <div class="shop-detail-name">
+                {{store.storeName}}
+            </div>
+            <div class="goods-score">
+                <div class="score-start sprits">
+                    <div class="current-score sprits"></div>
+                </div>
+                <span class="comment-count">{{comments_info.avgscore}}分</span>
+            </div>
+            <div class="shop-deatil-juli">
+                805km
+            </div>
+        </div>
+        <div class="shop-detail-inf nob">
+            <div class="shop-detail-server">
+                <p>项目：{{store.services}}</p>
+                <p>营业时间：{{store.openTime}}</p>
+            </div>
+            <a href="/home/store/storeOrder/id/{{store.id}}" class="yuyue-xiadan">预约下单</a>
+        </div>
+    </div>
+
+    <div class="shop-detail-box">
+        <ul class="shop-detail-contant">
+            <li>
+                <a href="/home/store/storeMap.html">
+                    <i class="sprits location"></i>
+                    <p>{{store.storeAddress}}</p>
+                    <i class="sprits gonext"></i>
+                </a>
+            </li>
+            <li class="nob">
+                <a href="tel:{{store.bossTel}}">
+                    <i class="sprits tel"></i>
+                    <p>{{store.bossTel}}</p>
+                    <i class="sprits gonext"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="shop-detail-daijinqun">
+        {% if promos %}
+            {% for promo in promos %}
+                <a href="#">
+                    <i class="sprits daijinjuan"></i>
+                    <div class="detail-daijinjuan-text">
+                        <p>{{promo.title}}</p>
+                        <p><span>¥{{promo.price}}</span><b>¥{{promo.mprice}}</b></p>
+                    </div>
+                    <i class="sprits gonext"></i>
+                </a>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+
+    <div class="shop-detail-comment">
+        <div class="goods-score">
+            <div class="score-start sprits">
+                <div class="current-score sprits"></div>
+            </div>
+            <span class="comment-count">{{comments_info.avgscore}}分</span>
+        </div>
+
+        <div class="shop-gocomment">
+            <a href="#">
+                {#                <i class="sprits gonext"></i>#}
+                <span>{{comments_info.totalnum}}评价</span>
+            </a>
+        </div>
+    </div>
+    <div class="shop-detail-box">
+        {% if comments %}
+            {% for comment in comments %}
+                <div class="comment-user-inf">
+                    <div class="user-inf-img">
+                        <img src="{{comment.avatar|default('/static/home/images/touxiang.png')}}" alt="">
+                    </div>
+                    <div class="user-inf-text">
+                        <p>{{comment.tel}}</p>
+                        <div class="goods-score">
+                            <div class="score-start sprits">
+                                <div class="current-score sprits"></div>
+                            </div>
+                            <span class="comment-count">{{comment.ctime}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="shop-comment-text">
+                    <p>{{comment.desc}}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% if comments_info.totalnum > 2 %}
+            <a href="/home/store/viewComment?type=1&id={{store.id}}" class="view-more-comment">
+                <span>查看全部{{comments_info.totalnum}}条评价</span>
+                <i class="sprits gonext"></i>
+            </a>
+        {% endif %}
+    </div>
+{%endblock%}
+{%block footer %}
+    <ul class="shop-detail-footer">
+        <li class="current" id="jiucuo">
+            <a href="javascript:;">
+                <div class="shop-footer-box">
+                    <i class="sprits jiucuo"></i>我要纠错
+                </div>
+            </a>
+        </li>
+        <li class="current">
+            <a href="/home/store/comment/sid/{{store.id}}">
+                <div class="shop-footer-box">
+                    <i class="sprits dianping"></i>我要点评
+                </div>
+            </a>
+        </li>
+    </ul>
+    <div class="zhezhao"></div>
+    <div class="jiucuo-layer-con">
+        <ul>
+            <li>商户信息错误</li>
+            <li>商户已关</li>
+            <li>地理位置错误</li>
+            <li>商户重复</li>
+            <li>其他</li>
+        </ul>
+        <a href="javascript:;" class="cancle">取消</a>
+    </div>
+
+    <div class="share-group-layer">
+        <ul>
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share1"></i>
+                    <p>微信好友</p>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share2"></i>
+                    <p>朋友圈</p>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share3"></i>
+                    <p>QQ</p>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share4"></i>
+                    <p>短信</p>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share5"></i>
+                    <p>新浪微博</p>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share6"></i>
+                    <p>QQ空间</p>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share7"></i>
+                    <p>邮件</p>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="sprits share8"></i>
+                    <p>复制链接</p>
+                </a>
+            </li>
+        </ul>
+        <a href="javascript:;" class="cancle cancle-share">取消分享</a>
+    </div>
+    <div class="liked-notic">
+        收藏成功
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        $(function () {
+            FastClick.attach(document.body);
+            var jiuCuo = function () {
+                $("#jiucuo").on("click", function () {
+                    $(".zhezhao").show();
+                    $(".jiucuo-layer-con").addClass("show");
+                });
+                $(".cancle").on("click", function () {
+                    $(".zhezhao").hide();
+                    $(".jiucuo-layer-con, .share-group-layer").removeClass("show");
+                })
+            }();
+            var share = function () {
+                $(".header-share").on("click", function (event) {
+                    event.stopPropagation();
+                    $(".zhezhao, .share-group-layer").show();
+                })
+            }();
+            $(".zhezhao, .cancle-share").on("click", function () {
+                $(".zhezhao, .share-group-layer").hide();
+            });
+            /**
+             * 收藏按钮点击事件
+             * @type Function|undefined
+             */
+            var likeBnt = function () {
+                var sid = '{{store.id}}';
+                var is_login = '{{is_login}}';
+                $(".header-like").on("click", function () {
+                    var obj = $(this);
+                    if (is_login) {
+                        $.ajax({
+                            url: '/home/useraction/collect.html',
+                            type: 'post',
+                            dataType: 'json',
+                            data: {'sid': sid},
+                            success: function (msg) {
+                                if (msg.status === true) {
+                                    obj.toggleClass('liked');
+                                    layer.open({
+                                        content: msg.msg,
+                                        style: 'padding:30px 40px;width:200px;font-size:15px;border:none;',
+                                        time: 2
+                                    });
+                                }
+                            }
+                        });
+                    } else {
+                        window.location.href = '/home/user/login.html';
+                    }
+                });
+            }();
+        })
+    </script>
+{% endblock %}

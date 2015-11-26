@@ -1,0 +1,117 @@
+{% extends "layout/front.twig" %}
+{%block header %}
+    <div class="location">
+        <span>{{location|default('深圳')}}</span>
+        <i class="sprits"></i>
+    </div>
+    <div class="title">苗苗儿推</div>
+    <div class="message">
+        <a href="mailto:email 1017769144@qq.com"><i class="sprits"></i></a>
+    </div>
+{% endblock %}
+{%block main %}
+    <div id="slider1_container" style="position: relative; margin: 0 auto;top: 0px; left: 0px; width: 750px; height: 320px; overflow: hidden;">
+        <!-- Slides Container -->
+        <div u="slides" style="cursor: move; position: absolute; left: 0px; top: 0px; width: 750px; height: 320px; overflow: hidden;">
+            {% for banner in banners %}
+                <div>
+                    <a href="{{banner.link}}"> <img u="image" src="{{banner.pic}}" /></a>
+                </div>
+            {% endfor %}
+            <div>
+                <a href="#"> <img u="image" src="/static/home/images/banner1.png" /></a>
+            </div>
+            <div>
+                <a href="#"> <img u="image" src="/static/home/images/banner2.png" /></a>
+            </div>
+        </div>
+        <div u="navigator" class="jssorb21" style="bottom: 26px; right: 6px;">
+            <!-- bullet navigator item prototype -->
+            <div u="prototype"></div>
+        </div>
+    </div>
+
+    <ul class="index-menu">
+        <li>
+            <a href="/home/orderservice/service">
+                <i class="sprits menu1"></i>
+                <p>预约上门</p>
+            </a>
+        </li>
+
+        <li>
+            <a href="/home/store/index">
+                <i class="sprits menu2"></i>
+                <p>儿推馆</p>
+            </a>
+        </li>
+
+        <li>
+            <a href="/home/store/promoStore">
+                <i class="sprits menu3"></i>
+                <p>优惠信息</p>
+            </a>
+        </li>
+
+        <li>
+            <a href="/home/health/index">
+                <i class="sprits menu4"></i>
+                <p>养生知识</p>
+            </a>
+        </li>
+    </ul>
+
+    <div class="box-title">
+        <p>猜你喜欢</p>
+    </div>
+    <div class="goods-list-box">
+        <ul class="goods-list-ul">
+            {% for store in stores %}
+                <li>
+                    <a href="/home/store/storeDetail/id/{{store.id}}.html">
+                        <div class="goods-img-box">
+                            <img src="{{store.cover}}" alt="">
+                            {#                            <i class="sprits"></i>#}
+                        </div>
+                        <div class="goods-inf-con">
+                            <div class="goods-name">
+                                {{store.storeName}}
+                            </div>
+                            <p class="goods-jianjie">[{{store.name}}]{{store.services}}</p>
+                            <div class="goods-score">
+                                <div class="score-start sprits">
+                                    <div data-score="{{store.score}}" style="width:{{store.score*10}}%" class="current-score sprits"></div>
+                                </div>
+                                <span class="comment-count">{{store.commentNums}}评价</span>
+                            </div>
+
+                            <div class="distance">{{(store.distance/1000)|round(1,'floor')}}km</div>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="http://api.map.baidu.com/api?v=2&ak=REAZ3A4MUALZ78fO1jl7Gnx1"></script>
+    <script src="/static/Js/mobile.js"></script>
+    <script src="/static/Js/pgwCookie.js"></script>
+    <script>
+        $(function () {
+            var bm = new BmapPos('REAZ3A4MUALZ78fO1jl7Gnx1', handlePos);
+            bm.init();
+        });
+        function handlePos(res) {
+            if (res.status === 0) {
+                //成功
+                var city = res.result.addressComponent.city;
+                var lng = res.result.location.lng;
+                var lat = res.result.location.lat;
+                $.pgwCookie({name: 'pos_city', city: city, path: '/'});
+                $.pgwCookie({name: 'pos_location', json: true, value: {lng: lng, lat: lat}, path: '/'});
+                $.pgwCookie({name: 'pos_address', value: res.result.formatted_address, path: '/'});
+        {#                window.location.reload();#}
+                }
+            }
+    </script>
+{% endblock %}
