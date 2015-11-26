@@ -11,12 +11,11 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- 导出 baby 的数据库结构
-CREATE DATABASE IF NOT EXISTS `baby` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `baby`;
+CREATE DATABASE IF NOT EXISTS `e_health` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `e_health`;
 
 
 -- 导出  表 baby.admin_group 结构
-DROP TABLE IF EXISTS `admin_group`;
 CREATE TABLE IF NOT EXISTS `admin_group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL COMMENT '群组名',
@@ -41,7 +40,6 @@ INSERT INTO `admin_group` (`id`, `name`, `remark`, `acl`, `ctime`, `utime`, `sta
 
 
 -- 导出  表 baby.admin_node 结构
-DROP TABLE IF EXISTS `admin_node`;
 CREATE TABLE IF NOT EXISTS `admin_node` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `pid` int(10) NOT NULL COMMENT '父id',
@@ -88,7 +86,6 @@ INSERT INTO `admin_node` (`id`, `pid`, `node`, `name`, `remark`, `ctime`, `utime
 
 
 -- 导出  表 baby.area 结构
-DROP TABLE IF EXISTS `area`;
 CREATE TABLE IF NOT EXISTS `area` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `pid` smallint(5) unsigned NOT NULL DEFAULT '0',
@@ -4017,7 +4014,6 @@ INSERT INTO `area` (`id`, `pid`, `name`, `type`, `letter`, `status`, `code`, `ct
 
 
 -- 导出  表 baby.banner 结构
-DROP TABLE IF EXISTS `banner`;
 CREATE TABLE IF NOT EXISTS `banner` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pic` varchar(250) NOT NULL,
@@ -4039,7 +4035,6 @@ INSERT INTO `banner` (`id`, `pic`, `desc`, `link`, `status`, `ctime`, `utime`) V
 
 
 -- 导出  表 baby.card 结构
-DROP TABLE IF EXISTS `card`;
 CREATE TABLE IF NOT EXISTS `card` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL DEFAULT '0' COMMENT '店铺',
@@ -4062,7 +4057,6 @@ INSERT INTO `card` (`id`, `store_id`, `name`, `expires`, `mprice`, `price`, `con
 
 
 -- 导出  表 baby.cargo_log 结构
-DROP TABLE IF EXISTS `cargo_log`;
 CREATE TABLE IF NOT EXISTS `cargo_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL DEFAULT '0',
@@ -4073,9 +4067,9 @@ CREATE TABLE IF NOT EXISTS `cargo_log` (
   `ctime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `remark` varchar(150) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COMMENT='出入库记录';
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COMMENT='出入库记录';
 
--- 正在导出表  baby.cargo_log 的数据：~4 rows (大约)
+-- 正在导出表  baby.cargo_log 的数据：~14 rows (大约)
 DELETE FROM `cargo_log`;
 /*!40000 ALTER TABLE `cargo_log` DISABLE KEYS */;
 INSERT INTO `cargo_log` (`id`, `store_id`, `cargo_id`, `relation_id`, `num`, `do_type`, `ctime`, `remark`) VALUES
@@ -4088,12 +4082,15 @@ INSERT INTO `cargo_log` (`id`, `store_id`, `cargo_id`, `relation_id`, `num`, `do
 	(11, 1, 1, 111, 2, 2, '2015-11-17 13:59:19', '线下开单消耗物品'),
 	(12, 1, 2, 111, 3, 2, '2015-11-17 13:59:19', '线下开单消耗物品'),
 	(13, 1, 1, 112, 1, 2, '2015-11-17 14:17:33', '线下开单消耗物品'),
-	(14, 1, 2, 112, 1, 2, '2015-11-17 14:17:33', '线下开单消耗物品');
+	(14, 1, 2, 112, 1, 2, '2015-11-17 14:17:33', '线下开单消耗物品'),
+	(15, 1, 1, 1, 2, 1, '2015-11-17 16:24:22', '入库'),
+	(16, 1, 1, 113, 1, 2, '2015-11-24 17:17:08', '线下开单消耗物品'),
+	(17, 1, 2, 113, 1, 2, '2015-11-24 17:17:08', '线下开单消耗物品'),
+	(18, 1, 3, 3, 5, 1, '2015-11-24 17:28:10', '入库');
 /*!40000 ALTER TABLE `cargo_log` ENABLE KEYS */;
 
 
 -- 导出  表 baby.collect 结构
-DROP TABLE IF EXISTS `collect`;
 CREATE TABLE IF NOT EXISTS `collect` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `oid` int(10) unsigned NOT NULL COMMENT '对象id',
@@ -4126,7 +4123,6 @@ INSERT INTO `collect` (`id`, `oid`, `type`, `uid`, `status`, `ctime`, `utime`) V
 
 
 -- 导出  表 baby.comment 结构
-DROP TABLE IF EXISTS `comment`;
 CREATE TABLE IF NOT EXISTS `comment` (
   `id` int(8) NOT NULL AUTO_INCREMENT COMMENT '评价ID',
   `uid` int(8) DEFAULT NULL COMMENT '用户ID',
@@ -4175,7 +4171,6 @@ INSERT INTO `comment` (`id`, `uid`, `sid`, `oid`, `type`, `score`, `total`, `cti
 
 
 -- 导出  表 baby.comment_desc 结构
-DROP TABLE IF EXISTS `comment_desc`;
 CREATE TABLE IF NOT EXISTS `comment_desc` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '类别，便于拓展',
@@ -4195,7 +4190,6 @@ INSERT INTO `comment_desc` (`id`, `type`, `desc`, `ctime`) VALUES
 
 
 -- 导出  表 baby.coupon 结构
-DROP TABLE IF EXISTS `coupon`;
 CREATE TABLE IF NOT EXISTS `coupon` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
   `name` varchar(30) DEFAULT NULL COMMENT '名称',
@@ -4223,7 +4217,6 @@ INSERT INTO `coupon` (`id`, `name`, `type`, `amount1`, `amount2`, `areaId`, `sho
 
 
 -- 导出  表 baby.engineer 结构
-DROP TABLE IF EXISTS `engineer`;
 CREATE TABLE IF NOT EXISTS `engineer` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cityId` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '城市id',
@@ -4262,7 +4255,6 @@ INSERT INTO `engineer` (`id`, `cityId`, `areaId`, `regionId`, `num`, `name`, `pw
 
 
 -- 导出  表 baby.engineer_service 结构
-DROP TABLE IF EXISTS `engineer_service`;
 CREATE TABLE IF NOT EXISTS `engineer_service` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `engineerId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '技师id',
@@ -4286,7 +4278,6 @@ INSERT INTO `engineer_service` (`id`, `engineerId`, `serviceId`, `isVisit`, `cti
 
 
 -- 导出  表 baby.flowing 结构
-DROP TABLE IF EXISTS `flowing`;
 CREATE TABLE IF NOT EXISTS `flowing` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `oid` int(11) NOT NULL DEFAULT '0' COMMENT '对象id',
@@ -4300,9 +4291,9 @@ CREATE TABLE IF NOT EXISTS `flowing` (
   `remark` varchar(150) NOT NULL DEFAULT '0' COMMENT '备注',
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0,审核，1，作废，2，生效',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='交易流水';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='交易流水';
 
--- 正在导出表  baby.flowing 的数据：~5 rows (大约)
+-- 正在导出表  baby.flowing 的数据：~7 rows (大约)
 DELETE FROM `flowing`;
 /*!40000 ALTER TABLE `flowing` DISABLE KEYS */;
 INSERT INTO `flowing` (`id`, `oid`, `otype`, `type`, `relation_id`, `ctime`, `utime`, `income`, `amount`, `remark`, `status`) VALUES
@@ -4313,12 +4304,12 @@ INSERT INTO `flowing` (`id`, `oid`, `otype`, `type`, `relation_id`, `ctime`, `ut
 	(7, 13, 2, 4, '107', '2015-11-11 15:39:06', '0000-00-00 00:00:00', 2, 0, '线下开单0元', 0),
 	(8, 14, 2, 4, '108', '2015-11-17 10:59:41', '0000-00-00 00:00:00', 2, 0, '线下开单会员卡消费0元', 0),
 	(9, 0, 2, 4, '111', '2015-11-17 13:59:19', '0000-00-00 00:00:00', 2, 1000, '线下开单1000元', 0),
-	(10, 0, 2, 4, '112', '2015-11-17 14:17:33', '0000-00-00 00:00:00', 2, 1000, '线下开单1000元', 0);
+	(10, 0, 2, 4, '112', '2015-11-17 14:17:33', '0000-00-00 00:00:00', 2, 1000, '线下开单1000元', 0),
+	(11, 0, 2, 4, '113', '2015-11-24 17:17:08', '0000-00-00 00:00:00', 2, 134, '线下开单134元', 0);
 /*!40000 ALTER TABLE `flowing` ENABLE KEYS */;
 
 
 -- 导出  表 baby.health 结构
-DROP TABLE IF EXISTS `health`;
 CREATE TABLE IF NOT EXISTS `health` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) DEFAULT NULL COMMENT '养生知识的题目',
@@ -4343,7 +4334,6 @@ INSERT INTO `health` (`id`, `title`, `abstract`, `detail`, `hit`, `from`, `ctime
 
 
 -- 导出  表 baby.manager 结构
-DROP TABLE IF EXISTS `manager`;
 CREATE TABLE IF NOT EXISTS `manager` (
   `id` int(8) NOT NULL AUTO_INCREMENT COMMENT '管理员ID',
   `name` varchar(32) DEFAULT NULL COMMENT '管理员昵称',
@@ -4368,7 +4358,6 @@ INSERT INTO `manager` (`id`, `name`, `phoneNo`, `mail`, `password`, `role`, `uti
 
 
 -- 导出  表 baby.member 结构
-DROP TABLE IF EXISTS `member`;
 CREATE TABLE IF NOT EXISTS `member` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `type` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '会员类型，1:平台正式会员;2:店铺线下会员，购买了会员卡但还未激活成平台会员',
@@ -4386,7 +4375,7 @@ CREATE TABLE IF NOT EXISTS `member` (
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态：1,启用；0,禁用',
   PRIMARY KEY (`id`),
   UNIQUE KEY `tel` (`tel`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- 正在导出表  baby.member 的数据：~11 rows (大约)
 DELETE FROM `member`;
@@ -4405,12 +4394,12 @@ INSERT INTO `member` (`id`, `type`, `store_id`, `tel`, `nick`, `trueName`, `gend
 	(12, 1, 0, '18317728879', 'vison_all', '范冰冰', 1, '江西省', '831dabf7670871f2e6b54c1958168f', '2015-10-19', '2015-10-19 17:14:41', NULL, '', 1),
 	(13, 2, 1, '13570217861', '黑暗游侠', '崔西斯', 0, '', '', '2015-10-27', '2015-10-27 15:12:50', NULL, '', 0),
 	(14, 2, 1, '15297762904', '小娜迦', '司里希司', 0, '', '', '2015-10-27', '2015-10-27 16:13:09', NULL, '', 0),
-	(15, 2, 1, '13800138000', '就是呵呵哒', '呵呵哒', 0, '', '', '1992-11-11', '2015-10-30 10:20:56', NULL, '', 0);
+	(15, 2, 1, '13800138000', '就是呵呵哒', '呵呵哒', 0, '', '', '1992-11-11', '2015-10-30 10:20:56', NULL, '', 0),
+	(16, 1, 0, '13266500920', '', NULL, 1, '', '831dabf7670871f2e6b54c1958168f', NULL, '2015-11-25 15:55:49', NULL, '', 1);
 /*!40000 ALTER TABLE `member` ENABLE KEYS */;
 
 
 -- 导出  表 baby.member_card 结构
-DROP TABLE IF EXISTS `member_card`;
 CREATE TABLE IF NOT EXISTS `member_card` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL DEFAULT '0',
@@ -4437,7 +4426,6 @@ INSERT INTO `member_card` (`id`, `store_id`, `user_id`, `card_id`, `price`, `exp
 
 
 -- 导出  表 baby.msg 结构
-DROP TABLE IF EXISTS `msg`;
 CREATE TABLE IF NOT EXISTS `msg` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(50) NOT NULL COMMENT '标题',
@@ -4517,7 +4505,6 @@ INSERT INTO `msg` (`id`, `title`, `uid`, `content`, `ctime`, `utime`, `isRead`) 
 
 
 -- 导出  表 baby.order 结构
-DROP TABLE IF EXISTS `order`;
 CREATE TABLE IF NOT EXISTS `order` (
   `id` int(8) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(8) NOT NULL COMMENT '会员iD',
@@ -4546,7 +4533,7 @@ CREATE TABLE IF NOT EXISTS `order` (
   `consignee` varchar(30) DEFAULT NULL COMMENT '收货人，下单人',
   PRIMARY KEY (`id`),
   UNIQUE KEY `orderNo` (`orderNo`)
-) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8 COMMENT='订单表';
+) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8 COMMENT='订单表';
 
 -- 正在导出表  baby.order 的数据：~55 rows (大约)
 DELETE FROM `order`;
@@ -4610,12 +4597,14 @@ INSERT INTO `order` (`id`, `uid`, `sid`, `nums`, `type`, `provider`, `serviceId`
 	(107, 13, 1, 1, 3, NULL, 1, 's_10002015111115', 134, 0.00, 5, 2, 5, '2015-11-11 15:39:06', '0000-00-00 00:00:00', '2015-11-11 15:39:06', '2015-11-11 15:39:06', '2015-11-11 15:39:06', 0, 16, '0', NULL, NULL, NULL, '13570217861'),
 	(108, 14, 1, 1, 3, NULL, 1, 's_10002015111710', 134, 0.00, 5, 2, 5, '2015-11-17 10:59:41', '0000-00-00 00:00:00', '2015-11-17 10:59:41', '2015-11-17 10:59:41', '2015-11-17 10:59:41', 0, 14, '0', NULL, NULL, NULL, '15297762904'),
 	(111, 0, 1, 2, 3, NULL, 1, 's_10002015111713', 134, 1000.00, 5, 2, 5, '2015-11-17 13:59:18', '0000-00-00 00:00:00', '2015-11-17 13:59:18', '2015-11-17 13:59:18', '2015-11-17 13:59:18', 0, 0, '0', NULL, NULL, NULL, '18316629973'),
-	(112, 0, 1, 2, 3, NULL, 3, 's_10002015111714', 90, 1000.00, 5, 2, 5, '2015-11-17 14:17:33', '0000-00-00 00:00:00', '2015-11-17 14:17:33', '2015-11-17 14:17:33', '2015-11-17 14:17:33', 0, 0, '0', NULL, NULL, NULL, '18316629973');
+	(112, 0, 1, 2, 3, NULL, 3, 's_10002015111714', 90, 1000.00, 5, 2, 5, '2015-11-17 14:17:33', '0000-00-00 00:00:00', '2015-11-17 14:17:33', '2015-11-17 14:17:33', '2015-11-17 14:17:33', 0, 0, '0', NULL, NULL, NULL, '18316629973'),
+	(113, 0, 1, 1, 3, NULL, 1, 's_10002015112417', 134, 134.00, 5, 2, 5, '2015-11-24 17:17:08', '0000-00-00 00:00:00', '2015-11-24 17:17:08', '2015-11-24 17:17:08', '2015-11-24 17:17:08', 0, 0, '0', NULL, NULL, NULL, '13266500920'),
+	(114, 16, 1, 1, 1, '全美康儿推', 1, '2015112515585116', 90, NULL, NULL, 1, 1, '2015-11-25 15:58:51', '0000-00-00 00:00:00', '2015-11-25 18:00:00', NULL, NULL, 0, 0, '0', '', '', NULL, '(女士)'),
+	(115, 16, 1, 1, 1, '全美康儿推', 1, '2015112516005216', 134, NULL, NULL, 1, 1, '2015-11-25 16:00:52', '0000-00-00 00:00:00', '2015-11-26 09:00:00', NULL, NULL, 0, 0, '1', '', '', NULL, '(女士)');
 /*!40000 ALTER TABLE `order` ENABLE KEYS */;
 
 
 -- 导出  表 baby.order_copy 结构
-DROP TABLE IF EXISTS `order_copy`;
 CREATE TABLE IF NOT EXISTS `order_copy` (
   `id` int(8) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(8) NOT NULL COMMENT '会员iD',
@@ -4701,7 +4690,6 @@ INSERT INTO `order_copy` (`id`, `uid`, `sid`, `nums`, `type`, `provider`, `servi
 
 
 -- 导出  表 baby.reback 结构
-DROP TABLE IF EXISTS `reback`;
 CREATE TABLE IF NOT EXISTS `reback` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `order_id` int(10) unsigned DEFAULT '0' COMMENT '订单id',
@@ -4732,7 +4720,6 @@ INSERT INTO `reback` (`id`, `order_id`, `user_id`, `store_id`, `ctime`, `status`
 
 
 -- 导出  表 baby.service 结构
-DROP TABLE IF EXISTS `service`;
 CREATE TABLE IF NOT EXISTS `service` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
   `state` varchar(32) DEFAULT NULL COMMENT '服务订单状态',
@@ -4763,7 +4750,6 @@ INSERT INTO `service` (`id`, `state`, `type`, `name`, `mprice`, `price`, `desc`,
 
 
 -- 导出  表 baby.smslog 结构
-DROP TABLE IF EXISTS `smslog`;
 CREATE TABLE IF NOT EXISTS `smslog` (
   `id` int(8) NOT NULL AUTO_INCREMENT COMMENT '短信流水id',
   `phone` varchar(16) DEFAULT NULL COMMENT '手机号',
@@ -4773,7 +4759,7 @@ CREATE TABLE IF NOT EXISTS `smslog` (
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态',
   `utime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='短信记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=201 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='短信记录表';
 
 -- 正在导出表  baby.smslog 的数据：~21 rows (大约)
 DELETE FROM `smslog`;
@@ -4804,12 +4790,12 @@ INSERT INTO `smslog` (`id`, `phone`, `ctime`, `code`, `content`, `status`, `utim
 	(196, '18565573263', '2015-10-20 11:32:26', NULL, '您的短信验证码为6882,请在页面中输入以完成注册【苗苗儿推】', 1, NULL),
 	(197, '18565573263', '2015-10-20 11:36:05', NULL, '您的短信验证码为4593,请在页面中输入以完成注册【苗苗儿推】', 1, NULL),
 	(198, '18316629973', '2015-10-30 10:28:30', '6357', '您将要申请一笔提现，您的提现验证码为:6357。如果这不是您本人操作，请注意您的账号安全。', 0, '2015-10-30 10:29:01'),
-	(199, '18316629973', '2015-11-06 16:37:31', '2831', '您将要申请一笔提现，您的提现验证码为:2831。如果这不是您本人操作，请注意您的账号安全。', 0, '2015-11-06 16:38:11');
+	(199, '18316629973', '2015-11-06 16:37:31', '2831', '您将要申请一笔提现，您的提现验证码为:2831。如果这不是您本人操作，请注意您的账号安全。', 0, '2015-11-06 16:38:11'),
+	(200, '13266500920', '2015-11-25 15:55:22', NULL, '您的短信验证码为0778,请在页面中输入以完成注册【苗苗儿推】', 1, NULL);
 /*!40000 ALTER TABLE `smslog` ENABLE KEYS */;
 
 
 -- 导出  表 baby.store 结构
-DROP TABLE IF EXISTS `store`;
 CREATE TABLE IF NOT EXISTS `store` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cityId` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '城市id',
@@ -4851,7 +4837,6 @@ INSERT INTO `store` (`id`, `cityId`, `areaId`, `regionId`, `storeNum`, `storeNam
 
 
 -- 导出  表 baby.store_cargo 结构
-DROP TABLE IF EXISTS `store_cargo`;
 CREATE TABLE IF NOT EXISTS `store_cargo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL DEFAULT '0',
@@ -4862,19 +4847,19 @@ CREATE TABLE IF NOT EXISTS `store_cargo` (
   `ctime` datetime NOT NULL,
   `utime` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='店铺货物类型表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='店铺货物类型表';
 
 -- 正在导出表  baby.store_cargo 的数据：~1 rows (大约)
 DELETE FROM `store_cargo`;
 /*!40000 ALTER TABLE `store_cargo` DISABLE KEYS */;
 INSERT INTO `store_cargo` (`id`, `store_id`, `cargo_name`, `from`, `price`, `nums`, `ctime`, `utime`) VALUES
-	(1, 1, '毛巾', '村头小卖部', 5, 5, '2015-11-13 13:04:27', '2015-11-17 14:17:33'),
-	(2, 1, '精油', '西班牙进口', 10, 13, '2015-11-16 11:17:56', '2015-11-17 14:17:33');
+	(1, 1, '毛巾', '村头小卖部', 6, 6, '2015-11-17 17:20:45', '2015-11-24 17:17:08'),
+	(2, 1, '精油', '西班牙进口', 10, 12, '2015-11-16 11:17:56', '2015-11-24 17:17:08'),
+	(3, 1, '牙刷', '杯具', 1, 5, '2015-11-24 17:27:53', '2015-11-24 17:28:10');
 /*!40000 ALTER TABLE `store_cargo` ENABLE KEYS */;
 
 
 -- 导出  表 baby.store_detail 结构
-DROP TABLE IF EXISTS `store_detail`;
 CREATE TABLE IF NOT EXISTS `store_detail` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `sid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '主表id',
@@ -4894,7 +4879,7 @@ CREATE TABLE IF NOT EXISTS `store_detail` (
 DELETE FROM `store_detail`;
 /*!40000 ALTER TABLE `store_detail` DISABLE KEYS */;
 INSERT INTO `store_detail` (`id`, `sid`, `serviceArea`, `serviceNotice`, `orderNotice`, `orderTime`, `balance`, `account_no`, `account_name`, `utime`) VALUES
-	(1, 1, 'a:1:{i:77;a:2:{i:707;a:1:{i:0;s:4:"3954";}i:705;a:1:{i:0;s:4:"3952";}}}', '<p>•饭后30分钟内不宜推拿</p><p>•女性月经期间不宜推拿</p><p>•怀孕者腰部腹部不宜进行推拿，服务前请告知推拿师</p><p>•过度饥饿血糖过低需要及时补充能量</p><p>•酒醉后要休息清醒后再接受推拿理疗</p><p>•房间温度过低应先打开暖气或空调后再接受推拿理疗</p><p>•剧烈运动过度疲劳应先要休息片刻后再接受推拿理疗</p><p>•女推拿师不携带折叠推拿床上门服务</p><p>•女推拿师不上门服务男客户</p>', '<ol class=" list-paddingleft-2" style="list-style-type: decimal;"><li><p>订单服务时间开始前2小时以上修改/取消订单，不收取任何违约金；</p></li><li><p>订单服务时间开始前2小时内修改/取消订单，扣除30元的违约金；</p></li><li><p>订单服务时间后修改/取消订单，扣除60元的违约金。<br/></p></li></ol>', 'a:2:{s:7:"timeArr";a:16:{i:0;s:1:"0";i:1;s:1:"1";i:2;s:1:"1";i:3;s:1:"1";i:4;s:1:"0";i:5;s:1:"0";i:6;s:1:"1";i:7;s:1:"1";i:8;s:1:"1";i:9;s:1:"1";i:10;s:1:"1";i:11;s:1:"1";i:12;s:1:"1";i:13;s:1:"1";i:14;s:1:"1";i:15;s:1:"0";}s:4:"nums";s:1:"5";}', 1000, '6230580010029018864', '曹文鹏', '2015-11-06 16:38:11'),
+	(1, 1, 'a:1:{i:77;a:2:{i:707;a:1:{i:0;s:4:"3954";}i:705;a:1:{i:0;s:4:"3952";}}}', '<p>•饭后30分钟内不宜推拿</p><p>•女性月经期间不宜推拿</p><p>•怀孕者腰部腹部不宜进行推拿，服务前请告知推拿师</p><p>•过度饥饿血糖过低需要及时补充能量</p><p>•酒醉后要休息清醒后再接受推拿理疗</p><p>•房间温度过低应先打开暖气或空调后再接受推拿理疗</p><p>•剧烈运动过度疲劳应先要休息片刻后再接受推拿理疗</p><p>•女推拿师不携带折叠推拿床上门服务</p><p>•女推拿师不上门服务男客户</p>', '<ol class=" list-paddingleft-2" style="list-style-type: decimal;"><li><p>订单服务时间开始前2小时以上修改/取消订单，不收取任何违约金；</p></li><li><p>订单服务时间开始前2小时内修改/取消订单，扣除30元的违约金；</p></li><li><p>订单服务时间后修改/取消订单，扣除60元的违约金。<br/></p></li></ol>', 'a:2:{s:7:"timeArr";a:16:{i:0;s:1:"1";i:1;s:1:"1";i:2;s:1:"0";i:3;s:1:"1";i:4;s:1:"0";i:5;s:1:"0";i:6;s:1:"1";i:7;s:1:"1";i:8;s:1:"1";i:9;s:1:"1";i:10;s:1:"1";i:11;s:1:"1";i:12;s:1:"1";i:13;s:1:"1";i:14;s:1:"1";i:15;s:1:"0";}s:4:"nums";s:1:"6";}', 1000, '6230580010029018864', '曹文鹏', '2015-11-24 17:11:00'),
 	(2, 2, '', '<p>•饭后30分钟内不宜推拿</p><p>•女性月经期间不宜推拿</p><p>•怀孕者腰部腹部不宜进行推拿，服务前请告知推拿师</p><p>•过度饥饿血糖过低需要及时补充能量</p><p>•酒醉后要休息清醒后再接受推拿理疗</p><p>•房间温度过低应先打开暖气或空调后再接受推拿理疗</p><p>•剧烈运动过度疲劳应先要休息片刻后再接受推拿理疗</p><p>•女推拿师不携带折叠推拿床上门服务</p><p>•女推拿师不上门服务男客户</p>', '<ol class=" list-paddingleft-2" style="list-style-type: decimal;"><li><p>订单服务时间开始前2小时以上修改/取消订单，不收取任何违约金；</p></li><li><p>订单服务时间开始前2小时内修改/取消订单，扣除30元的违约金；</p></li><li><p>订单服务时间后修改/取消订单，扣除60元的违约金。<br/></p></li></ol>', 'a:2:{s:7:"timeArr";a:16:{i:0;i:1;i:1;i:1;i:2;i:1;i:3;i:1;i:4;i:1;i:5;i:1;i:6;i:1;i:7;i:1;i:8;i:1;i:9;i:1;i:10;i:1;i:11;i:1;i:12;i:1;i:13;i:1;i:14;i:1;i:15;i:1;}s:4:"nums";i:5;}', 0, '0', '0', NULL),
 	(3, 3, '', '<p>•饭后30分钟内不宜推拿</p><p>•女性月经期间不宜推拿</p><p>•怀孕者腰部腹部不宜进行推拿，服务前请告知推拿师</p><p>•过度饥饿血糖过低需要及时补充能量</p><p>•酒醉后要休息清醒后再接受推拿理疗</p><p>•房间温度过低应先打开暖气或空调后再接受推拿理疗</p><p>•剧烈运动过度疲劳应先要休息片刻后再接受推拿理疗</p><p>•女推拿师不携带折叠推拿床上门服务</p><p>•女推拿师不上门服务男客户</p>', '<ol class=" list-paddingleft-2" style="list-style-type: decimal;"><li><p>订单服务时间开始前2小时以上修改/取消订单，不收取任何违约金；</p></li><li><p>订单服务时间开始前2小时内修改/取消订单，扣除30元的违约金；</p></li><li><p>订单服务时间后修改/取消订单，扣除60元的违约金。<br/></p></li></ol>', 'a:2:{s:7:"timeArr";a:16:{i:0;i:1;i:1;i:1;i:2;i:1;i:3;i:1;i:4;i:1;i:5;i:1;i:6;i:1;i:7;i:1;i:8;i:1;i:9;i:1;i:10;i:1;i:11;i:1;i:12;i:1;i:13;i:1;i:14;i:1;i:15;i:1;}s:4:"nums";i:5;}', 0, '0', '0', NULL),
 	(4, 4, '', '<p>•饭后30分钟内不宜推拿</p><p>•女性月经期间不宜推拿</p><p>•怀孕者腰部腹部不宜进行推拿，服务前请告知推拿师</p><p>•过度饥饿血糖过低需要及时补充能量</p><p>•酒醉后要休息清醒后再接受推拿理疗</p><p>•房间温度过低应先打开暖气或空调后再接受推拿理疗</p><p>•剧烈运动过度疲劳应先要休息片刻后再接受推拿理疗</p><p>•女推拿师不携带折叠推拿床上门服务</p>', '<ol class=" list-paddingleft-2" style="list-style-type: decimal;"><li><p>订单服务时间开始前2小时以上修改/取消订单，不收取任何违约金；</p></li><li><p>订单服务时间开始前2小时内修改/取消订单，扣除30元的违约金；</p></li><li><p>订单服务时间后修改/取消订单，扣除60元的违约金。<br/></p></li></ol>', 'a:2:{s:7:"timeArr";a:16:{i:0;i:1;i:1;i:1;i:2;i:1;i:3;i:1;i:4;i:1;i:5;i:1;i:6;i:1;i:7;i:1;i:8;i:1;i:9;i:1;i:10;i:1;i:11;i:1;i:12;i:1;i:13;i:1;i:14;i:1;i:15;i:1;}s:4:"nums";i:5;}', 0, '0', '0', NULL),
@@ -4903,7 +4888,6 @@ INSERT INTO `store_detail` (`id`, `sid`, `serviceArea`, `serviceNotice`, `orderN
 
 
 -- 导出  表 baby.store_employee 结构
-DROP TABLE IF EXISTS `store_employee`;
 CREATE TABLE IF NOT EXISTS `store_employee` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL DEFAULT '0' COMMENT '门店id',
@@ -4935,7 +4919,6 @@ INSERT INTO `store_employee` (`id`, `store_id`, `employee_no`, `id_no`, `gender`
 
 
 -- 导出  表 baby.store_employee_order 结构
-DROP TABLE IF EXISTS `store_employee_order`;
 CREATE TABLE IF NOT EXISTS `store_employee_order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL DEFAULT '0' COMMENT '门店id',
@@ -4961,7 +4944,6 @@ INSERT INTO `store_employee_order` (`id`, `store_id`, `employee_id`, `order_id`,
 
 
 -- 导出  表 baby.store_employee_salary 结构
-DROP TABLE IF EXISTS `store_employee_salary`;
 CREATE TABLE IF NOT EXISTS `store_employee_salary` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL DEFAULT '0' COMMENT '门店id',
@@ -4986,7 +4968,6 @@ INSERT INTO `store_employee_salary` (`id`, `store_id`, `employee_id`, `employee_
 
 
 -- 导出  表 baby.store_employee_vacate 结构
-DROP TABLE IF EXISTS `store_employee_vacate`;
 CREATE TABLE IF NOT EXISTS `store_employee_vacate` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL DEFAULT '0' COMMENT '门店id',
@@ -5014,7 +4995,6 @@ INSERT INTO `store_employee_vacate` (`id`, `store_id`, `employee_id`, `status`, 
 
 
 -- 导出  表 baby.store_member 结构
-DROP TABLE IF EXISTS `store_member`;
 CREATE TABLE IF NOT EXISTS `store_member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL COMMENT '店铺id',
@@ -5038,7 +5018,6 @@ INSERT INTO `store_member` (`id`, `store_id`, `truename`, `tel`, `ctime`, `utime
 
 
 -- 导出  表 baby.store_msg 结构
-DROP TABLE IF EXISTS `store_msg`;
 CREATE TABLE IF NOT EXISTS `store_msg` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(50) NOT NULL COMMENT '标题',
@@ -5064,7 +5043,6 @@ INSERT INTO `store_msg` (`id`, `title`, `sid`, `content`, `ctime`, `utime`, `isR
 
 
 -- 导出  表 baby.store_promo 结构
-DROP TABLE IF EXISTS `store_promo`;
 CREATE TABLE IF NOT EXISTS `store_promo` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
   `title` varchar(50) DEFAULT NULL COMMENT '活动主题',
@@ -5093,7 +5071,6 @@ INSERT INTO `store_promo` (`id`, `title`, `sid`, `serviceId`, `mprice`, `price`,
 
 
 -- 导出  表 baby.store_service 结构
-DROP TABLE IF EXISTS `store_service`;
 CREATE TABLE IF NOT EXISTS `store_service` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `storeId` int(11) unsigned NOT NULL DEFAULT '0',
@@ -5113,13 +5090,12 @@ INSERT INTO `store_service` (`id`, `storeId`, `serviceId`, `isVisit`, `cargo`, `
 	(3, 2, 1, 1, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 	(4, 2, 3, 1, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 	(5, 1, 3, 0, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-	(6, 1, 2, 1, '', '0000-00-00 00:00:00', '2015-11-16 15:21:48'),
+	(6, 1, 2, 0, '', '0000-00-00 00:00:00', '2015-11-16 15:21:48'),
 	(7, 2, 2, 0, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `store_service` ENABLE KEYS */;
 
 
 -- 导出  表 baby.store_service_cargo 结构
-DROP TABLE IF EXISTS `store_service_cargo`;
 CREATE TABLE IF NOT EXISTS `store_service_cargo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `store_service_id` int(11) DEFAULT NULL,
@@ -5137,7 +5113,6 @@ DELETE FROM `store_service_cargo`;
 
 
 -- 导出  表 baby.user_coupon 结构
-DROP TABLE IF EXISTS `user_coupon`;
 CREATE TABLE IF NOT EXISTS `user_coupon` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
   `uid` int(8) NOT NULL COMMENT '会员iD',
@@ -5178,14 +5153,13 @@ INSERT INTO `user_coupon` (`id`, `uid`, `cid`, `code`, `beginTime`, `endTime`, `
 
 
 -- 导出  表 baby.view_log 结构
-DROP TABLE IF EXISTS `view_log`;
 CREATE TABLE IF NOT EXISTS `view_log` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `storeId` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '店铺id',
   `userId` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
   `vtime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '浏览时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='用户浏览记录';
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COMMENT='用户浏览记录';
 
 -- 正在导出表  baby.view_log 的数据：~20 rows (大约)
 DELETE FROM `view_log`;
@@ -5209,15 +5183,15 @@ INSERT INTO `view_log` (`id`, `storeId`, `userId`, `vtime`) VALUES
 	(16, 1, 11, '2015-11-03 15:04:15'),
 	(17, 2, 11, '2015-09-21 14:41:09'),
 	(18, 3, 10, '2015-09-16 16:49:25'),
-	(19, 1, 10, '2015-11-04 16:43:35'),
+	(19, 1, 10, '2015-11-23 15:28:12'),
 	(20, 7, 10, '2015-10-10 14:40:19'),
 	(21, 7, 11, '2015-09-21 14:47:18'),
-	(22, 2, 10, '2015-10-10 15:01:52');
+	(22, 2, 10, '2015-10-10 15:01:52'),
+	(23, 1, 16, '2015-11-25 16:53:28');
 /*!40000 ALTER TABLE `view_log` ENABLE KEYS */;
 
 
 -- 导出  表 baby.withdraw 结构
-DROP TABLE IF EXISTS `withdraw`;
 CREATE TABLE IF NOT EXISTS `withdraw` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `sid` int(11) NOT NULL DEFAULT '0' COMMENT '对象id',
