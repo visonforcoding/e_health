@@ -1,0 +1,91 @@
+{# empty Twig template #}
+{% extends "layout/esui.twig" %}
+{% block main %}
+    <div class="easyui-panel" title="添加服务" data-options="iconCls:'icon-user2',collapsible:true,fit:true,border:false" >
+        <div style="margin: 10px 0;"></div>
+        <div class="form-box" style="padding: 10px 0 10px 20px">
+            <form id="node-form"  action="" method="post" enctype="multipart/form-data">
+                <div class="input-group">
+                    <span class="input-group-addon">优惠劵名称</span>
+                    <input name="name" id="name" class="easyui-validatebox" data-options="required:true" value="{{ coupons.name }}">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" >满减金额</span>
+                    <input type="text" name="amount1" class="easyui-numberbox" precision="2" data-options="required:true"  aria-describedby="basic-addon1" value='{{ coupons.amount1 }}'><span>(现金劵满减金额为0)</span>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" >扣减金额</span>
+                    <input type="text" name="amount2" class="easyui-numberbox" data-options="required:true"  aria-describedby="basic-addon1"value='{{ coupons.amount2 }}'>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">适用店铺</span>
+                    <select name="shopId">
+                        <option value="0">所有店铺适用</option>
+                        {% for shop in shops %}
+                         <option value="{{ shop.id }}" {% if shop.id == coupons.shopId %}   {{ "selected='selected'" }}  {% endif %}>{{ shop.storeName }}</option>
+                        {% endfor %}
+                       
+                    </select>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">适用服务</span>
+                    <select name="serviceId">
+                        <option value="0" >所有服务适用</option>
+                         {% for service in services %}
+                         <option value="{{ service.id }}"  {% if service.id == coupons.serviceId %}  {{ "selected='selected'" }} {% endif %}>{{ service.name }}</option>
+                         {% endfor %}
+                    </select>  
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">开始时间</span>
+                    <input type="text" name="beginTime" class="easyui-datetimebox" data-options="required:true"  aria-describedby="basic-addon1" value='{{ coupons.beginTime }}'>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">结束时间</span>
+                    <input type="text" name="endTime" class="easyui-datetimebox" data-options="required:true"  aria-describedby="basic-addon1" value='{{ coupons.endTime }}'>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">优惠劵描述</span>
+                    <textarea name="desc" id="desc">{{ coupons.desc }}</textarea>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">状态</span>
+                    <input type="radio" name="flag" value="1" {% if coupons.flag=='1' %}  {{ "checked='checked'" }} {% endif %} />启用
+                    <input type="radio" name="flag" value="0" {% if coupons.flag=='0' %}  {{ "checked='checked'" }} {% endif %} />禁用 
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon"></span>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm('node-form');">提交</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm();">返回列表</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+
+        function submitForm(id) {
+            var $form = $('#' + id);
+            if(!$form.form('validate')){
+                return false;
+            }
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                dataType: 'json',
+                success: function (msg) {
+                    if (typeof msg === 'object') {
+                        if (msg.status) {
+                           alert(msg.msg);
+                            window.location.href = msg.url;
+                        } else {
+                           alert(msg.msg);
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}

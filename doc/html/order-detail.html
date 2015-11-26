@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=750,  user-scalable=no">
+	<meta name="format-detection" content="telphone=no, email=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="x5-page-mode" content="app">
+	<title>苗苗儿推-订单详情</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script type="text/javascript" src="js/zepto.js"></script>
+	<script type="application/javascript" src="js/fastclick.js"></script>
+</head>
+<body style="padding-bottom:0">
+	<div class="header">
+		<div class="goback">
+			<a href="javascript:history.go(-1)">
+				<i class="sprits"></i>
+			</a>
+		</div>
+		
+		<div class="title">订单详情</div>
+	</div>
+
+	<div class="shop-detail-box order-detail">
+		<div class="order-server-option">
+			<div class="order-option-img">
+				<img src="images/img1.jpg" alt="">
+			</div>
+			
+			<div class="order-detail-inf">
+				<div class="order-server-name">轻松头面肩</div>
+				<div class="order-server-time"><i class="sprits"></i>45分钟</div>
+				<div class="order-server-price">￥128</div>
+			</div>
+
+			<a href="#" class="order-server-xiadan">预约下单</a>
+		</div>
+	</div>
+
+
+	<div class="shop-detail-box">
+		
+		<ul class="server-inf-option">
+			<li class="current">功能功效</li>
+			<li>禁忌症状</li>
+		</ul>
+
+		<div class="select-tab-option" style="display:block">
+			<ul>
+				<li>两组两个推拿揉捏按摩头,主要针对颈椎的按摩；</li>
+				<li>具有红外线热疗功能；</li>
+				<li>轻便灵活，操作简单方便；</li>
+				<li>能迅速消除疲劳、缓解肌肉紧张及疼痛；</li>
+				<li>加速血液循环，增加细胞供氧量，增强细胞活力，使身心倍感轻松；</li>
+				<li>对改善多种慢性疾病，如颈椎炎、肩周炎、腰肌劳损、贫血、神经衰弱、失眠、静脉曲张等作用显著。</li>
+			</ul>
+		</div>
+
+		<div class="select-tab-option">
+			<ul>
+				<li>有急性传染病或急性炎症，和一切腹痛难于忍受按摩的病人。</li>
+				<li>有皮肤病者尽量不要按摩，或者可戴手套按摩，但较不方便。</li>
+				<li>急性类风湿性脊椎炎病人。</li>
+				<li>有严重肺病、心脏病、肝、肾病的病人。</li>
+				<li>各种肿瘤疾患的病人(不宜太用力)</li>
+				<li>容易引起出血性疾患，如糖尿病、肺结核、血友病等的病人(糖尿病患者不可使用刮沙法，轻轻按摩即可)</li>
+				<li>体内有金属固定的疾患者。</li>
+				<li>妊娠妇女禁忌指压合谷、三阴交及腹部穴位。</li>
+				<li>怀孕五个月以上的妇女和月经期，不宜在腹部作重手法按摩。怀孕、月经禁按肩颈，治疗月经痛可按摩尾椎两侧。</li>
+				<li>恶性贫血、妇女产后恶露未净，或久病体弱而极度消瘦者。</li>
+			</ul>
+		</div>
+	
+
+	</div>
+
+
+	<script>
+	     $(function(){
+	     	FastClick.attach(document.body);
+	     	var tabSelect=function(){
+	     		var _index="";
+	     		$(".server-inf-option").on("click","li",function(){
+	     			_index=$(this).index();
+	     			$(this).addClass("current").siblings().removeClass("current");
+	     			$(".select-tab-option").hide();
+	     			$(".select-tab-option").eq(_index).show();
+
+	     		});
+	     	}()
+
+	     });
+	</script>
+
+</body>
+</html>

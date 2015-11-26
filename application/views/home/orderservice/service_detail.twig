@@ -1,0 +1,60 @@
+{% extends "layout/front.twig" %}
+{% block title %}项目详情{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">项目详情</div>
+{% endblock %}
+{%block main %}
+    <div class="shop-detail-box order-detail">
+        <div class="order-server-option">
+            <div class="order-option-img">
+                <img src="{{service.cover}}" alt="">
+            </div>
+
+            <div class="order-detail-inf">
+                <div class="order-server-name">{{service.name}}</div>
+                <div class="order-server-time"><i class="sprits"></i>{{service.stime}}分钟</div>
+                <div class="order-server-price">￥{{service.price}}</div>
+            </div>
+            <a href="/home/orderservice/choiceStore/service_id/{{service.id}}" class="order-server-xiadan">预约下单</a>
+        </div>
+    </div>
+    <div class="shop-detail-box">
+        <ul class="server-inf-option">
+            <li class="current">功能功效</li>
+            <li>禁忌症状</li>
+        </ul>
+        <div class="select-tab-option" style="display:block">
+            <ul>
+                {{service.efficacy|raw}}
+            </ul>
+        </div>
+        <div class="select-tab-option">
+            <ul>
+                {{service.taboo|raw}}
+            </ul>
+        </div>
+    </div>
+{%endblock%}
+{%block footer %}
+{% endblock %}
+{% block script %}
+    <script>
+        $(function(){
+	     	FastClick.attach(document.body);
+	     	var tabSelect=function(){
+	     		var _index="";
+	     		$(".server-inf-option").on("click","li",function(){
+	     			_index=$(this).index();
+	     			$(this).addClass("current").siblings().removeClass("current");
+	     			$(".select-tab-option").hide();
+	     			$(".select-tab-option").eq(_index).show();
+	     		});
+	     	}()
+	     });
+    </script>
+{% endblock %}

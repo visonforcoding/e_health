@@ -1,0 +1,23 @@
+{# jeasyui 后台管理版 #}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ title|default('苗苗儿推后台管理系统') }}</title>
+        <meta charset="UTF-8">
+        <link href="/static/lib/icomoon/style.css" rel="stylesheet" />
+        <link href="/static/jeasyui/themes/default/easyui.css" rel="stylesheet" />
+        <link href="/static/jeasyui/themes/icon.css" rel="stylesheet" />
+        <link href="/static/admin/css/adminbase.css" rel="stylesheet" />
+        <script src="/static/jeasyui/jquery.min.js"></script>
+        <script src="/static/jeasyui/jquery.easyui.min.js"></script>
+        <script src="/static/jeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="/static/layer/layer.js"></script>
+        <script src="/static/admin/js/lib.js"></script>
+        {% block static %}{%endblock %}
+    </head>
+    <body class="easyui-layout">
+        {% block main %}
+        {% endblock %}
+    </body>
+{% block script %}{% endblock %}
+</html>

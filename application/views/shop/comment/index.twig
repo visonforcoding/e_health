@@ -1,0 +1,211 @@
+{%  extends "/shop/layout/layout.twig"  %}
+{% set page_bread_top = '工作中心' %}
+{% if type=='pay' %}
+    {% set page_bread_sub = '我的评价' %}
+    {% set page_header_title = '我的评价' %}
+    {% set page_tag = 'shop_comment_pay' %}
+{% else %}
+    {% set page_bread_sub = '我的点评' %}
+    {% set page_header_title = '我的点评' %}
+    {% set page_tag = 'shop_comment_index' %}
+{% endif %}
+
+{% block static %}
+    {#    <link rel="stylesheet" type="text/css" href="/static/lib/jqgrid/css/ui.jqgrid-bootstrap.css">#}
+    <link rel="stylesheet" type="text/css" href="/static/lib/jqgrid/css/ui.jqgrid.css">
+    <link rel="stylesheet" type="text/css" href="/static/lib/jqgrid/css/ui.ace.css">
+{% endblock %}
+{% block main %}
+    <div class="col-xs-12">
+        <table id="list"><tr><td></td></tr></table> 
+        <div id="pager"></div> 
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="/static/lib/jqgrid/js/jquery.jqGrid.min.js"></script>
+    <script src="/static/lib/jqgrid/js/i18n/grid.locale-cn.js"></script>
+    <script>
+        $(function () {
+        
+         //type为pay，则显示评价
+          {% if type=='pay' %}
+                $("#list").jqGrid({
+                    url: "/shop/comment/getComment?type=pay",
+                    datatype: "json",
+                    mtype: "POST",
+                    colNames: ["评论ID", "用户手机", "用户昵称", "评价分数", "评价时间", "评价内容", "回复内容", "操作"],
+                    colModel: [
+                        {name: "id", width: 55},
+                        {name: "phoneNo", width: 90},
+                        {name: "uname", width: 90},
+                        {name: "score", width: 90},
+                        {name: "ctime", width: 100},
+                        {name: "desc", width: 150, sortable: false},
+                        {name: "rcontent", width: 200},
+                        {name: "operator", width: 150,formatter:operateFormatter}
+                    ],
+                    pager: "#pager",
+                    rowNum: 10,
+                    rowList: [10, 20, 30],
+                    sortname: "invid",
+                    sortorder: "desc",
+                    viewrecords: true,
+                    gridview: true,
+                    autoencode: true,
+                    caption: '评价管理',
+                    autowidth: true,
+                    height: 'auto',
+                    rownumbers:true,
+                    {#toolbar:[true,"both"],#}
+                    jsonReader: {
+                        root: "rows",
+                        page: "page",
+                        total: "total",
+                        records: "records",
+                        repeatitems: false,
+                        id: "0"
+                    }
+                });
+                 
+               function operateFormatter(cellvalue, options, rowObject){
+                    var rcontent=rowObject['rcontent'];
+                    var id=rowObject['id']; 
+                    //如果没有回复信息，则显示回复按钮
+                    if(rcontent==null){ 
+                       
+
+                        var editDelStr=' <button  id="del'+rowObject.id+'" onClick="del(' + rowObject.id + ');" data-id="' + rowObject.id + '" class="grid-btn btn btn-primary btn-mini del-record"><i class="icon icon-trash"></i> 删除</button>&nbsp;&nbsp; <button  id="add'+rowObject.id+'" onClick="add(' + rowObject.id + ');" data-id="' + rowObject.id + '" class="grid-btn btn btn-primary btn-mini del-record"><i class="icon icon-edit"></i> 回复</button>';
+                    }else{
+                          
+                        var editDelStr='<button  id="del'+rowObject.id+'" onClick="del(' + rowObject.id + ');" data-id="' + rowObject.id + '" class="grid-btn btn btn-primary btn-mini del-record"><i class="icon icon-trash"></i> 删除</button>&nbsp;&nbsp; <button  id="update'+rowObject.id+'" onClick="update(' + rowObject.id + ');" data-id="' + rowObject.id + '" class="grid-btn btn btn-primary btn-mini del-record"><i class="icon icon-edit"></i> 修改</button>';
+                    }
+                   
+                    return editDelStr;
+             } 
+            });
+       //点评     
+      {% else %} 
+            $("#list").jqGrid({
+                    url: "/shop/comment/getComment",
+                    datatype: "json",
+                    mtype: "POST",
+                    colNames: ["评论ID", "用户手机", "用户昵称", "评价分数", "评价时间", "评价内容", "操作"],
+                    colModel: [
+                        {name: "id", width: 55},
+                        {name: "phoneNo", width: 90},
+                        {name: "uname", width: 90},
+                        {name: "score", width: 90},
+                        {name: "ctime", width: 100},
+                        {name: "desc", width: 150, sortable: false}, 
+                        {name: "operator", width: 150,formatter:operateFormatter}
+                    ],
+                    pager: "#pager",
+                    rowNum: 10,
+                    rowList: [10, 20, 30],
+                    sortname: "invid",
+                    sortorder: "desc",
+                    viewrecords: true,
+                    gridview: true,
+                    autoencode: true,
+                    caption: '我的点评',
+                    autowidth: true,
+                    height: 'auto',
+                    rownumbers:true,
+                    {#toolbar:[true,"both"],#}
+                    jsonReader: {
+                        root: "rows",
+                        page: "page",
+                        total: "total",
+                        records: "records",
+                        repeatitems: false,
+                        id: "0"
+                    }
+                });
+                 
+                 function operateFormatter(cellvalue, options, rowObject){
+                        
+                        var id=rowObject['id']; 
+                        var editDelStr='<button  id="del'+rowObject.id+'" onClick="del(' + rowObject.id + ');" data-id="' + rowObject.id + '" class="grid-btn btn btn-primary btn-mini del-record"><i class="icon icon-trash"></i> 删除</button>';
+                        return editDelStr;
+                 }
+    
+                
+            });
+      
+      {% endif %} 
+      
+      
+        //删除
+        function del(id){
+            if(!confirm("确定要删除吗？"))
+            {
+                return;
+            }
+            var td=$('#del'+id).parent().prev(); //获取回复信息
+            if(td.html()=='&nbsp;'){
+                url="/shop/comment/del/id/"+id+"/type/reply";
+            }else{
+                url="/shop/comment/del/id/"+id;
+            }
+            $.ajax({
+                url:url, 
+                success:function(re){
+                re = JSON.parse(re);
+                if(re.code == 'ok'){
+                    $('#del'+id).parent().parent().hide();
+                }
+                else{
+                    alert('删除失败，请联系管理员');
+                }
+            }})
+        }
+        
+         function add(id){
+           
+           var td=$('#add'+id).parent().prev();
+           var content=td.html();
+           td.html('<textarea id="content">'+content+'</textarea><a href="#" id="button">确定</a>');
+           $('#button').click(function(){
+                var content=$('#content').val();
+                $.ajax({
+                    url:'/shop/comment/edit', 
+                    type:'post',
+                    data:{id:id,content:content},
+                    success:function(re){
+                     re = JSON.parse(re);
+                    if(re.code == 'ok'){
+                        $('#add'+id).parent().prev().html(content);
+                        $('#add'+id).parent().html("<a href='javascript:void(0);' id='del"+id+"' onclick='del("+id+")'>删除</a>&nbsp;&nbsp;<a href='javascript:void(0);' id='update"+id+"' onclick='update("+id+")'>修改回复</a>");
+                    }
+                    else{
+                        alert('更新失败，请联系管理员');
+                    }
+               }})
+           });
+        }
+
+        function update(id){
+           var td=$('#update'+id).parent().prev();
+           var content=td.html();
+           td.html('<textarea id="content">'+content+'</textarea><a href="#" id="button">确定</a>');
+           $('#button').click(function(){
+                var content=$('#content').val();
+                $.ajax({
+                    url:'/shop/comment/edit?type=update', 
+                    type:'post',
+                    data:{id:id,content:content},
+                    success:function(re){
+                     re = JSON.parse(re);
+                    if(re.code == 'ok'){
+                        $('#update'+id).parent().prev().html(content);
+                    }
+                    else{
+                        alert('更新失败，请联系管理员');
+                    }
+               }})
+           });
+
+        }
+       
+    </script>
+{% endblock %}

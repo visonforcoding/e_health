@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=750,  user-scalable=no">
+	<meta name="format-detection" content="telphone=no, email=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="x5-page-mode" content="app">
+	<title>苗苗儿推-个人信息</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script type="text/javascript" src="js/zepto.js"></script>
+	<script type="application/javascript" src="js/fastclick.js"></script>
+</head>
+<body>
+	<div class="header">
+		<div class="goback">
+			<a href="javascript:history.go(-1)">
+				<i class="sprits"></i>
+			</a>
+		</div>
+		
+		<div class="title">个人信息</div>
+	</div>
+
+	<ul class="user-inf-ul">
+		<li class="user-touxiang">
+			<div class="user-inf-left">
+				我的头像
+			</div>
+			<div class="user-inf-right">
+				<div class="user-inf-tx">
+					<i class="sprits"></i>
+					<input type="file" name="file_head" id="file_head" onchange="javascript:setImagePreview();" />
+				</div>
+			</div>
+			<i class="sprits gonext"></i>
+		</li>
+
+		<li>
+			<div class="user-inf-left">
+				用户名
+			</div>
+			<div class="user-inf-right">
+				<input type="text" value="黑霸霸">
+			</div>
+			<i class="sprits gonext"></i>
+		</li>
+
+
+		<li>
+			<div class="user-inf-left">
+				性别
+			</div>
+			<div class="user-inf-right">
+				<div class="radios-group">
+					<div class="radios-list selected">
+						<i class="sprits"></i>
+						女士
+						<input type="radio" name="sex" checked="checked">
+					</div>
+					<div class="radios-list">
+						<i class="sprits"></i>
+						男士
+						<input type="radio" name="sex">
+					</div>
+				</div>
+			</div>
+			<i class="sprits gonext"></i>
+		</li>
+
+		<li>
+			<div class="user-inf-left">
+				生日
+			</div>
+			<div class="user-inf-right">
+				<input type="text" value="1992年02月02日">
+			</div>
+			<i class="sprits gonext"></i>
+		</li> 
+
+		<li>
+			<div class="user-inf-left">
+				常用地址
+			</div>
+			<div class="user-inf-right">
+				<input type="text" value="新豪方大厦5F">
+			</div>
+			<i class="sprits gonext"></i>
+		</li> 
+	</ul>
+
+	<ul class="user-inf-ul">
+		
+		<li>
+			<div class="user-inf-left">
+				手机号码
+			</div>
+			<div class="user-inf-right">
+				<input type="text" value="13500000000">
+			</div>
+			<i class="sprits gonext"></i>
+		</li>
+
+		<li>
+			<a href="#">
+				<div class="user-inf-left">
+					修改密码
+				</div>
+				<i class="sprits gonext"></i>
+			</a>
+		</li>
+
+	</ul>
+
+	<a href="javascript:;" class="save-change">保存修改</a>
+	
+
+
+	<ul class="footer-menu">
+		<li>
+			<a href="#">
+				<i class="sprits footer-menu1"></i>
+				<p>首页</p>
+			</a>
+		</li>
+
+		<li>
+			<a href="#">
+				<i class="sprits footer-menu2"></i>
+				<p>订单</p>
+			</a>
+		</li>
+
+		<li>
+			<a href="#" class="current">
+				<i class="sprits footer-menu3"></i>
+				<p>我的</p>
+			</a>
+		</li>
+
+		<li>
+			<a href="#">
+				<i class="sprits footer-menu4"></i>
+				<p>更多</p>
+			</a>
+		</li>
+	</ul>
+
+	<script>
+		 $(function(){
+		 	FastClick.attach(document.body);
+
+		 	var selectRadio=function(){
+
+		 		$(".radios-list").on("click",function(){
+					$(".radios-list").removeClass("selected");
+				    $(".radios-list").find("input").attr("checked"," ");
+				    $(this).addClass("selected");
+				    $(this).find("input").attr("checked","checked");
+
+		 		});
+
+		 	}();
+
+		 	var changeInput=function(){
+
+		 		$(".user-inf-right input").on("focus",function(){
+		 			$(".user-inf-right input").removeClass("change")
+		 			$(this).addClass("change");
+		 		})
+
+		 	}();
+		 	
+		 })
+	 </script>
+</body>
+</html>

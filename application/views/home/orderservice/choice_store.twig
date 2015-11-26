@@ -1,0 +1,139 @@
+{% extends "layout/front.twig" %}
+{% block title %}预约上门服务{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">预约上门服务</div>
+{% endblock %}
+{%block main %}
+    <div class="shop-location">
+        <a href="/home/map/getPos.html">
+            <i class="sprits location"></i>
+            <p>{{pos_address}}</p>
+            <i class="sprits go-next"></i>
+        </a>
+    </div>
+
+    <div class="goods-kinds">
+        <ul class="goods-kinds-ul shangmen">
+            <li data-kinds="all-kinds">
+                <a href="javascript:;">
+                    <div class="all-kinds">
+                        排序
+                        <i class="sprits"></i>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="/home/orderservice/service">
+                    <div class="all-city">
+                        选项目
+                    </div>
+                </a>
+            </li>
+            <li class="current">
+                <a href="/home/orderservice/choiceStore/service_id/{{service_id}}">
+                    <div class="zhineng">
+                        选店铺
+                    </div>
+                </a>
+            </li>
+            <li>
+                {% if service_id is not empty %}
+                    <a href="/home/orderservice/choiceEngineer/service_id/{{service_id}}" class="nob">
+                    {% else %}
+                        <a href="/home/orderservice/choiceEngineer" class="nob">
+                        {% endif %}
+                        <div class="zhineng">
+                            选技师
+                        </div>
+                    </a>
+            </li>
+        </ul>
+
+        <div class="select-kinds-layer" data-kinds="all-kinds">
+            <ol class="select-condition">
+                <li class="current">
+                    <a href="javascript:;">按评分</a>
+                </li>
+                <li>
+                    <a href="javascript:;">按距离</a>
+                </li>
+                <li>
+                    <a href="javascript:;">按人气</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+
+    <ul class="shangmen-shop">
+        {% for store in stores %}
+            <li>
+                <a href="/home/orderservice/orderHome/id/{{store.id}}/sid/{{service_id}}">
+                    <div class="shangmen-shop-img">
+                        <img src="{{store.cover}}" alt="">
+                    </div>
+                    <div class="shangmen-shop-inf">
+                        <div class="shangmen-shop-name">
+                            <p>{{store.storeName}}</p>
+                        </div>
+                        <div class="shangmen-shop-server">
+                            <ol>
+                                {% for service in store.services%}
+                                    <li>
+                                        <span>{{service.name}}</span><em>￥{{service.price}}</em>
+                                    </li>
+                                {% endfor %}
+                            </ol>
+                        </div>
+                        <div class="shangmen-shop-code">
+                            <p>{{store.commentNums}}人评论</p>
+                            <div class="shangmen-comment-code sprits">
+                                <div class="shangmen-current-code sprits"></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+{% block script %}
+    <script>
+        $(function () {
+            FastClick.attach(document.body);
+            var selectKinds = function () {
+                var $selectHandle = $(".goods-kinds-ul li"),
+                        _target = "",
+                        $showOption = $(".select-kinds-layer");
+                $selectHandle.on("click", function () {
+                    if (!$(this).hasClass("current") && $(this).index() == 0) {
+                        $(this).addClass("current");
+                        _target = $(this).data("kinds");
+
+                        for (var i = 0; i < $showOption.length; i++) {
+                            var _point = $showOption.eq(i).data("kinds");
+                            if (_point == _target) {
+                                $showOption.hide();
+                                $showOption.eq(i).show();
+                                $showOption.eq(i).height($("body").height() - 170);
+                            }
+                        }
+                    } else {
+                        $(this).removeClass("current");
+                        $showOption.hide();
+                    }
+                });
+                $showOption.on("click", "li", function () {
+                    $showOption.hide();
+                    $selectHandle.removeClass("current")
+                });
+            }();
+        });
+
+    </script>
+{% endblock%}

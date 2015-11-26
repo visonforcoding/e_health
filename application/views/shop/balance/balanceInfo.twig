@@ -1,0 +1,56 @@
+{%  extends "/shop/layout/layout.twig" %}
+{% set page_bread_top = '资金管理' %}
+{% set page_bread_sub = '资金明细' %}
+{% set page_header_title = '资金明细' %}
+{% set page_tag = 'shop_balance_balanceInfo' %}
+{% block main %}
+    <div class="row" id="welcome_box">
+        <div class="col-xs-12">
+            <div style="padding:20px;" class="alert alert-success with-icon">
+                <i class="icon-yen" ></i>
+                <div class="content">
+                    <div class="col-xs-1">
+                        总金额(元):</br>{{store_detail.balance|number_format}}</div>
+                    <div class="col-xs-2">
+                        <a href="/shop/balance/withdraw" class="btn btn-primary">提现</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="list">
+            <header>
+                <div class="pull-right">
+                    <div class="btn-group" data-toggle="buttons-radio">
+                        <button type="button" class="btn btn-default active"><i class="icon-th-list"></i></button>
+                        <button type="button" class="btn btn-default"><i class="icon-th"></i></button>
+                        <button type="button" class="btn btn-default"><i class="icon-th-large"></i></button>
+                    </div>
+                </div>
+                <h3><i class="icon-list-ul icon-border-circle"></i> 交易明细 &nbsp;<small>{{total_nums}}条记录</small></h3>
+            </header>
+            <section class="items items-hover">
+                {% for following in followings %}
+                    <div class="item row">
+                        <div class="col-md-2">{{following.ctime}}</div>
+                        <div class="col-md-1">{{following.amount}}
+                            {% if following.income == '1'%}
+                                <i class="icon  icon-long-arrow-up"></i>
+                            {% else %}
+                                <i class="icon  icon-long-arrow-down"></i>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-1">{{following.remark}}</div>
+                    </div>
+                {% endfor %}
+            </section>
+            <footer>
+                <ul class="pager">
+                    {{pageShow|raw}}
+                </ul>
+            </footer>
+        </div>
+    </div>
+
+{% endblock %}

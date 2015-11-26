@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=750,  user-scalable=no">
+	<meta name="format-detection" content="telphone=no, email=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="x5-page-mode" content="app">
+	<title>苗苗儿推-更多</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script type="text/javascript" src="js/zepto.js"></script>
+	<script type="application/javascript" src="js/fastclick.js"></script>
+</head>
+<body>
+	<div class="header">
+		<div class="goback">
+			<a href="javascript:history.go(-1)">
+				<i class="sprits"></i>
+			</a>
+		</div>
+		
+		<div class="title">更多</div>
+	</div>
+
+	
+	<ul class="more-set-ul">
+		<li>
+			<div class="more-set-left">消息提醒</div>
+			<div class="more-set-right">
+				<div class="accept-bnt">
+					<i class="sprits"></i>
+				</div>
+			</div>
+		</li>
+		<li>
+			<a href="#">
+				意见反馈
+			</a>
+		</li>
+		<li>
+			<div class="more-set-left">检测更新</div>
+			<div class="more-set-right">当前版本V4.2.1</div>
+		</li>
+		<li>
+			<a href="#">关于苗苗推</a>
+		</li>
+	</ul>
+
+
+
+	<ul class="footer-menu">
+		<li>
+			<a href="index.html">
+				<i class="sprits footer-menu1"></i>
+				<p>首页</p>
+			</a>
+		</li>
+
+		<li>
+			<a href="order-server.html">
+				<i class="sprits footer-menu2"></i>
+				<p>订单</p>
+			</a>
+		</li>
+
+		<li>
+			<a href="user-center.html">
+				<i class="sprits footer-menu3"></i>
+				<p>我的</p>
+			</a>
+		</li>
+
+		<li>
+			<a href="more-set.html" class="current">
+				<i class="sprits footer-menu4"></i>
+				<p>更多</p>
+			</a>
+		</li>
+	</ul>
+
+	<script>
+	     $(function(){
+	     	FastClick.attach(document.body);
+	     
+		   var setAccept=function(){
+
+		   		$(".accept-bnt").on("click",function(){
+
+		   			if($(this).hasClass("accepted")){
+		   				$(this).removeClass("accepted")
+		   			}else{
+		   				$(this).addClass("accepted")
+		   			}
+
+		   		})
+
+		   }();
+	     })
+
+	 </script>
+</body>
+</html>

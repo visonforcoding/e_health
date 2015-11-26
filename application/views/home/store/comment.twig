@@ -1,0 +1,121 @@
+{% extends "layout/front.twig" %}
+{% block title %}预约店面详情{% endblock%}
+{% block static %}
+    <style>
+        .comment-tag li{
+            cursor: pointer;
+        }
+        .comment-tag li:hover{
+            background: #FF7725;
+            color: white;
+        }
+    </style>
+{% endblock %}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">点评</div>
+{% endblock %}
+{%block main %}
+    <div class="comment-box">
+        <div class="zongti-pingjia">
+            <div class="zongti-pingjia-left">
+                <span>总体评价：</span>
+                <ul class="comment-start">
+                    <li class="current"></li>
+                    <li class="current"></li>
+                    <li class="current"></li>
+                    <li class="current"></li>
+                    <li class="current"></li>
+                </ul>
+            </div>
+            <span class="comment-level">惊喜</span>
+            <input name="score" type="hidden" value="10"/>
+        </div>
+        <div class="comment-tag">
+            <ul>
+                {% for desc in comment_desc %}
+                    <li>{{desc.desc}}</li>
+                    {% endfor %}
+            </ul>
+        </div>
+        <div class="comment-textaera">
+            <textarea name="content" class="content" placeholder="亲，我们的服务您满意吗？环境怎么样？技术怎么样？"></textarea>
+        </div>
+
+        <a href="javascript:;" class="submit-comment">提交</a>
+    </div>
+    <div class="add-tag-layer">
+        <div class="add-tag-con">
+            <input type="text" placeholder="请输入您的标签">
+            <a href="javascript:;" class="save-tag">添&nbsp;&nbsp;&nbsp;&nbsp;加</a>
+            <div class="close-bnt sprits"></div>
+        </div>
+    </div>
+{%endblock%}
+{%block footer %}
+{% endblock %}
+{% block script %}
+    <script>
+        $(function () {
+            FastClick.attach(document.body);
+            var commentStart = function () {
+                var commentLevel = ["极差", "失望", "一般", "满意", "惊喜"];
+
+                var $stratLi = $(".comment-start li");
+                var _index = "";
+                var $levelText = $(".comment-level");
+
+                $stratLi.on("click", function () {
+                    _index = $(this).index();
+                    $stratLi.removeClass("current");
+                    for (var i = 0; i <= _index; i++) {
+                        $stratLi.eq(i).addClass("current");
+                    }
+                    score = (_index + 1) * 2;
+                    $("input[name='score']").val(score);
+                    $levelText.text(commentLevel[_index]);
+
+                });
+            }();
+            var textareaFocus = function () {
+
+                $(".comment-textaera textarea").focus(function () {
+                    $(this).addClass("focus");
+                    $(this).parent().addClass("focus");
+
+                });
+
+                $(".comment-textaera textarea").blur(function () {
+                    $(this).removeClass("focus");
+                    $(this).parent().removeClass("focus");
+
+                });
+
+            }();
+            //
+            $('.comment-tag li').click(function () {
+                var content = $(this).text();
+                $('.comment-textaera textarea').val(content);
+            });
+            //提交评论
+            $('.submit-comment').click(function () {
+                var score = $("input[name='score']").val();
+                var content = $("textarea.content").val();
+                var sid = '{{sid}}';
+                $.ajax({
+                    type: 'post',
+                    data: {'score': score, 'content': content, 'sid': sid},
+                    dataType: 'json',
+                    success: function (res) {
+                        alert(res.msg);
+                        window.location.href = res.url;
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

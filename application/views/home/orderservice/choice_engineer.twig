@@ -1,0 +1,133 @@
+{% extends "layout/front.twig" %}
+{% block title %}预约上门服务{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">预约上门服务</div>
+{% endblock %}
+{%block main %}
+    <div class="shop-location">
+        <a href="/home/map/getPos.html">
+            <i class="sprits location"></i>
+            <p>{{pos_address}}</p>
+            <i class="sprits go-next"></i>
+        </a>
+    </div>
+    <div class="goods-kinds">
+        <ul class="goods-kinds-ul shangmen">
+            <li data-kinds="all-kinds">
+                <a href="javascript:;">
+                    <div class="all-kinds">
+                        排序
+                        <i class="sprits"></i>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="/home/orderservice/service/service_id/{{sid}}">
+                    <div class="all-city">
+                        选项目
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="/home/orderservice/choiceStore/service_id/{{sid}}">
+                    <div class="zhineng">
+                        选店铺
+                    </div>
+                </a>
+            </li>
+            <li class="current">
+                <a href="/home/orderservice/choiceEngineer" class="nob">
+                    <div class="zhineng">
+                        选技师
+                    </div>
+                </a>
+            </li>
+        </ul>
+
+        <div class="select-kinds-layer" data-kinds="all-kinds">
+            <ol class="select-condition">
+                <li class="current">
+                    <a href="javascript:;">按评价</a>
+                </li>
+                <li>
+                    <a href="javascript:;">按距离</a>
+                </li>
+                <li>
+                    <a href="javascript:;">按人气</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="goods-list-box">
+
+        <ul class="goods-list-ul">
+            {% for engineer in engineers %}
+                <li>
+                    <a href="/home/orderservice/engineerDetail/eid/{{engineer.id}}/sid/{{sid}}">
+                        <div class="goods-img-box">
+                            <img src="{{engineer.cover}}" alt="">
+{#                            <i class="sprits"></i>#}
+                        </div>
+                        <div class="goods-inf-con">
+                            <div class="jishi-inf">
+                                <p class="jishi-name">{{engineer.name}}</p>
+                                <div class="jishi-inf-box">
+                                    <p class="jishi-zizhi"><span>男</span>执业医师</p>
+                                    <p class="jishi-jianjie">{{engineer.desc|slice(0,30)}}...</p>
+                                </div>
+                            </div>
+
+                            <div class="jishi-coder">
+                                <span class="comment-count">{{engineer.commentNums}}评价</span>
+                                <div class="score-start sprits">
+                                    <div class="current-score sprits"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        $(function () {
+            FastClick.attach(document.body);
+            var selectKinds = function () {
+                var $selectHandle = $(".goods-kinds-ul li"),
+                        _target = "",
+                        $showOption = $(".select-kinds-layer");
+                $selectHandle.on("click", function () {
+                    if (!$(this).hasClass("current") && $(this).index() == 0) {
+                        $(this).addClass("current");
+                        _target = $(this).data("kinds");
+
+                        for (var i = 0; i < $showOption.length; i++) {
+                            var _point = $showOption.eq(i).data("kinds");
+                            if (_point == _target) {
+                                $showOption.hide();
+                                $showOption.eq(i).show();
+                                $showOption.eq(i).height($("body").height() - 170);
+                            }
+                        }
+                    } else {
+                        $(this).removeClass("current");
+                        $showOption.hide();
+                    }
+                });
+                $showOption.on("click", "li", function () {
+                    $showOption.hide();
+                    $selectHandle.removeClass("current")
+                })
+            }()
+        })
+    </script>
+{% endblock%}

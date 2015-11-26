@@ -1,0 +1,92 @@
+{% extends "layout/front.twig" %}
+{% block title %}项目详情{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">技师-{{engineer.name}}</div>
+{% endblock %}
+{%block main %}
+    <div class="shop-detail-box">
+        <div class="order-server-option">
+            <div class="order-option-img">
+                <img src="{{engineer.cover}}" alt="">
+            </div>
+            <div class="detail-jishi-inf">
+                <div class="detail-jishi-name">{{engineer.name}}</div>
+                <div class="detail-jishi-zhizhao"><span>{% if engineer.sex == '1'%}男{% else %}女{% endif %}</span><span>职业医师</span></div>
+                <div class="detail-jishi-code sprits">
+                    <div class="detail-code-length sprits"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-jishi-jianjie">
+            <h4>【简介】</h4>
+            <p>{{engineer.desc}}</p>
+            <h4>【擅长】</h4>
+            <p>{{engineer.skilled}}</p>
+            <h4>【服务宣言】</h4>
+            <p>{{engineer.manifesto}}</p>
+        </div>
+    </div>
+
+    <div class="shop-detail-box">
+        <div class="jishi-server-list">
+            <h4>【服务条目】</h4>
+            <ul class="server-ul-list">
+                {% for service in services %}
+                    <li>
+                        <div class="server-list-name">{{service.name}}</div>
+                        <div class="server-list-time">{{service.stime}}分钟</div>
+                        <div class="server-list-price">{{service.price}}元</div>
+                        <a href="/home/orderservice/submitOrder/eid/{{engineer.id}}/sid/{{service.id}}" class="server-list-yuyue">预约</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="shop-detail-box">
+        <div class="jishi-server-list">
+            <h4>【用户评论】</h4>
+            <ul class="jishi-comment-list">
+                {% for comment in comments %}
+                    <li>
+                        <div class="commenter-inf">
+                            <div class="commenter-img">
+                                <img src="{{comment.avatar|default('/static/home/images/touxiang.png')}}" alt="">
+                            </div>
+                            <div class="commenter-inf-text">
+                                <p class="commenter-name">{{comment.tel}}</p>
+                                <div class="detail-jishi-code sprits">
+                                    <div class="detail-code-length sprits"></div>
+                                </div>
+                            </div>
+                            <div class="commented-time">
+                                {{comment.ctime}}
+                            </div>
+                        </div>
+                        <div class="commented-text">
+                            <p>{{comment.desc}}</p>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% if comment_info.totalnum > 2 %}
+            <a href="/home/store/viewComment?type=2&id={{engineer.id}}" class="view-all-comment">
+                <div>查看所有<i class="sprits"></i></div>
+            </a>
+        {% endif %}
+    </div>
+{%endblock%}
+{%block footer %}
+{% endblock %}
+{% block script %}
+    <script>
+        $(function () {
+        });
+    </script>
+{% endblock %}

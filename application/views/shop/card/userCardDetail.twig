@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{page_title|default('灸疗管理后台')}}</title>
+        <!-- zui -->
+        <link href="/static/zui/css/zui.min.css" rel="stylesheet">
+        <link href="/static/shop/css/base.css" rel="stylesheet">
+        <style>
+            table tr td:first-child{
+                text-align: right;
+                width:120px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="example">
+            <table class="table">
+                <tbody>
+                    <tr class="success">
+                        <td>卡种：</td>
+                        <td>{{usercard.name}}</td>
+                    </tr>
+                    <tr class="danger">
+                        <td>持卡人：</td>
+                        <td>{{usercard.trueName}}</td>
+                    </tr>
+                    <tr class="active">
+                        <td>持卡人手机号：</td>
+                        <td>{{usercard.tel}}</td>
+                    </tr>
+                    <tr class="active">
+                        <td>开卡日期：</td>
+                        <td>{{usercard.get_date}}</td>
+                    </tr>
+                    <tr class="warning">
+                        <td>到期日期：</td>
+                        <td>{{usercard.expires_date}}</td>
+                    </tr>
+                    <tr class="success">
+                        <td>购买金额：</td>
+                        <td>{{usercard.price}}</td>
+                    </tr>
+                    <tr class="success">
+                        <td>消费情况：</td>
+                        <td>{{usercard.contentStr|raw}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 在此处挥洒你的创意 -->
+        <!-- jQuery (ZUI中的Javascript组件依赖于jQuery) -->
+        <script src="/static/Js/jquery.js"></script>
+        <!-- ZUI Javascript组件 -->
+        <script src="/static/zui/js/zui.min.plus.js"></script>
+        {#layer弹出层组件#}
+        <script src="/static/layer/layer.js"></script>
+        {#        <script src="/static/shop/js/global.js"></script>#}
+        <script>
+        </script>
+    </body>
+</html>

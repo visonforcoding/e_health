@@ -1,0 +1,61 @@
+{# 我的收藏 #}
+{% extends "layout/front.twig" %}
+{% block title %}我的{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="/home/user/userCenter.html">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="header-center">
+        <ul class="shop-tab">
+            <li>
+                <a href="/home/user/myCollect.html" >店铺</a>
+            </li>
+            <li>
+                <a href="/home/user/myCollect/type/2" class="current">技师</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+{%block main %}
+    <div class="goods-list-box">
+        <ul class="goods-list-ul collect-jishi">
+            {% for collect in collects %}
+                <li>
+                    <a href="jishi-detail.html">
+                        <div class="goods-img-box">
+                            <img src="{{collect.cover}}" alt="">
+                            <i class="sprits"></i>
+                        </div>
+                        <div class="goods-inf-con">
+                            <div class="jishi-inf">
+                                <p class="jishi-name">{{collect.name}}</p>
+                                <div class="jishi-inf-box">
+                                    <p class="jishi-zizhi"><span>{% if collect.sex == '1'%}男{% else %}女{% endif %}</span>执业医师</p>
+                                    <p class="jishi-jianjie">{{collect.desc|slice(0,30)}}</p>
+                                </div>
+                            </div>
+
+                            <div class="jishi-coder">
+                                <span class="comment-count">{{collect.commentNums}}评价</span>
+                                <div class="score-start sprits">
+                                    <div class="current-score sprits"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collect-jishi-juli">
+                            <i class="sprits"></i>966米
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+{% block footer %}
+{% endblock %}
+{% block script %}
+    <script>
+    </script>
+{% endblock %}

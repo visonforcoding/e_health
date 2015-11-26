@@ -1,0 +1,50 @@
+{#个人中心页#}
+{% extends "layout/front.twig" %}
+{% set page_tag = 'user'%}
+{% block title %}我的{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">优惠劵</div>
+{% endblock %}
+{%block main %}
+    <ul class="youhuijuan-kind">
+        <li class="current">
+            <a href="#">未使用</a>
+        </li>
+        <li>
+            <a href="#">已使用</a>
+        </li>
+        <li>
+            <a href="#">已过期</a>
+        </li>
+    </ul>
+    <div class="nothing-youhuijuan">
+        <i class="sprits"></i>
+        <h4>您还没有优惠券哦~</h4>
+    </div>
+{% endblock %}
+{% block footer %}{% endblock %}
+{% block script %}
+    <script>
+        $(function () {
+            FastClick.attach(document.body);
+
+            var share = function () {
+                $(".invite-ul").on("click", function (event) {
+                    event.stopPropagation();
+                    $(".zhezhao, .share-group-layer").show();
+                })
+            }();
+
+
+            $(".zhezhao, .cancle-share").on("click", function () {
+                $(".zhezhao, .share-group-layer").hide();
+            });
+
+        })
+    </script>
+{% endblock %}

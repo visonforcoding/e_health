@@ -1,0 +1,117 @@
+{% extends "layout/front.twig" %}
+{% block title %}修改手机{% endblock %}
+{% block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">修改手机</div>
+{% endblock %}
+{% block main %}
+	<form action="?flag=0" method='post'>
+		<ul class="change-phone-box">
+			<li>
+				<a href="#">
+					中国（+86）
+					<i class="sprits gonext"></i>
+				</a>
+			</li>
+			<li>
+				<input type="text" placeholder="请输入手机号码"  id='phone' name='phone'>
+				<a href="javascript:;" class="get-phne-code geting" id='get-yanzheng'>获取验证码</a>
+			</li>
+			<li>
+				<input type="text"  id='code' name='code' placeholder="请输入验证码">
+			</li>
+		</ul>
+		<div class="set-login-password">
+			<input type="password" name='pwd' placeholder="设置登陆密码">
+		</div>
+
+		<input type="submit" class="confrim-password" value="修改">
+	</form>
+	
+{% endblock %}
+{% block script %}
+	<script type="text/javascript">
+		$(function(){
+			 FastClick.attach(document.body);
+			//获取验证码
+			$('#get-yanzheng').click(function() {
+				//验证手机 
+                 var phone = $('#phone').val();
+                           
+                if(phone==''){
+                    alert('电话号码不能为空');
+                     return false;
+               }
+               var reg = /^0?1[3|4|5|8][0-9]\d{8}$/;
+               if(!reg.test(phone)){
+                    alert('电话号码格式不正确');
+                     return false;
+               }
+
+				//验证发送短信验证
+				 $.ajax({
+                    type: "POST",
+                    url: "/home/user/getCode.html",
+                    data: {'phone': phone},
+                    success: function (msg) {
+                        alert("发送成功" );
+                    }
+                });
+			
+			});
+
+			//验证验证码的合理性
+			$('.confrim-password').click(function() {
+				 $form = $(this).parents('form');
+                //验证手机 
+                 var phone = $('#phone').val();
+                           
+               if(phone==''){
+                    alert('电话号码不能为空');
+                     return false;
+               }
+               var reg = /^0?1[3|4|5|8][0-9]\d{8}$/;
+               if(!reg.test(phone)){
+                    alert('电话号码格式不正确');
+                     return false;
+               }
+               //验证密码不能为空
+               
+              var pwd=$('input[name=pwd]').val(); 
+              if(pwd==''){
+                    alert('密码不能为空');
+                     return false;
+               }
+              
+                //验证用户名
+                $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    success: function (msg) {
+                        if (typeof msg === 'object') {
+                            if (msg.status) {
+                                alert(msg.msg);
+                                window.location.href = msg.url;
+                            } else {
+                                alert(msg.msg);
+                            }
+                        }
+                    }
+                });
+                return false;
+         
+			});
+
+
+
+		});
+
+
+	</script>
+{% endblock %}

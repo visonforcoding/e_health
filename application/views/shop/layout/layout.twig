@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{page_title|default('灸疗管理后台')}}</title>
+        <!-- zui -->
+        <link href="/static/zui/css/zui.min.css" rel="stylesheet">
+        <link href="/static/zui/lib/datetimepicker/datetimepicker.min.css" rel="stylesheet">
+        <link href="/static/shop/css/base.css" rel="stylesheet">
+        {% block  static %}
+        {% endblock %}
+    </head>
+    <body>
+        <!-- header -->
+        <header>
+            <nav class="navbar navbar-inverse " role="navigation">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">灸疗店铺管理系统</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse navbar-collapse-example">
+                    <ul class="nav navbar-nav navbar-avatar navbar-right">
+                        <li class="has-num">
+                            <a href="/shop/order/orderList" class="header-tooltip"  style="margin-top:8px;" data-toggle="tooltip"
+                               data-placement="bottom" data-container="body" title="" data-original-title= "{{realTimeInfo.unDoOrderNums}}条未处理订单">
+                                <i style="font-size: 25px;" class="icon-shopping-cart icon-xlarge text-default"></i>
+                                <b style="display: block;" class="badge badge-notes bg-default count-n">{{realTimeInfo.unDoOrderNums}}</b>
+                            </a>
+                        </li>
+                        <li class="has-num">
+                            <a href="/shop/user/message" class="header-tooltip" style="margin-top:8px;" data-toggle="tooltip"
+                               data-placement="bottom" data-container="body" title="" data-original-title= "{{realTimeInfo.unReadMsgNums}}条未读信息">
+                                <i  style="font-size: 25px;" class="icon-comment-alt icon-xlarge text-default"></i>
+                                <b style="display: block;" class="badge badge-notes bg-danger count-n">{{realTimeInfo.unReadMsgNums}}</b>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{App.user.bossName|default('未设置')}}
+                                <span class="thumb-small avatar inline">
+                                    <img src="/static/Images/avatar/avatar.jpg" alt="Mika Sokeil" class="img-circle">
+                                </span>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Action</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li><a href="#">Something else here</a></li>
+                                <li class="divider"></li>
+                                <li><a href="/shop/index/loginOut.html"><i class="icon icon-off"></i> 注销</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </nav>
+        </header>
+        <!-- / header -->
+        {#左菜单#}
+        <div id="left-bar" style="width: 200px">
+            <nav class="menu" id="left-menu"  data-toggle="menu" >
+                <ul class="nav nav-primary">
+                    <li><a href="/index.php?/shop/index/index"><i class="icon-home"></i> 主面板</a></li>
+                    <li><a href="#"><i class="icon-building"></i>我的店铺</a>
+                        <ul class="nav">
+                            <li {% if page_tag is defined %}{% if page_tag == 'shop_shop_shopInfo' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/shop/shopInfo">店铺信息</a></li>
+                            <li{% if page_tag is defined %}{% if page_tag == 'shop_shop_orderTime' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/shop/orderTime">预约时间管理</a></li>
+                            <li{% if page_tag is defined %}{% if page_tag == 'shop_user_service' %} class="active" {% endif %}{% endif %}><a href="/shop/user/service">服务项目管理</a></li>
+                            <li{% if page_tag is defined %}{% if page_tag == 'shop_user_serviceArea' %} class="active" {% endif %}{% endif %}><a href="/shop/user/serviceArea">服务区域管理</a></li>
+                            <li{% if page_tag is defined %}{% if page_tag == 'shop_cargo_cargo' %} class="active" {% endif %}{% endif %}><a href="/shop/cargo/cargoList">仓储管理</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#"><i class="icon-user"></i>员工管理</a>
+                        <ul class="nav">
+                            <li{% if page_tag is defined %}{% if page_tag == 'shop_employee_employeeList' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/employee/employeeList">员工管理</a></li>
+                            <li{% if page_tag is defined %}{% if page_tag == 'shop_vacate_vacateList' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/vacate/vacateList">员工考勤</a></li>
+                            <li{% if page_tag is defined %}{% if page_tag == 'shop_salary_index' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/salary/index">薪资统计</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#"><i class="icon-yen"></i>资金管理</a>
+                        <ul class="nav">
+                            <li{% if page_tag is defined %}{% if page_tag == 'shop_balance_balanceInfo' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/balance/balanceInfo">资金管理</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#"><i class="icon-dashboard"></i>工作中心</a>
+                        <ul class="nav">
+                            <li {% if page_tag is defined %}{% if page_tag == 'shop_order_orderList' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/order/orderList"><i class="icon-shopping-cart"></i>订单管理</a>
+                            </li>
+
+                            <li {% if page_tag is defined %}{% if page_tag == 'shop_order_add' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/order/add"><i class="icon-shopping-cart"></i>收银开单</a>
+                            </li>
+
+                            <li {% if page_tag is defined %}{% if page_tag == 'shop_chart_index' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/chart/index"><i class="icon-line-chart"></i>交易统计</a>
+                            </li>
+                            <li{% if page_tag is defined %}{% if page_tag == 'shop_member_memberList' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/member/memberList"><i class="icon-user"></i>会员管理</a></li>
+                            <li {% if page_tag is defined %}{% if page_tag == 'shop_card_cardList' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/card/cardList"><i class="icon-cloud"></i>会员卡</a>
+                            </li>
+                            <li {% if page_tag is defined %}{% if page_tag == 'shop_card_usercardList' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/card/userCardList"><i class="icon-cloud"></i>用户会员卡</a>
+                            </li>
+                            <li {% if page_tag is defined %}{% if page_tag == 'shop_promo_index' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/promo/index"><i class="icon-lemon"></i>活动管理</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="icon-comments-alt"></i>评论管理</a>
+                        <ul class="nav">
+                            <li {% if page_tag is defined %}{% if page_tag == 'shop_comment_index' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/comment/index">我的点评</a>
+                            </li>
+
+                            <li {% if page_tag is defined %}{% if page_tag == 'shop_comment_pay' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/comment/index?type=pay">评价管理</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/shop/user/message"><i class="icon-tasks"></i> 消息中心
+                            <span class="label label-badge label-danger pull-right">{{realTimeInfo.unReadMsgNums}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        {#        左菜单结束#}
+        <div id="main-content">
+            <div id="breadcrumb">
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="/index.php?/shop/index/index"><i class="icon icon-home"></i> 主页</a>
+                    </li>
+                    <li>
+                        <a id="parent-bread" href="#">{{page_bread_top|default('未设置')}}</a>
+                    </li>
+                    <li id="children-bread" class="active">{{page_bread_sub|default('未设置')}}</li>
+                </ul>
+            </div>
+            <div id="page-content">
+                {% block page_header %}
+                    <div class="page-header" >
+                        <h1>
+                            {{page_header_title|default('页面标题')}}
+                        </h1>
+                    </div>
+                {% endblock %}
+                {% block main %}
+                {% endblock %}
+            </div>
+        </div>
+
+        <!-- 在此处挥洒你的创意 -->
+        <!-- jQuery (ZUI中的Javascript组件依赖于jQuery) -->
+        <script src="/static/Js/jquery.js"></script>
+        <!-- ZUI Javascript组件 -->
+        <script src="/static/zui/js/zui.min.plus.js"></script>
+        <script src="/static/zui/lib/datetimepicker/datetimepicker.min.js"></script>
+        {#layer弹出层组件#}
+        <script src="/static/layer/layer.js"></script>
+        <script src="/static/shop/js/global.js"></script>
+        <script>
+            $(function () {
+                $('#left-bar').add('#main-content').height($(window).height() - $('header').height());
+                $('.header-tooltip').tooltip();
+                $('#left-menu ul.nav-primary ul.nav li.active').parents('li').addClass('active show');
+            });
+        </script>
+        {% block script %}
+        {% endblock %}
+    </body>
+</html>

@@ -1,0 +1,16 @@
+{# bootstrap 后台管理版 #}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ title|default('苗苗儿推后台管理系统') }}</title>
+        <meta charset="UTF-8">
+        <link href="/static/admin/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="/static/admin/css/adminbase.css" rel="stylesheet" />
+        {% block static %}{%endblock %}
+    </head>
+    <body class="easyui-layout">
+        {% block main %}
+        {% endblock %}
+    </body>
+{% block script %}{% endblock %}
+</html>

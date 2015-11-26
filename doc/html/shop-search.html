@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=750,  user-scalable=no">
+	<meta name="format-detection" content="telphone=no, email=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="x5-page-mode" content="app">
+	<title>苗苗儿推-店铺搜索</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script type="text/javascript" src="js/zepto.js"></script>
+</head>
+<body>
+	<div class="header">
+		<div class="goback">
+			<a href="javascript:history.go(-1)">
+				<i class="sprits"></i>
+			</a>
+		</div>
+		
+		<div class="header-center">
+			<div class="header-search-box">
+				<i class="sprits"></i>
+				<input type="text" placeholder="请输入店铺名字、关键字">
+			</div>
+		</div>
+	</div>
+
+	<div class="shop-location">
+		<i class="sprits location"></i>
+		<p>深圳市南山区新豪方大厦</p>
+		<i class="sprits go-next"></i>
+	</div>
+	
+	<div class="goods-kinds">
+		<ul class="goods-kinds-ul">
+			<li data-kinds="all-kinds">
+				<a href="javascript:;">
+					<div class="all-kinds">
+						全部分类
+						<i class="sprits"></i>
+					</div>
+				</a>
+			</li>
+			<li data-kinds="all-city">
+				<a href="javascript:;">
+					<div class="all-city">
+						全城
+						<i class="sprits"></i>
+					</div>
+				</a>
+			</li>
+			<li data-kinds="all-zhineng">
+				<a href="javascript:;" class="nob">
+					<div class="zhineng">
+						智能排序
+						<i class="sprits"></i>
+					</div>
+				</a>
+			</li>
+		</ul>
+		<div class="select-kinds-layer" data-kinds="all-kinds">
+			<ol class="select-condition">
+				<li class="current">
+					<a href="javascript:;"><i class="sprits condition1"></i>全部分类</a>
+				</li>
+				<li>
+					<a href="javascript:;"><i class="sprits condition2"></i>推拿</a>
+				</li>
+				<li>
+					<a href="javascript:;"><i class="sprits condition3"></i>针灸</a>
+				</li>
+				<li>
+					<a href="javascript:;"><i class="sprits condition4"></i>汗蒸</a>
+				</li>
+				<li>
+					<a href="javascript:;"><i class="sprits condition5"></i>刮痧</a>
+				</li>
+				<li>
+					<a href="javascript:;"><i class="sprits condition6"></i>拔罐</a>
+				</li>
+				<li>
+					<a href="javascript:;"><i class="sprits condition7"></i>面部护理</a>
+				</li>
+			</ol>
+		</div>
+
+		<div class="select-kinds-layer" data-kinds="all-city">
+			<ol class="select-condition">
+				<li class="current">
+					<a href="javascript:;">全城</a>
+				</li>
+				<li>
+					<a href="javascript:;">南山区</a>
+				</li>
+				<li>
+					<a href="javascript:;">宝安区</a>
+				</li>
+				<li>
+					<a href="javascript:;">福田区</a>
+				</li>
+				<li>
+					<a href="javascript:;">罗湖区</a>
+				</li>
+				<li>
+					<a href="javascript:;">龙岗区</a>
+				</li>
+			</ol>
+		</div>
+
+		<div class="select-kinds-layer" data-kinds="all-zhineng">
+			<ol class="select-condition">
+				<li class="current">
+					<a href="javascript:;">智能排序</a>
+				</li>
+				<li>
+					<a href="javascript:;">离我最近</a>
+				</li>
+				<li>
+					<a href="javascript:;">人气最高</a>
+				</li>
+				<li>
+					<a href="javascript:;">评价最好</a>
+				</li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="goods-list-box">
+		
+		<ul class="goods-list-ul">
+			
+			<li>
+				<a href="#">
+					<div class="goods-img-box">
+						<img src="images/img1.jpg" alt="">
+						<i class="sprits"></i>
+					</div>
+					<div class="goods-inf-con">
+						<div class="goods-name">
+							美丽人生
+						</div>
+						<p class="goods-jianjie">[中关村]针灸、推拿</p>
+
+						<div class="goods-score">
+							<div class="score-start sprits">
+								<div class="current-score sprits"></div>
+							</div>
+							<span class="comment-count">1021评价</span>
+
+							<div class="renjun">
+								人均<span>120</span>元
+							</div>
+						</div>
+
+						<div class="distance"><0.5km</div>
+					</div>
+				</a>
+			</li>
+
+			<li>
+				<a href="#">
+					<div class="goods-img-box">
+						<img src="images/img1.jpg" alt="">
+					</div>
+					<div class="goods-inf-con">
+						<div class="goods-name">
+							美丽人生
+						</div>
+						<p class="goods-jianjie">[中关村]针灸、推拿</p>
+
+						<div class="goods-score">
+							<div class="score-start sprits">
+								<div class="current-score sprits"></div>
+							</div>
+							<span class="comment-count">1021评价</span>
+							<div class="renjun">
+								人均<span>120</span>元
+							</div>
+						</div>
+
+						<div class="distance"><0.5km</div>
+					</div>
+				</a>
+			</li>
+
+			<li>
+				<a href="#">
+					<div class="goods-img-box">
+						<img src="images/img1.jpg" alt="">
+						<i class="sprits"></i>
+					</div>
+					<div class="goods-inf-con">
+						<div class="goods-name">
+							美丽人生
+						</div>
+						<p class="goods-jianjie">[中关村]针灸、推拿</p>
+
+						<div class="goods-score">
+							<div class="score-start sprits">
+								<div class="current-score sprits"></div>
+							</div>
+							<span class="comment-count">1021评价</span>
+							<div class="renjun">
+								人均<span>120</span>元
+							</div>
+						</div>
+
+						<div class="distance"><0.5km</div>
+					</div>
+				</a>
+			</li>
+
+			<li>
+				<a href="#">
+					<div class="goods-img-box">
+						<img src="images/img1.jpg" alt="">
+					</div>
+					<div class="goods-inf-con">
+						<div class="goods-name">
+							美丽人生
+						</div>
+						<p class="goods-jianjie">[中关村]针灸、推拿[中关村]针灸、推拿[中关村]针灸、推拿[中关村]针灸、推拿[中关村]针灸、推拿</p>
+
+						<div class="goods-score">
+							<div class="score-start sprits">
+								<div class="current-score sprits"></div>
+							</div>
+							<span class="comment-count">1021评价</span>
+							<div class="renjun">
+								人均<span>120</span>元
+							</div>
+						</div>
+
+						<div class="distance"><0.5km</div>
+					</div>
+				</a>
+			</li>
+
+			<li>
+				<a href="#">
+					<div class="goods-img-box">
+						<img src="images/img1.jpg" alt="">
+						<i class="sprits"></i>
+					</div>
+					<div class="goods-inf-con">
+						<div class="goods-name">
+							美丽人生
+						</div>
+						<p class="goods-jianjie">[中关村]针灸、推拿</p>
+
+						<div class="goods-score">
+							<div class="score-start sprits">
+								<div class="current-score sprits"></div>
+							</div>
+							<span class="comment-count">1021评价</span>
+							<div class="renjun">
+								人均<span>120</span>元
+							</div>
+						</div>
+
+						<div class="distance"><0.5km</div>
+					</div>
+				</a>
+			</li>
+		</ul>
+	</div>
+
+	<ul class="footer-menu">
+		<li>
+			<a href="#" class="current">
+				<i class="sprits footer-menu1"></i>
+				<p>首页</p>
+			</a>
+		</li>
+
+		<li>
+			<a href="#">
+				<i class="sprits footer-menu2"></i>
+				<p>订单</p>
+			</a>
+		</li>
+
+		<li>
+			<a href="#">
+				<i class="sprits footer-menu3"></i>
+				<p>我的</p>
+			</a>
+		</li>
+
+		<li>
+			<a href="#">
+				<i class="sprits footer-menu4"></i>
+				<p>更多</p>
+			</a>
+		</li>
+	</ul>
+
+	<div class="search-layer">
+		
+
+	</div>
+</body>
+</html>

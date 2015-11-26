@@ -1,0 +1,95 @@
+{%  extends "/shop/layout/layout.twig" %}
+{% set page_header_title = '提现' %}
+{% set page_bread_top = '资金管理' %}
+{% set page_bread_sub = '提现' %}
+{% set page_tag = 'shop_balance_balanceInfo' %}
+{% block static %}
+    <link href="/static/lib/jqvalidation/css/validationEngine.jquery.css" rel="stylesheet">
+{%endblock %}
+{% block main %}
+    <div class='example'>
+        <form class="form-horizontal" action="" role="form"  method='post'>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">用户名</label>
+                <div class="col-md-4">
+                    <input type='text' data-validation-engine="validate[required]" name='username' value="{{store_detail.account_name}}" readonly   class='form-control'  />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">账号</label>
+                <div class="col-md-4">
+                    <input type='text' data-validation-engine="validate[required]" name='username' value="{{store_detail.account_no}}" readonly   class='form-control'  />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">提取金额</label>
+                <div class="col-md-4">
+                    <input type='text'  name='amount' placeholder="提取金额不得超过{{store_detail.balance|number_format}}元"    class='form-control'   />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">验证码</label>
+                <div class="col-md-2">
+                    <input type='text'  name='vcode'    class='form-control'   />
+                </div>
+                <div class="col-md-2">
+                    <button id="getVCode" type="button" class="btn btn-primary">获取验证码</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type='submit' id='submit' class='btn btn-primary' value='确认' data-loading='稍候...' /> 
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="/static/lib/jqform/jquery.form.js"></script>
+    <script type="text/javascript" src="/static/lib/jqvalidation/js/languages/jquery.validationEngine-zh_CN.js"></script>
+    <script type="text/javascript" src="/static/lib/jqvalidation/js/jquery.validationEngine.js"></script>
+    <script>
+        $(function () {
+            $('form').validationEngine();
+            $('form').ajaxForm({ 
+                beforeSubmit: function (formData, jqForm, options) {
+                },
+                success: function (data) {
+                    if (data.status) {
+                        layer.alert(data.msg, {icon: 6});
+                    } else {
+                        layer.alert(data.msg, {icon: 5});
+                    }
+                }
+            });
+            //
+           $('#getVCode').on('click',function(){
+               $obj = $(this);
+               $(this).attr('disabled','disabled');
+               $(this).html('<span id="sendCodeCount">60</span>S后再次发送');
+               setInterval('clock()',1000);
+               $.ajax({
+                   url:'/shop/balance/getVCode',
+                   type:'post',
+                   dataType:'json',
+                   success:function(res){
+                       layer.msg(res.msg);
+                   }
+               });
+           });
+        });
+        
+        function clock(){
+          var count = $('#sendCodeCount').html();
+          if(count>0){
+               $('#sendCodeCount').html(count-1);
+          }else{
+              $('#getVCode').removeAttr('disabled'); 
+              $('#getVCode').html('获取验证码'); 
+          }
+        }
+    </script>
+{% endblock %}

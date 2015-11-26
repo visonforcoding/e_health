@@ -1,0 +1,195 @@
+{%  extends "/shop/layout/layout.twig"  %}
+{% block  static %}
+   <style>
+        #city{ margin-bottom: 20px;}
+        #city .prov,#city .city,#city .dist{width:150px;height:30px;}
+        .btn{margin:5px 20px;}
+        .choose ul {list-style:none;margin:0px}
+        .choose ul li {float:left;width:80px;} 
+
+   </style>
+{% endblock %}
+{% block main %}
+      
+    <div><h3>请选择服务范围:</h3></div>
+    <div> 
+            <select id="province" name="Province" onchange="getArea('city', this.value)" class="no-ml" datatype="*" nullmsg="请选择省份">
+               <option  value="">选择省</option>
+                      </select>
+                      <select id="city" name="City" onchange="getArea('district', this.value)" datatype="*" nullmsg="请选择省市">
+                <option value="">选择市</option>
+                  </select>
+                <select id="district" name="District" datatype="*" nullmsg="请选择区">
+              <option value="">选择区</option>
+          </select>
+    </div>
+    <div class='content'>
+        <div class='area'>
+              <div class="panel">
+                <div class="panel-body">
+                     <div class="btn-group">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="choose" contenteditable="true">
+            <div class="panel">
+              <div class="panel-heading">已选择范围:</div>
+              <div class="panel-body">   
+                  <ul >
+                  </ul>
+              </div>
+            </div>
+        </div> 
+    </div>   
+    <div><button id='submit'>确定</button></div>
+
+	
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+         function getArea(area, pid, rs) {
+            var obj = $('#' + area);
+            obj.find("option").remove();
+            obj.append('<option value="0">---请选择---</option>');
+            $.ajax({
+                url:"/shop/user/get_area_json",
+                type: 'post',
+                data: {'area': area, 'pid': pid},
+                dataType: 'json',
+                success: function(data) {
+                    $.each(data, function(i, n) {
+                        if (n.name === rs) {
+                            obj.append('<option selected="selected" value="' + n.id + '">' + n.name + '</option>');
+                        } else {
+                            obj.append('<option value="' + n.id + '">' + n.name + '</option>');
+                        }
+                    });
+                }
+            });
+        }
+
+
+    </script>
+	  <script>
+        $(function() {
+            getArea('province', "{{ storeInfo[0]['pid'] }}", "{{ storeInfo[0]['name'] }}");
+            getArea('city', "{{ storeInfo[1]['pid'] }}", "{{ storeInfo[1]['name'] }}");
+            getArea('district', "{{ storeInfo[2]['pid'] }}", "{{ storeInfo[2]['name'] }}");
+            getAllArea({{storeInfo[2]['id'] }});
+
+            $('#province, #city').change(function() {
+                 $('.content .btn-group').html('');
+                 $('.choose ul li').remove();
+            });
+
+            //获取服务商圈
+            $('#district').change(function(){ 
+                //区域id 
+               $('.choose ul li').remove();
+               var regionId=$("#district").val(); 
+               getAllArea(regionId);
+            });
+
+            function getAllArea(regionId){
+               $.ajax({
+                   url: '/shop/user/getAllArea?type={{ type }}',
+                   type: 'POST',
+                   data: {regionId: regionId},
+                   success:function(msg){ 
+                      //清除当前的服务 
+                      $('.content .btn-group').html('');
+                      for (var i = 0; i < msg.length; i++) {
+                           if(msg[i].type=='1'){
+                              $('.content .btn-group').append('<button type="button" name="btn" class="btn" style="background:#FE7241" id="'+msg[i].id+'">'+msg[i].name+'</button>');
+                              $('.choose ul').append('<li class="'+msg[i].id+'">'+msg[i].name+'</li>');
+
+                           }else{
+                             $('.content .btn-group').append('<button type="button" name="" class="btn" id="'+msg[i].id+'">'+msg[i].name+'</button>');
+                           }
+                         
+                          
+                      }
+                   }
+               })
+
+            }
+
+          
+            //给每个服务商圈绑定点击事件
+            $('.content .btn-group').on('click','button',function(){ 
+                
+                var id=$(this).attr('id'); 
+                var name=$(this).attr('name');
+                //id为0，则是选取全部
+                 if(id=='0'){
+                         $('.choose ul').html(''); //清除当前已选的服务商圈
+                         var html=$('.content .btn-group').find('button'); 
+                          for (var i = 1; i < html.length; i++) {
+                              $(html[i]).css('background','');  //把其他按钮的背景色去掉
+                              $('.choose ul').append('<li class="'+html[i].id+'">'+html[i].innerHTML+'</li>');
+                              $(html[i]).removeAttr('name'); //移除其他按钮的name值，点击没效果
+                          }
+                  }else{
+
+                  }
+
+
+                if(name==''){
+                    var value=$(this).html();
+                    $(this).css('background','#FE7241');
+                    $(this).attr('name','btn');
+                    if(id!='0'){
+                        $('.choose ul').append('<li class="'+id+'">'+value+'</li>');
+                    }
+                }else if(name!=undefined){
+                    
+                    $(this).css('background','');
+                    if(id=='0'){
+                        $('.choose ul li').remove();  //id为0，则移除全部
+                        var html=$('.content .btn-group').find('button'); 
+                        html.attr('name','');
+                    }else{
+                        $('.choose ul>.'+id+'').remove();
+                        $(this).attr('name','');
+                    }
+                    
+                }
+                
+            
+            }); 
+
+              //提交服务商圈
+            $('#submit').click(function(){
+               var cityId=$('#city').val();
+               var regionId=$('#district').val();
+               var ids=[]; //服务商圈id
+               var lis=$('.choose ul').find('li');
+               for (var i = 0; i < lis.length; i++) {
+                   ids.push($(lis[i]).attr('class'));
+               };
+               $.ajax({
+                 url: '',
+                 type: 'POST',
+                 data: {cityId: cityId,regionId:regionId,ids:ids},
+                 success:function(msg){
+                          if(msg.status=='1'){
+                              window.location.href='/shop/user/serviceArea';
+                          }else{
+                            alert(msg.msg);
+
+                          }
+                         
+                 }
+               })
+               
+            });
+
+      
+     
+       });
+   
+    </script>
+         
+
+{% endblock %}

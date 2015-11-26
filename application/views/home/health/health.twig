@@ -1,0 +1,27 @@
+{# empty Twig template #}
+{% extends "layout/front.twig" %}
+{% block title %}苗苗儿推-养生知识{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">养生知识</div>
+{% endblock %}
+{%block main %}
+   <ul class="yangsheng-list">
+            {% for health in healths %}
+		<li>
+			<a href="/home/health/healthDetail/id/{{health.id}}">
+				<p class="big-p">{{health.title}}</p>
+				<p class="small-p">{{health.abstract}}</p>
+{#				<i class="sprits gonext"></i>#}
+			</a>
+		</li>
+               {% endfor %}
+	</ul>
+{% endblock %}
+{% block script %}
+   
+{% endblock%}

@@ -1,0 +1,127 @@
+{#查看评论#}
+{% extends "layout/front.twig" %}
+{% block title %}查看评论{% endblock%}
+{%block header %}
+    <div class="goback">
+        <a href="javascript:history.go(-1)">
+            <i class="sprits"></i>
+        </a>
+    </div>
+    <div class="title">查看点评</div>
+{% endblock %}
+{%block main %}
+    <div class="goods-kinds  view-comment">
+        <ul class="goods-kinds-ul">
+            <li data-kinds="all-kinds">
+                <a href="javascript:;">
+                    <div class="all-kinds">
+                        全部星级
+                        <i class="sprits"></i>
+                    </div>
+                </a>
+            </li>
+            <li data-kinds="all-zhineng">
+                <a href="javascript:;" class="nob">
+                    <div class="zhineng">
+                        默认排序
+                        <i class="sprits"></i>
+                    </div>
+                </a>
+            </li>
+        </ul>
+
+        <div class="select-kinds-layer" data-kinds="all-kinds">
+            <ol class="select-condition">
+                <li class="current">
+                    <a href="javascript:;">全部星级</a>
+                </li>
+                <li>
+                    <a href="javascript:;">五星级点评</a>
+                </li>
+                <li>
+                    <a href="javascript:;">四星级点评</a>
+                </li>
+                <li>
+                    <a href="javascript:;">三星级点评</a>
+                </li>
+                <li>
+                    <a href="javascript:;">二星级点评</a>
+                </li>
+                <li>
+                    <a href="javascript:;">一星级点评</a>
+                </li>
+            </ol>
+        </div>
+
+        <div class="select-kinds-layer" data-kinds="all-zhineng">
+            <ol class="select-condition">
+                <li class="current">
+                    <a href="javascript:;">默认排序</a>
+                </li>
+                <li>
+                    <a href="javascript:;">时间排序</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+    {% for comment in comments %}
+        <div class="shop-detail-box view-comment">
+            <div class="comment-user-inf">
+                <div class="user-inf-img">
+                    <img src="{{comment.avatar|default('/static/home/images/touxiang.png')}}" alt="">
+                </div>
+                <div class="user-inf-text">
+                    <p>{{comment.tel}}</p>
+                    <div class="goods-score">
+                        <div class="score-start sprits">
+                            <div class="current-score sprits"></div>
+                        </div>
+                        <span class="comment-count">{{comment.ctime}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="shop-comment-text">
+                <p>{{comment.desc}}</p>
+            </div>
+        </div>
+    {% endfor %}
+
+
+{%endblock%}
+{%block footer %}
+{% endblock %}
+{% block script %}
+    <script>
+        $(function () {
+            FastClick.attach(document.body);
+            var selectKinds = function () {
+                var $selectHandle = $(".goods-kinds-ul li"),
+                        _target = "",
+                        $showOption = $(".select-kinds-layer");
+                $selectHandle.on("click", function () {
+                    if (!$(this).hasClass("current")) {
+                        $(this).addClass("current").siblings().removeClass("current");
+                        _target = $(this).data("kinds");
+
+                        for (var i = 0; i < $showOption.length; i++) {
+                            var _point = $showOption.eq(i).data("kinds");
+                            if (_point == _target) {
+                                $showOption.hide();
+                                $showOption.eq(i).show();
+                                $showOption.eq(i).height($("body").height() - 170);
+                            }
+                        }
+                    } else {
+                        $(this).removeClass("current");
+                        $showOption.hide();
+                    }
+                });
+                $showOption.on("click", "li", function () {
+                    $showOption.hide();
+                    $selectHandle.removeClass("current")
+                });
+            }();
+        })
+
+    </script>
+{% endblock %}
