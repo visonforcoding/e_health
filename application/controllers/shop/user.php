@@ -64,103 +64,157 @@ class User extends Shop_Controller {
     //服务项目管理、
     public function service() {
         //获取所有服务
-        $re = $this->db->query("select concat(id,':',name) as serviceStr from service");
-        $service = $re->result_array();
-
-        $serviceStr = '';
-        foreach ($service as $key => $value) {
-            $serviceStr.=$value['serviceStr'] . ';';
-        }
-
-        $serviceStr = rtrim($serviceStr, ';');
         $this->twig->render('shop/user/service.twig', array(
-            'serviceStr' => $serviceStr,
             'realTimeInfo' => $this->getRealtimeInfo()
         ));
     }
 
     //获取店铺服务项数据
     public function getData() {
-
         $posts = $this->input->posts();
         $user = $this->user;
         $store_id = $user['id'];
-        $where = "store_service.storeId = '$store_id'"; //条件查询 本店和店铺类型
+        $where = "store_service22.storeId = '$store_id'"; //条件查询 本店和店铺类型
+
 
         $datas = $this->user_model
-                ->getJsonData('store_service', $posts['page'], $posts['rows'], 'store_service.ctime', 'desc', $where);
+                ->getJsonData('store_service22', $posts['page'], $posts['rows'], 'store_service22.ctime', 'desc', $where);
         $this->output->set_content_type('application/json')
                 ->set_output(json_encode($datas));
     }
 
-    //修改服务项设置，添加，或删除
-    public function editService() {
-        $user = $this->user;
-        $sid = $user['id'];
 
-        $posts = $this->input->posts();
-        $oper = $posts['oper'];
-        if ($oper == 'add') {
-            $serviceId = $posts['service'];
-            $isVisit = $posts['isVisit'];
-            //判断当前店铺是否存在相同的类型的服务项
-            $where = array('storeId' => $sid, 'serviceId' => $serviceId);
-            $query = $this->db->where($where)->get('store_service');
-            if ($query->result()) {
-                $data['success'] = false;
-                $data['message'] = '已存在相同类型的服务项';
+    public function serviceAdd(){
+        $user = $this->user;
+        $store_id = $user['id'];
+        if($this->input->isPost()){
+            $posts = $this->input->post();
+             $data = array(
+                'name' => $posts['name'],
+                //'mprice' => $posts['price'],
+                'price' => $posts['price'],
+                'ctime' => date('Y-m-d H:i:s'),
+                'utime' => date('Y-m-d H:i:s'),
+                'efficacy' => $posts['efficacy'],
+                'taboo' => $posts['taboo'],
+                'stime' => $posts['stime'],
+                'cover' => $posts['cover'],
+                'isVisit' => $posts['isVisit'],
+                'status' => $posts['status'],
+                'storeId' =>  $store_id,
+            );
+            $query_ck = $this->db->where(array('name' => $posts['name'],"storeId" =>$store_id))->get('store_service22');
+            $ck_node = $query_ck->row_array();
+            //检测是否已被存在
+            if (is_array($ck_node) && count($ck_node) > 0) {
+                $response['status'] = true;
+                $response['msg'] = '该项目名已经存在！';
                 $this->output->set_content_type('application/json')
-                        ->set_output(json_encode($data));
+                        ->set_output(json_encode($response));
                 return;
             }
-            $insert_data['storeId'] = $sid;
-            $insert_data['serviceId'] = $serviceId;
-            $insert_data['isVisit'] = $isVisit;
-            $insert_data['ctime'] = date('Y-m-d H:i:s');
-            $query = $this->db->insert('store_service', $insert_data);
-            if ($query) {
-                $data['success'] = true;
-                $data['message'] = '新增服务项成功';
+            $ck_ins = $this->db->insert('store_service22', $data);
+            $response['status'] = $ck_ins;
+            if ($ck_ins) {
+                $response['status'] = true;
+                $response['msg'] = '添加成功！';
             } else {
-                $data['success'] = false;
-                $data['message'] = '新增失败，请联系管理员';
+                $response['status'] = false;
+                $response['msg'] = '添加失败！';
             }
-        } else {
+            $this->output->set_content_type('application/json')
+                    ->set_output(json_encode($response));
+            return;
+        }
+        $this->twig->render("shop/user/serviceAdd.twig",array(
+            'realTimeInfo' => $this->getRealtimeInfo()
+        ));
+    }
+
+    public function serviceEdit(){
+        if($this->input->isPost()){
+             $posts = $this->input->post();
+             //var_dump($posts);exit;
+             $data = array(
+                'name' => $posts['name'],
+                //'mprice' => $posts['price'],
+                'price' => $posts['price'],
+                'utime' => date('Y-m-d H:i:s'),
+                'efficacy' => $posts['efficacy'],
+                'taboo' => $posts['taboo'],
+                'stime' => $posts['stime'],
+                'cover' => $posts['cover'],
+                'isVisit' => $posts['isVisit'],
+                'status' => $posts['status'],
+            );
             $id = $posts['id'];
-            $query = $this->db->delete('store_service', array('id' => $id));
-            if ($query) {
-                $data['success'] = true;
-                $data['message'] = '删除成功';
+
+            $store_ins = $this->db->update('store_service22', $data,array('id'=>$id));
+            if ($store_ins) {
+                $response['status'] = true;
+                $response['msg'] = '修改成功！';
             } else {
-                $data['success'] = false;
-                $data['message'] = '删除失败，请联系管理员';
+                $response['status'] = false;
+                $response['msg'] = '修改失败！';
             }
+            $this->output->set_content_type('application/json')
+                    ->set_output(json_encode($response));
+            return;
+
+        }
+        $id = $this->input->get('id');
+        $query = $this->db->where(array('id'=>$id))->get('store_service22');
+        $service = $query->row_array();
+
+        $this->twig->render('shop/user/serviceEdit.twig',array(
+            'service' => $service,
+            'realTimeInfo' => $this->getRealtimeInfo(),
+        ));
+
+    }
+
+    public function servicerDel(){
+        $id = $this->input->post('id');
+        $query = $this->db->delete('store_service22', array('id' => $id));
+        if ($query) {
+            $data['status'] = true;
+            $data['msg'] = '删除成功';
+        } else {
+            $data['status'] = false;
+            $data['msg'] = '删除失败，请联系管理员';
         }
 
         $this->output->set_content_type('application/json')
                 ->set_output(json_encode($data));
+    
     }
-
-    //修改服务类型
-    public function changeVisitStatus() {
-        $id = $this->input->post('id');
-        $query = $this->db->select('isVisit')->where(array('id' => $id))->get('store_service');
-        $re = $query->row();
-        $isVisit = $re->isVisit;
-
-        if ($isVisit == '1') {
-            //本来是上门，则是取消上门
-            $query = $this->db->update('store_service', array('isVisit' => '0'), array('id' => $id));
-            if ($query) {
-                exit('{"code":"ok","isVisit":"0"}');
-            }
+    
+    public function doUpload(){
+        $config['upload_path'] = './uploads/admin/';
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['max_size'] = '1024';
+        $config['max_width'] = '1024';
+        $config['max_height'] = '768';
+        $config['file_name'] = date('Ymdhis') . createRandomCode(2);
+        $this->lang->load('upload', 'chinese'); //加载语言类
+        $this->load->library('upload', $config);
+        if (!$this->upload->do_upload('file')) {
+            $error = $this->upload->display_errors();
+            $response['status'] = false;
+            $response['msg'] = strip_tags($error);
+            $this->output->set_content_type('application/json')
+                    ->set_output(json_encode($response));
         } else {
-            $query = $this->db->update('store_service', array('isVisit' => '1'), array('id' => $id));
-            if ($query) {
-                exit('{"code":"ok","isVisit":"1"}');
-            }
+            $upload_data = $this->upload->data();
+            $filename = $upload_data['file_name'];
+            $response['status'] = true;
+            $response['msg'] = '上传成功！';
+            $response['url'] = '/uploads/admin/' . $filename;
+            $this->output->set_content_type('application/json')
+                    ->set_output(json_encode($response));
         }
     }
+
 
     //店铺服务范围列表
     public function serviceArea() {
