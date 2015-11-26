@@ -10,6 +10,13 @@
 {% endblock %}
 {% block main %}
     <div class="col-xs-12">
+        <div class="table-bar">
+            <label>关键字:</label>
+            <input type="text" name="keywords" style="width:260px;" class="form-control" placeholder="按员工编号、真实姓名、手机号"/>
+            <label></label>
+            <button onclick="doSearch();" class="btn btn-info"><i class="icon icon-search"></i>搜索</button>
+            <a href="/shop/user/serviceAdd" class="btn btn-small btn-warning">新增服务项<i class="icon icon-plus-sign"></i></a>
+        </div>
         <table id="list"><tr><td></td></tr></table> 
         <div id="pager"></div> 
     </div>
@@ -24,13 +31,17 @@
                 url: "/shop/user/getData",
                 datatype: "json",
                 mtype: "POST",
-                colNames: ["id", "服务项目", "价格", "服务时长", "预约类型", '操作'],
+                colNames: ["id", "服务项目", "价格", "服务时长","示意图","创建时间","修改时间","服务类型","状态","操作"],
                 colModel: [
-                    {name: "id", hidden: true, key: true, editable: true, width: 200, },
-                    {name: "service", editable: true, editoptions: true, edittype: "select", editoptions:{value: "{{ serviceStr }}"}, width: 250, },
-                    {name: "price", width: 200, },
-                    {name: "stime", width: 200, },
-                    {name: "isVisit", editable: true, edittype: "select", editoptions: {value: "0:上门;1:到店"}, width: 200, },
+                    {name: "id", hidden: true, key: true, editable: true, width: 150, },
+                    {name: "name", editable: true, editoptions: true, edittype: "select" },
+                    {name: "price", width: 150, },
+                    {name: "stime", width: 100, },
+                    {name: "cover", width: 200,formatter: img},
+                    {name: "ctime", width: 150, },
+                    {name: "utime", width: 150, },
+                    {name: "isVisit", editable: true, edittype: "select", editoptions: {value: "0:上门;1:到店"}, width: 150, },
+                    {name: "status", width: 100, },
                     {name: "operator", formatter: operateFormatter, width: 215, }
                 ],
                 pager: "#pager",
@@ -41,7 +52,7 @@
                 viewrecords: true,
                 gridview: true,
                 autoencode: true,
-                caption: '服务项目管理',
+                caption: false,
                 autowidth: true,
                 shrinkToFit: 30,
                 height: 'auto',
@@ -54,8 +65,7 @@
                     repeatitems: false,
                     id: "0"
                 },
-                editurl: '/shop/user/editService'
-            }).navGrid('#pager', {add: true, edit: false, view: true, del: true}, searchFn, editFn);
+            }).navGrid('#pager', {add: false, edit: false, view: true, del: false}, searchFn, editFn);
 
             var searchFn = {
             };
@@ -75,33 +85,41 @@
 
             };
             function operateFormatter(cellvalue, options, rowObject) {
-                var isVisit = rowObject['isVisit'];
-                var id = rowObject['id'];
-                editDelStr = '';
-                if (isVisit == '上门+到店') {
-                    var editDelStr = '<button  id="update' + rowObject.id + '" onClick="update(' + rowObject.id + ');" data-id="' + rowObject.id + '" class="grid-btn btn btn-primary btn-mini del-record"><i class="icon icon-edit"></i> 取消预约上门</button>';
-                } else {
-                    var editDelStr = '<button id="update' + rowObject.id + '" onClick="update(' + rowObject.id + ');" data-id="' + rowObject.id + '" class="grid-btn btn btn-primary btn-mini del-record"><i class="icon icon-edit"></i> 可预约上门</button>';
-                }
+                 
+                var editDelStr = '<button onClick="delRecord(' + rowObject.id + ');" data-id="' + rowObject.id + '" class="grid-btn btn btn-primary btn-mini del-record"><i class="icon icon-trash"></i> 删除</button>';
+
+                editDelStr += '<a href="/shop/user/serviceEdit?id=' + rowObject.id + '" class="grid-btn btn btn-primary btn-mini"><i class="icon icon-pencil"></i> 修改</a>';
+
                 editDelStr += '<button id="update' + rowObject.id + '" onClick="setCargo(' + rowObject.id + ');" data-id="' + rowObject.id + '" class="grid-btn btn btn-primary btn-mini del-record"><i class="icon icon-cubes"></i> 绑定耗材</button>';
+                return editDelStr;
+            }
+
+            function img(cellvalue, options, rowObject){
+                var editDelStr = "<img src='" +cellvalue+"' />";
+                //console.log(editDelStr);
                 return editDelStr;
             }
         });
 
-        function update(id) {
-            $.ajax({
-                url: '/shop/user/changeVisitStatus',
-                type: 'post',
-                data: {id: id},
-                success: function (re) {
-                    re = JSON.parse(re);
-                    if (re.code == 'ok') {
+         function delRecord(id) {
+            layer.confirm('确定要删除该条记录？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    url: '/shop/user/serviceDel',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {id: id},
+                    success: function (res) {
+                        layer.msg(res.msg, {icon: 1});
+                        if (res.status) {
                             $('#list').trigger('reloadGrid');
-                    } else {
-                        alert('更新失败，请联系管理员');
+                        }
                     }
-                }})
-
+                });
+            }, function () {
+                
+            });
         }
         function setCargo(id) {
             //查看明细

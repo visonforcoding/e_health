@@ -8,19 +8,16 @@ class User_model extends LM_Model {
 	
 	public function getJsonData($tableName, $page, $rows, $sort = '', $order = '', $where = '') {
     	$offset = ($page - 1) * $rows; //分页起始条数
-        $selectStr = 'store_service.id as id,store_service.isVisit,service.name as service,service.price,service.stime ';
+        $selectStr = 'store_service22.* ';
         if (!empty($where)) {
             $nums = $this->db->where($where)->count_all_results($tableName); //总条数
             if (!empty($order)) {
                 $res = $this->db
-                        ->select($selectStr)
-                        ->join('service','store_service.serviceId = service.id')
-                        ->where($where)->limit($rows, $offset)->order_by($sort, $order)->get($tableName);
+                        ->select($selectStr)->where($where)
+                        ->limit($rows, $offset)->order_by($sort, $order)->get($tableName);
 
             } else {
-                $res = $this->db
-                        ->select($selectStr)
-                        ->join('service','store_service.serviceId = service.id')
+                $res = $this->db->select($selectStr)
                         ->where($where)->limit($rows, $offset)->get($tableName);
             }
         } else {
@@ -28,22 +25,26 @@ class User_model extends LM_Model {
             if (!empty($order)) {
                 $res = $this->db
                         ->select($selectStr)
-                        ->join('service','store_service.serviceId = service.id')
                         ->limit($rows, $offset)->order_by($sort, $order)->get($tableName);
             } else {
                 $res = $this->db
                         ->select($selectStr)
-                        ->join('service','store_service.serviceId = service.id')
                         ->limit($rows, $offset)->get($tableName);
             }
         }
         $res = $res->result_array();
         foreach ($res as $key => $value) {
-        	if($value['isVisit']=='1'){
-        		$res[$key]['isVisit']='上门+到店';
-        	}else{
-        		$res[$key]['isVisit']='到店';
-        	}
+            if($value['isVisit']=='1'){
+                $res[$key]['isVisit']='上门+到店';
+            }else{
+                $res[$key]['isVisit']='到店';
+            }
+
+            if($value['status'] == "1"){
+               $res[$key]['status']='启用'; 
+            }else{
+               $res[$key]['status']='禁用'; 
+            }
         }
 
         if (empty($res)) {
