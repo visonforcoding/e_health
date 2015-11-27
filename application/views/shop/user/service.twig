@@ -11,8 +11,8 @@
 {% block main %}
     <div class="col-xs-12">
         <div class="table-bar">
-            <label>关键字:</label>
-            <input type="text" name="keywords" style="width:260px;" class="form-control" placeholder="按员工编号、真实姓名、手机号"/>
+            <label>服务项目:</label>
+            <input type="text" name="keyword" style="width:260px;" class="form-control" placeholder="填写服务项目"/>
             <label></label>
             <button onclick="doSearch();" class="btn btn-info"><i class="icon icon-search"></i>搜索</button>
             <a href="/shop/user/serviceAdd" class="btn btn-small btn-warning">新增服务项<i class="icon icon-plus-sign"></i></a>
@@ -33,14 +33,14 @@
                 mtype: "POST",
                 colNames: ["id", "服务项目", "价格", "服务时长","示意图","创建时间","修改时间","服务类型","状态","操作"],
                 colModel: [
-                    {name: "id", hidden: true, key: true, editable: true, width: 150, },
-                    {name: "name", editable: true, editoptions: true, edittype: "select" },
-                    {name: "price", width: 150, },
+                    {name: "id", hidden: true, key: true, editable: true, width: 100, },
+                    {name: "name",width: 100,},
+                    {name: "price", width: 100, },
                     {name: "stime", width: 100, },
-                    {name: "cover", width: 200,formatter: img},
+                    {name: "cover", width: 150,formatter: img},
                     {name: "ctime", width: 150, },
                     {name: "utime", width: 150, },
-                    {name: "isVisit", editable: true, edittype: "select", editoptions: {value: "0:上门;1:到店"}, width: 150, },
+                    {name: "isVisit", editable: true, edittype: "select", editoptions: {value: "0:上门;1:到店"}, width: 100, },
                     {name: "status", width: 100, },
                     {name: "operator", formatter: operateFormatter, width: 215, }
                 ],
@@ -95,7 +95,7 @@
             }
 
             function img(cellvalue, options, rowObject){
-                var editDelStr = "<img src='" +cellvalue+"' />";
+                var editDelStr = "<img src='" +cellvalue+"'  />";
                 //console.log(editDelStr);
                 return editDelStr;
             }
@@ -132,6 +132,13 @@
                 area: ['380px', '50%'],
                 content: url//iframe的url
             });
+        }
+
+        function doSearch() {
+            var keyword = $('input[name="keyword"]').val();
+            $("#list").jqGrid('setGridParam', {
+                postData: {keyword: keyword}
+            }).trigger("reloadGrid");
         }
 
     </script>

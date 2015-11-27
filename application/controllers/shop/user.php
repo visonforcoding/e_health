@@ -74,11 +74,14 @@ class User extends Shop_Controller {
         $posts = $this->input->posts();
         $user = $this->user;
         $store_id = $user['id'];
-        $where = "store_service22.storeId = '$store_id'"; //条件查询 本店和店铺类型
-
+        $keyword = isset($posts['keyword'])? $posts['keyword'] : '';
+        $where = "store_service.storeId = '$store_id'"; //条件查询 本店和店铺类型
+        if($keyword){
+            $where .= "and store_service.name like '%$keyword%'";
+        }
 
         $datas = $this->user_model
-                ->getJsonData('store_service22', $posts['page'], $posts['rows'], 'store_service22.ctime', 'desc', $where);
+                ->getJsonData('store_service', $posts['page'], $posts['rows'], 'store_service.ctime', 'desc', $where);
         $this->output->set_content_type('application/json')
                 ->set_output(json_encode($datas));
     }
@@ -103,7 +106,7 @@ class User extends Shop_Controller {
                 'status' => $posts['status'],
                 'storeId' =>  $store_id,
             );
-            $query_ck = $this->db->where(array('name' => $posts['name'],"storeId" =>$store_id))->get('store_service22');
+            $query_ck = $this->db->where(array('name' => $posts['name'],"storeId" =>$store_id))->get('store_service');
             $ck_node = $query_ck->row_array();
             //检测是否已被存在
             if (is_array($ck_node) && count($ck_node) > 0) {
@@ -113,7 +116,7 @@ class User extends Shop_Controller {
                         ->set_output(json_encode($response));
                 return;
             }
-            $ck_ins = $this->db->insert('store_service22', $data);
+            $ck_ins = $this->db->insert('store_service', $data);
             $response['status'] = $ck_ins;
             if ($ck_ins) {
                 $response['status'] = true;
@@ -136,6 +139,7 @@ class User extends Shop_Controller {
              $posts = $this->input->post();
              //var_dump($posts);exit;
              $data = array(
+                'cover' => $posts['cover'],
                 'name' => $posts['name'],
                 //'mprice' => $posts['price'],
                 'price' => $posts['price'],
@@ -143,13 +147,12 @@ class User extends Shop_Controller {
                 'efficacy' => $posts['efficacy'],
                 'taboo' => $posts['taboo'],
                 'stime' => $posts['stime'],
-                'cover' => $posts['cover'],
                 'isVisit' => $posts['isVisit'],
                 'status' => $posts['status'],
             );
+            
             $id = $posts['id'];
-
-            $store_ins = $this->db->update('store_service22', $data,array('id'=>$id));
+            $store_ins = $this->db->where(array('id'=>$id))->update('store_service', $data);
             if ($store_ins) {
                 $response['status'] = true;
                 $response['msg'] = '修改成功！';
@@ -163,9 +166,8 @@ class User extends Shop_Controller {
 
         }
         $id = $this->input->get('id');
-        $query = $this->db->where(array('id'=>$id))->get('store_service22');
+        $query = $this->db->where(array('id'=>$id))->get('store_service');
         $service = $query->row_array();
-
         $this->twig->render('shop/user/serviceEdit.twig',array(
             'service' => $service,
             'realTimeInfo' => $this->getRealtimeInfo(),
@@ -175,7 +177,7 @@ class User extends Shop_Controller {
 
     public function servicerDel(){
         $id = $this->input->post('id');
-        $query = $this->db->delete('store_service22', array('id' => $id));
+        $query = $this->db->delete('store_service', array('id' => $id));
         if ($query) {
             $data['status'] = true;
             $data['msg'] = '删除成功';

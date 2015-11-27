@@ -8,7 +8,7 @@ class User_model extends LM_Model {
 	
 	public function getJsonData($tableName, $page, $rows, $sort = '', $order = '', $where = '') {
     	$offset = ($page - 1) * $rows; //分页起始条数
-        $selectStr = 'store_service22.* ';
+        $selectStr = 'store_service.* ';
         if (!empty($where)) {
             $nums = $this->db->where($where)->count_all_results($tableName); //总条数
             if (!empty($order)) {

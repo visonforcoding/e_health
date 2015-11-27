@@ -15,7 +15,7 @@ class Order_model extends LM_Model {
     public function getJsonData($tableName, $page, $rows, $sort = '', $order = '', $where = '') {
         $offset = ($page - 1) * $rows; //分页起始条数
         $selectStr = 'order.id as id,order.isVisit,order.ctime,order.payStatus,order.orderStatus,'
-                . 'service.name,order.orderNo,order.remark,member.nick,member.tel,'
+                . 'store_service.name,order.orderNo,order.remark,member.nick,member.tel,'
                 . 'order.price,order.amount,member.gender,order.serviceTime,order.type,'
                 . 'order.address,store_employee.truename,order.consignee,order.ucid,order.card_id';
         if (!empty($where)) {
@@ -24,7 +24,7 @@ class Order_model extends LM_Model {
                 $res = $this->db
                                 ->select($selectStr)
                                 ->join('store', 'store.id = order.sid')
-                                ->join('service', 'order.serviceId = service.id')
+                                ->join('store_service', 'order.serviceId = store_service.id')
                                 ->join('member', 'order.uid = member.id', 'left')
                                 ->join('store_employee_order', 'order.id = store_employee_order.order_id', 'left')
                                 ->join('store_employee', 'store_employee.id = store_employee_order.employee_id', 'left')
@@ -33,7 +33,7 @@ class Order_model extends LM_Model {
                 $res = $this->db
                                 ->select($selectStr)
                                 ->join('store', 'store.id = order.sid')
-                                ->join('service', 'order.serviceId = service.id')
+                                ->join('store_service', 'order.serviceId = store_service.id')
                                 ->join('store_employee_order', 'order.id = store_employee_order.order_id', 'left')
                                 ->join('store_employee', 'store_employee.id = store_employee_order.employee_id', 'left')
                                 ->where($where)->limit($rows, $offset)->get($tableName);
@@ -44,7 +44,7 @@ class Order_model extends LM_Model {
                 $res = $this->db
                                 ->select($selectStr)
                                 ->join('store', 'store.id = order.sid')
-                                ->join('service', 'order.serviceId = service.id')
+                                ->join('store_service', 'order.serviceId = store_service.id')
                                 ->join('store_employee_order', 'order.id = store_employee_order.order_id', 'left')
                                 ->join('store_employee', 'store_employee.id = store_employee_order.employee_id', 'left')
                                 ->limit($rows, $offset)->order_by($sort, $order)->get($tableName);
@@ -52,7 +52,7 @@ class Order_model extends LM_Model {
                 $res = $this->db
                                 ->select($selectStr)
                                 ->join('store', 'store.id = order.sid')
-                                ->join('service', 'order.serviceId = service.id')
+                                ->join('store_service', 'order.serviceId = store_service.id')
                                 ->join('store_employee_order', 'order.id = store_employee_order.order_id', 'left')
                                 ->join('store_employee', 'store_employee.id = store_employee_order.employee_id', 'left')
                                 ->limit($rows, $offset)->get($tableName);
