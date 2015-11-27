@@ -50,7 +50,7 @@ class Orderservice extends Home_Controller {
             $order = 'price';
             $sort = 'asc';
         }
-        $query_services = $this->db->order_by("$order", "$sort")->get('service');
+        $query_services = $this->db->order_by("$order", "$sort")->get('store_service');
         $services = $query_services->result_array();
         $this->twig->render('home/orderservice/service.twig', array(
             'services' => $services,
@@ -67,7 +67,7 @@ class Orderservice extends Home_Controller {
             $where['id'] = $service_id;
             $where['status'] = 1;
             $query_store = $this->db
-                            ->where($where)->get('service');
+                            ->where($where)->get('store_service');
             $service = $query_store->row_array();
             if ($service) {
                 
@@ -90,7 +90,7 @@ class Orderservice extends Home_Controller {
         $isvisit_stores_ids = array();
         $service_where['isVisit'] = 1;
         if (!empty($service_id)) {
-            $service_where['serviceId'] = $service_id;
+            $service_where['id'] = $service_id;
         }
         $query_isvisit_stores = $this->db
                 ->distinct('storeId')
@@ -134,102 +134,6 @@ class Orderservice extends Home_Controller {
     }
 
     /**
-     * 选技师
-     */
-    public function choiceEngineer() {
-        $service_id = $this->input->get('service_id');
-        $isvisit_engineer_ids = array();
-        $service_where['isVisit'] = 1;
-        if (!empty($service_id)) {
-            //提供该服务的技师
-            $service_where['serviceId'] = $service_id;
-        }
-        $query_isvisit_engineer = $this->db
-                ->where($service_where)
-                ->get('engineer_service');
-        $isvisit_engineers = $query_isvisit_engineer->result_array();
-        foreach ($isvisit_engineers as $value) {
-            $isvisit_engineer_ids[] = $value['engineerId'];
-        }
-        $location = '深圳';
-        $query_area = $this->db->select('id')->where("`name` like '%$location%'")
-                ->get('area');
-        $location_area = $query_area->row_array();
-        $location_id = $location_area['id']; //定位地点在数据库中的id
-        $get = $this->input->gets();
-
-        if (isset($get['area'])) {
-            $where['engineer.areaId'] = $get['area'];
-        } else {
-            $where['engineer.cityId'] = $location_id;
-        }
-        $where['engineer.status'] = 1;
-        if (!empty($service_id) && !empty($isvisit_engineer_ids)) {
-            $query_engineer = $this->db->select('area.name,engineer.id,engineer.name,engineer.cover,'
-                            . 'engineer.commentNums,engineer.desc')
-                    ->join('area', 'area.id = engineer.regionId', 'left')
-                    ->where($where)
-                    ->where_in('engineer.id', $isvisit_engineer_ids)
-                    ->get('engineer');
-        } else {
-            $query_engineer = $this->db->select('area.name,engineer.id,engineer.name,engineer.cover,'
-                            . 'engineer.commentNums,engineer.desc')
-                    ->join('area', 'area.id = engineer.regionId', 'left')
-                    ->where($where)
-                    ->get('engineer');
-        }
-        $engineers = $query_engineer->result_array();
-        $this->twig->render('home/orderservice/choice_engineer.twig', array(
-            'engineers' => $engineers,
-            'sid' => $service_id,
-            'pos_address' => $this->pos_address
-        ));
-    }
-
-    /**
-     * 技师详情
-     */
-    public function engineerDetail() {
-        $engineer_id = $this->input->get('eid');
-        $service_id = $this->input->get('sid');
-        if (empty($engineer_id)) {
-            show_404();
-        } else {
-            $this->session->set_userdata(array(
-                'engineer_id' => $engineer_id,
-            ));
-        }
-        $query_engineer = $this->db->where("`id` = '$engineer_id' and `status` = '1'")
-                ->get('engineer');
-        $engineer = $query_engineer->row_array();
-        if (!empty($service_id)) {
-            $query_service = $this->db->where("`id` = '$service_id'")->get('service');
-            $service = $query_service->row_array();
-            $this->twig->render('home/orderservice/engineer_detail_2.twig', array(
-                'engineer' => $engineer,
-                'service' => $service
-            ));
-        } else {
-            $query_services = $this->db->select('service.name,service.id,service.price,service.stime')
-                    ->join('service', 'service.id = engineer_service.serviceId')
-                    ->where("`engineer_service.engineerId` = '$engineer_id'")
-                    ->get('engineer_service');
-            $services = $query_services->result_array();
-            //查询所有服务项目
-            $this->load->model('Comment_model', 'comment_model');
-            //格式化 店铺 信息 组织
-            $comment_info = $this->comment_model->fetchCommentInfo(2, $engineer_id);
-            $comments = $this->comment_model->fetchComments('2', $engineer_id, 4);
-            $this->twig->render('home/orderservice/engineer_detail_1.twig', array(
-                'engineer' => $engineer,
-                'services' => $services,
-                'comments' => $comments,
-                'comment_info' => $comment_info
-            ));
-        }
-    }
-
-    /**
      * 预定订单页
      */
     public function store() {
@@ -260,22 +164,7 @@ class Orderservice extends Home_Controller {
         ));
     }
 
-    /**
-     * 技师预约页
-     */
-    public function engineerOrder() {
-        $engineer_id = $this->input->get('eid');
-        $service_id = $this->input->get('sid');
-        $query_engineer = $this->db->where('id', $engineer_id)->get('engineer');
-        $engineer = $query_engineer->row_array();
-        $query_service = $this->db->where('id', $service_id)->get('service');
-        $service = $query_service->row_array();
-        $this->twig->render('home/orderservice/engineer_order.twig', array(
-            'service' => $service,
-            'engineer' => $engineer
-        ));
-    }
-
+   
     /**
      * 评论页
      */

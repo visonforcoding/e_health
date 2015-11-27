@@ -309,11 +309,8 @@ class Order extends Shop_Controller {
         }
 
         //获取当前店铺的服务
-        $query = $this->db->select('store_service.serviceId,service.name,store_service.isVisit,service.price')
-                ->join('service', 'service.id=store_service.serviceId')
-                ->where(array('store_service.storeId' => $store_id))
-                ->get('store_service');
-        $serviceData = $query->result_array();
+        $this->load->model('Service_model','service_model');
+        $serviceData = $this->service_model->getStoreService($store_id);
 
         //查询店铺所有耗材
         $query_cargos = $this->db->where("`store_id` = '$store_id'")->get('store_cargo');

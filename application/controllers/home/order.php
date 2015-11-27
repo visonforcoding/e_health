@@ -22,7 +22,6 @@ class Order extends Home_Controller {
                 show_error('您的订单已提交，请勿重复提交！');
             }
             $store_id = $this->input->post('store_id');
-            $engineer_id = $this->input->post('engineer_id');
             $address = $this->input->post('address');
             $address = $address ? $address : '';
             if (!empty($store_id)) {
@@ -32,17 +31,12 @@ class Order extends Home_Controller {
                 $good = $query_good->row_array();
                 $provider = $good['storeName'];
                 $isVisit = $post['isVisit'];
-            } else {
-                $oid = $engineer_id;
-                $query_good = $this->db->where('id', $engineer_id)->get('engineer');
-                $good = $query_good->row_array();
-                $provider = $good['name'];
-                $isVisit = '1';
-                $type = 2;
+            }else{
+                 show_error('数据错误!');
             }
             $service_id = $post['sid'];
 
-            $query_service = $this->db->where('id', $service_id)->get('service');
+            $query_service = $this->db->where('id', $service_id)->get('store_service');
             $service = $query_service->row_array();
             if ($good && $service) {
                 $order_name = $service['name'];
@@ -77,8 +71,8 @@ class Order extends Home_Controller {
         } else {
             //查询 待支付 订单信息
             $id = $this->input->get('id');
-            $query_order = $this->db->select('order.price,order.sid,order.serviceId,order.id,order.orderNo,service.name,order.amount')
-                    ->join('service', 'service.id = order.serviceId')
+            $query_order = $this->db->select('order.price,order.sid,order.serviceId,order.id,order.orderNo,store_service.name,order.amount')
+                    ->join('store_service', 'store_service.id = order.serviceId')
                     ->where("`order`.`id` = '$id' and `payStatus` = '1' and `orderStatus` = '1'")
                     ->get('order');
             $order = $query_order->row_array();
@@ -145,19 +139,19 @@ class Order extends Home_Controller {
         }
         if ($orderType != 'close') {
             $query_orders = $this->db
-                    ->select('order.provider,order.type,order.serviceTime,service.name,'
-                            . 'order.isVisit,order.id,service.cover,order.address,'
+                    ->select('order.provider,order.type,order.serviceTime,store_service.name,'
+                            . 'order.isVisit,order.id,store_service.cover,order.address,'
                             . 'order.orderStatus,order.payStatus')
-                    ->join('service', 'service.id = order.serviceId')
+                    ->join('store_service', 'store_service.id = order.serviceId')
                     ->where($where)
                     ->order_by('order.ctime', 'desc')
                     ->get('order');
         } else {
             $query_orders = $this->db
-                    ->select('order.provider,order.type,order.serviceTime,service.name,'
-                            . 'order.isVisit,order.id,service.cover,order.address,'
+                    ->select('order.provider,order.type,order.serviceTime,store_service.name,'
+                            . 'order.isVisit,order.id,store_service.cover,order.address,'
                             . 'order.orderStatus,order.payStatus')
-                    ->join('service', 'service.id = order.serviceId')
+                    ->join('store_service', 'store_service.id = order.serviceId')
                     ->where($where)
                     ->or_where("(order.payStatus = '1' and order.orderStatus = '2' and order.isVisit = '$isVisit' and order.uid = '$user_id')")
                     ->order_by('order.ctime', 'desc')
@@ -184,9 +178,9 @@ class Order extends Home_Controller {
         $where['order.uid'] = $userId;
         $query_order = $this->db
                 ->select('order.provider,order.type,order.serviceTime,order.orderNo,order.ctime,'
-                        . 'order.isVisit,order.id,service.cover,order.address,service.price,service.name,'
+                        . 'order.isVisit,order.id,store_service.cover,order.address,store_service.price,store_service.name,'
                         . 'order.payStatus,order.orderStatus')
-                ->join('service', 'service.id = order.sid')
+                ->join('store_service', 'store_service.id = order.serviceId')
                 ->where($where)
                 ->order_by('order.ctime', 'desc')
                 ->get('order');

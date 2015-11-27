@@ -114,38 +114,38 @@
             </ol>
         </div>
     </div>
-
-    {% for store in stores %}
-        <div class="youhui-shop-list">
-            <div class="youhui-shio-inf">
-                <div class="youhui-shop-name">{{store.storeName}}</div>
-                <div class="youhui-shop-code">
-                    <div class="youhui-code-box sprits">
-                        <div class="youhui-get-code sprits"></div>
+        {% for store in stores %}
+            <div class="youhui-shop-list">
+                <div class="youhui-shio-inf">
+                    <div class="youhui-shop-name">{{store.storeName}}</div>
+                    <div class="youhui-shop-code">
+                        <div class="youhui-code-box sprits">
+                            <div class="youhui-get-code sprits"></div>
+                        </div>
+                        {{store.commentNums}}评价
                     </div>
-                    {{store.commentNums}}评价
+                    <a href="#">更多养生</a>
+                    <div class="youhui-shop-address">深南大道沿线</div>
                 </div>
-                <a href="#">更多养生</a>
-                <div class="youhui-shop-address">深南大道沿线</div>
+                <ul class="youhui-shop-server">
+                    {% for service in store.promo_services %}
+                        <li>
+                            <a href="/home/store/storeOrder/id/{{store.store_id}}/service_id/{{service.service_id}}">
+                            <div class="youhui-shop-img">
+                                <img src="{{service.cover}}" alt="">
+                            </div>
+                            <div class="youhui-shop-text">
+                                <p>{{service.title}}</p> 
+                                <p> {{service.name}}</p>
+                                <p class="youhui"><span>¥{{service.price}} </span><em>¥{{service.mprice}}</em> <b>已售{{service.orderCount}}</b></p>
+                            </div>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
             </div>
-            <ul class="youhui-shop-server">
-                {% for service in store.promo_services %}
-                    <li>
-                        <a href="/home/store/storeOrder/id/{{store.store_id}}/service_id/{{service.service_id}}">
-                        <div class="youhui-shop-img">
-                            <img src="{{service.cover}}" alt="">
-                        </div>
-                        <div class="youhui-shop-text">
-                            <p>{{service.title}}</p> 
-                            <p> {{service.name}}</p>
-                            <p class="youhui"><span>¥{{service.price}} </span><em>¥{{service.mprice}}</em> <b>已售{{service.orderCount}}</b></p>
-                        </div>
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endfor %}
+        {% endfor %}
+   
 {% endblock %}
 {% block script %}
     <script>

@@ -26,7 +26,7 @@ class Service_model extends LM_Model {
      * @return type
      */
     public function getServiceArrPlus() {
-        $query_services = $this->db->get('service');
+        $query_services = $this->db->get('store_service');
         $services = $query_services->result_array();
         $services_arr = array();
         foreach ($services as $value) {
@@ -92,8 +92,7 @@ class Service_model extends LM_Model {
             $stores_ids[] = $value['id'];
         }
         //查询所有服务项目
-        $query_services = $this->db->select('service.name,service.price,store_service.storeId')
-                ->join('service', 'service.id = store_service.serviceId')
+        $query_services = $this->db->select('store_service.name,store_service.price,store_service.storeId')
                 ->where_in('store_service.storeId', $stores_ids)
                 ->get('store_service');
         $store_services = $query_services->result_array();
@@ -208,9 +207,8 @@ class Service_model extends LM_Model {
         if ($isVisit) {
             $where['store_service.isVisit'] = 1;
         }
-        $query_services = $this->db->select('service.stime,service.id,service.name,service.price,store_service.storeId,'
-                        . 'service.efficacy')
-                ->join('service', 'service.id = store_service.serviceId')
+        $query_services = $this->db->select('store_service.stime,store_service.id,store_service.name,store_service.price,store_service.storeId,'
+                        . 'store_service.efficacy')
                 ->where($where)
                 ->get('store_service'); 
         $services = $query_services->result_array();
@@ -226,5 +224,20 @@ class Service_model extends LM_Model {
         }
         return $services;
     }
+    //获取店铺下的服务项
+    public function getStoreService($store_id){
+        $query = $this->db->select('store_service.id as serviceId,store_service.name,store_service.isVisit,store_service.price')
+                ->where(array('store_service.storeId' => $store_id))
+                ->get('store_service');
+
+        $services = $query->result_array();
+
+        if(!$services){
+            $services = array();
+        }
+
+        return $services;
+    }
+       
 
 }

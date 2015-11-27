@@ -33,15 +33,7 @@
 
     <div class="goods-kinds">
         <ul class="goods-kinds-ul">
-            <li data-kinds="all-kinds">
-                <a href="javascript:;">
-                    <div class="all-kinds">
-                        全部分类
-                        <i class="sprits"></i>
-                    </div>
-                </a>
-            </li>
-            <li data-kinds="all-city">
+            <li data-kinds="all-city" style="width:50%">
                 <a href="javascript:;">
                     <div class="all-city">
                         {{search_area|default('全城')}}
@@ -49,7 +41,7 @@
                     </div>
                 </a>
             </li>
-            <li data-kinds="all-zhineng">
+            <li data-kinds="all-zhineng" style="width:50%" >
                 <a href="javascript:;" class="nob">
                     <div class="zhineng">
                         智能排序
@@ -58,20 +50,6 @@
                 </a>
             </li>
         </ul>
-        <div class="select-kinds-layer" data-kinds="all-kinds">
-            <ol class="select-condition">
-                <li class="current">
-                    <a href="javascript:;"><i class="sprits condition1"></i>全部分类</a>
-                </li>
-                {% for service in services %}
-                    <li>
-                        <a data-type="service" data-val="{{service.id}}" >
-                            <i class="sprits condition2"></i>{{service.name}}</a>
-                    </li>
-                {% endfor %}
-            </ol>
-        </div>
-
         <div class="select-kinds-layer" data-kinds="all-city">
             <ol class="select-condition">
                 <li class="current">
@@ -88,16 +66,16 @@
         <div class="select-kinds-layer" data-kinds="all-zhineng">
             <ol class="select-condition">
                 <li class="current">
-                    <a href="javascript:;">智能排序</a>
+                    <a data-type="sortType" data-val="">智能排序</a>
                 </li>
                 <li>
-                    <a href="?sortType=dist">离我最近</a>
+                    <a data-type="sortType" data-val="dist">离我最近</a>
                 </li>
                 <li>
-                    <a href="javascript:;">人气最高</a>
+                    <a data-type="sortType" data-val="comment">人气最高</a>
                 </li>
                 <li>
-                    <a href="javascript:;">评价最好</a>
+                    <a data-type="sortType" data-val="score">评价最好</a>
                 </li>
             </ol>
         </div>

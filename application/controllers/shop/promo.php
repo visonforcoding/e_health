@@ -19,7 +19,7 @@ class Promo extends Shop_Controller{
          //获取店铺下的所有服务
          $user = $this->user;
          $store_id = $user['id'];
-         $re=$this->db->query("select concat(store_service.serviceId,':',service.name) as serviceStr,concat(store_service.serviceId,':',service.price) as price from store_service left join service on store_service.serviceId=service.id where store_service.storeId='$store_id'");
+         $re=$this->db->query("select concat(store_service.id,':',store_service.name) as serviceStr,concat(store_service.id,':',store_service.price) as price from store_service  where store_service.storeId='$store_id'");
          $service=$re->result_array();
 
          $serviceStr='';
@@ -49,16 +49,16 @@ class Promo extends Shop_Controller{
 
     //修改记录
     public function edit(){
-        $posts=$this->input->posts();
-        $oper=$posts['oper'];
+        $posts = $this->input->posts();
+        $oper = $posts['oper'];
         if(isset($posts['price'])){
-                $prom_price=$posts['price']; //优惠价格
-                $serviceId=$posts['service'];
+                $prom_price = $posts['price']; //优惠价格
+                $serviceId = $posts['service'];
                 //获取当前服务的售价
-                $re=$this->db->select('price')->where(array('id'=>$serviceId))->get('service');
-                $re=$re->row_array();
-                $price= $re['price'];
-                if($prom_price>$price){
+                $re = $this->db->select('price')->where(array('id'=>$serviceId))->get('store_service');
+                $re = $re->row_array();
+                $price = $re['price'];
+                if($prom_price > $price){
                     $data['success']=false;
                     $data['message']='优惠价格不能高于售价';
                     $this->output->set_content_type('application/json')
@@ -71,8 +71,8 @@ class Promo extends Shop_Controller{
         //添加记录
         if($oper=='add'){
             $id=$posts['cid'];
-            $re=$this->db->select('price')->where(array('id'=>$serviceId))->get('service');
-            $re=$re->row_array();
+            $re = $this->db->select('price')->where(array('id'=>$serviceId))->get('store_service');
+            $re = $re->row_array();
             $posts['mprice']= $re['price'];
             unset($posts['cid']);
             unset($posts['service']);
@@ -94,8 +94,8 @@ class Promo extends Shop_Controller{
             }
 
         }elseif($oper=='edit'){
-            $id=$posts['cid'];
-            $posts['serviceId']= $serviceId;
+            $id = $posts['cid'];
+            $posts['serviceId'] = $serviceId;
             unset($posts['cid']);
             unset($posts['id']);
             unset($posts['service']);

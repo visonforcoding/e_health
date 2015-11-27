@@ -12,19 +12,19 @@ class Promo_model extends LM_Model{
 
     public function getJsonData($tableName, $page, $rows, $sort = '', $order = '', $where = '') {
     	$offset = ($page - 1) * $rows; //分页起始条数
-        $selectStr = 'store_promo.id as cid,store_promo.title,store_promo.mprice,store_promo.price,store_promo.begintime,store_promo.endtime,store_promo.status,service.name as service';
+        $selectStr = 'store_promo.id as cid,store_promo.title,store_promo.mprice,store_promo.price,store_promo.begintime,store_promo.endtime,store_promo.status,store_service.name as service';
         if (!empty($where)) {
             $nums = $this->db->where($where)->count_all_results($tableName); //总条数
             if (!empty($order)) {
                 $res = $this->db
                         ->select($selectStr)
-                        ->join('service','store_promo.serviceId = service.id')
+                        ->join('store_service','store_promo.serviceId = store_service.id')
                         ->where($where)->limit($rows, $offset)->order_by($sort, $order)->get($tableName);
 
             } else {
                 $res = $this->db
                         ->select($selectStr)
-                        ->join('service','store_promo.serviceId = service.id')
+                        ->join('store_service','store_promo.serviceId = store_service.id')
                         ->where($where)->limit($rows, $offset)->get($tableName);
             }
         } else {
@@ -32,12 +32,12 @@ class Promo_model extends LM_Model{
             if (!empty($order)) {
                 $res = $this->db
                         ->select($selectStr)
-                        ->join('service','store_promo.serviceId = service.id')
+                        ->join('store_service','store_promo.serviceId = store_service.id')
                         ->limit($rows, $offset)->order_by($sort, $order)->get($tableName);
             } else {
                 $res = $this->db
                         ->select($selectStr)
-                        ->join('service','store_promo.serviceId = service.id')
+                        ->join('store_service','store_promo.serviceId = store_service.id')
                         ->limit($rows, $offset)->get($tableName);
             }
         }

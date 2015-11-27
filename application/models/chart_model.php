@@ -348,11 +348,11 @@ class Chart_model extends LM_Model {
      */
     public function getStoreServiceData($storeId,$where) {
         $query_orders = $this->db->query("select ss.name,IFNULL(tmp.order_nums,0) as order_nums,IFNULL(tmp.total,0) as total
-                                from service ss
+                                from store_service ss
                                 left join (
                                 select count(*) as order_nums,s.id,s.name,sum(o.amount) as total
                                 from `order`  o
-                                join service s
+                                join store_service s
                                 on s.id = o.serviceId
                                 where o.sid = '$storeId' $where
                                 and (o.`type` = '1' or o.`type` = '3') and (o.`orderStatus`= '5' or o.`orderStatus` = '6')
@@ -375,23 +375,20 @@ class Chart_model extends LM_Model {
         $Xcategories = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
         $Ytext = '会员个数(个)';
         $valueSuffix = '个';
-        $query_orders = $this->db->query("select ser.name,IFNULL(tmp.order_nums,0) as order_nums,
-                            IFNULL(tmp.total,0) as total,IFNULL(total/tmp.total_nums,0) as avg_price,tmp.month,tmp.year,ser.id
+        $query_orders = $this->db->query("select ss.name,IFNULL(tmp.order_nums,0) as order_nums,
+                            IFNULL(tmp.total,0) as total,IFNULL(total/tmp.total_nums,0) as avg_price,tmp.month,tmp.year,ss.id
                             from store_service ss
                             join (
                             select count(*) as order_nums,s.id,sum(o.amount) as total,sum(o.nums) as total_nums,year(o.ctime) as year,month(o.ctime) as month
                             from `order`  o
                             join store_service s
-                            on s.serviceId = o.serviceId
+                            on s.id = o.serviceId
                             where o.sid = '$storeId' and year(o.ctime) = year(now()) 
                             and (o.`type` = '1' or o.`type` = '3') and (o.`orderStatus`= '5' or o.`orderStatus` = '6')
                             group by  year(o.ctime),month(o.ctime),o.serviceId) as tmp
-                            on ss.id = tmp.id
-                            join service ser
-                            on ser.id = ss.serviceId");
+                            on ss.id = tmp.id");
         $orders = $query_orders->result_array();
-        $query_services = $this->db->select('service.name,service.id')
-                ->join('service', 'service.id = store_service.serviceId')
+        $query_services = $this->db->select('store_service.name,store_service.id')
                 ->where("store_service.`storeId` = '$storeId'")
                 ->get('store_service');
         $services = $query_services->result_array();
@@ -428,20 +425,18 @@ class Chart_model extends LM_Model {
         $Xcategories = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
         $Ytext = '消费金额(元)';
         $valueSuffix = '个';
-        $query_orders = $this->db->query("select ser.name,IFNULL(tmp.order_nums,0) as order_nums,
-                            IFNULL(tmp.total,0) as total,IFNULL(total/tmp.total_nums,0) as avg_price,tmp.month,tmp.year,ser.id
+        $query_orders = $this->db->query("select ss.name,IFNULL(tmp.order_nums,0) as order_nums,
+                            IFNULL(tmp.total,0) as total,IFNULL(total/tmp.total_nums,0) as avg_price,tmp.month,tmp.year,ss.id
                             from store_service ss
                             join (
                             select count(*) as order_nums,s.id,sum(o.amount) as total,sum(o.nums) as total_nums,year(o.ctime) as year,month(o.ctime) as month
                             from `order`  o
                             join store_service s
-                            on s.serviceId = o.serviceId
+                            on s.id = o.serviceId
                             where o.sid = '$storeId' and year(o.ctime) = year(now()) 
                             and (o.`type` = '1' or o.`type` = '3') and (o.`orderStatus`= '5' or o.`orderStatus` = '6')
                             group by  year(o.ctime),month(o.ctime)) as tmp
-                            on ss.id = tmp.id
-                            join service ser
-                            on ser.id = ss.serviceId");
+                            on ss.id = tmp.id");
         $orders = $query_orders->result_array();
         $series = array();
         $series[0]['name'] = date('Y');
