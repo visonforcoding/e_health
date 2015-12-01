@@ -2,10 +2,19 @@
 
 class Usercoupon_model extends LM_Model {
 
-    //获取优惠劵劵种数据
+     /**
+     * 获取用户优惠劵数据
+     * @param string $tablename 表名
+     * @param int $curPage  当前页数
+     * @param int $pageSize 每页显示的条数
+     * @param string $sort 排序条件
+     * @param string $order desc | asc 
+     * @param string $where where条件 
+     * @return array
+     */
     public function getJsonRows($tableName, $curPage, $pageSize, $sort = '', $order = '', $where = '') {
         $offset = ($curPage - 1) * $pageSize; //分页起始条数
-        $selectStr = "user_coupon.*,coupon.type,coupon.amount1,coupon.amount2,member.tel,store.storeName,service.name as service";
+        $selectStr = "user_coupon.*,coupon.type,coupon.amount1,coupon.amount2,member.tel,store.storeName,store_service.name as service";
         if (!empty($where)) {
             $nums = $this->db->where($where)->count_all_results($tableName); //总条数
             if (!empty($order)) {
@@ -13,14 +22,14 @@ class Usercoupon_model extends LM_Model {
                                 ->join('coupon', 'coupon.id = user_coupon.cid')
                                 ->join('member', 'member.id = user_coupon.uid')
                                 ->join('store', 'store.id = coupon.shopId', 'left')
-                                ->join('service', 'coupon.serviceId = service.id', 'left')
+                                ->join('store_service', 'coupon.serviceId = store_service.id', 'left')
                                 ->where($where)->limit($pageSize, $offset)->order_by($sort, $order)->get($tableName);
             } else {
                 $res = $this->db->select($selectStr)
                                 ->join('coupon', 'coupon.id = user_coupon.cid')
                                 ->join('member', 'member.id = user_coupon.uid')
                                 ->join('store', 'store.id = coupon.shopId', 'left')
-                                ->join('service', 'coupon.serviceId = service.id', 'left')
+                                ->join('store_service', 'coupon.serviceId = store_service.id', 'left')
                                 ->where($where)->limit($pageSize, $offset)->get($tableName);
             }
         } else {
@@ -30,14 +39,14 @@ class Usercoupon_model extends LM_Model {
                                 ->join('coupon', 'coupon.id = user_coupon.cid')
                                 ->join('member', 'member.id = user_coupon.uid')
                                 ->join('store', 'store.id = coupon.shopId', 'left')
-                                ->join('service', 'coupon.serviceId = service.id', 'left')
+                                ->join('store_service', 'coupon.serviceId = store_service.id', 'left')
                                 ->limit($pageSize, $offset)->order_by($sort, $order)->get($tableName);
             } else {
                 $res = $this->db->select($selectStr)
                                 ->join('coupon', 'coupon.id = user_coupon.cid')
                                 ->join('member', 'member.id = user_coupon.uid')
                                 ->join('store', 'store.id = coupon.shopId', 'left')
-                                ->join('service', 'coupon.serviceId = service.id', 'left')
+                                ->join('store_service', 'coupon.serviceId = store_service.id', 'left')
                                 ->limit($pageSize, $offset)->get($tableName);
             }
         }
@@ -66,7 +75,12 @@ class Usercoupon_model extends LM_Model {
         return $arr_json;
     }
 
-    //启动关闭优惠券
+    /**
+     * 启动关闭优惠券
+     * @param int $id 优惠劵id
+     * @param int $flag 开启或关闭状态
+     * @return type
+     */
     public function on_off_usercoupon($id, $flag) {
         $query = $this->db->query("update `user_coupon` set `flag` ='" . $flag . "' where `id` = '" . $id . "'");
 

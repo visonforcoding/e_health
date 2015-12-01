@@ -95,7 +95,7 @@ class Coupon extends LM_Controller {
         $query_shop = $this->db->where(array('status' => '1'))->get('store'); //没判断审核状态
         $shop = $query_shop->result_array();
 
-        $query_service = $this->db->where(array('status' => '1'))->get('service');
+        $query_service = $this->db->where(array('status' => '1'))->get('store_service');
         $service = $query_service->result_array();
         $this->twig->render('admin/coupon/add.twig', array('shops' => $shop, 'services' => $service));
     }
@@ -108,7 +108,7 @@ class Coupon extends LM_Controller {
         $query_shop = $this->db->where(array('status' => '1'))->get('store'); //没判断审核状态
         $data['shops'] = $query_shop->result_array();
 
-        $query_service = $this->db->where(array('status' => '1'))->get('service');
+        $query_service = $this->db->where(array('status' => '1'))->get('store_service');
         $data['services'] = $query_service->result_array();
 
         if ($this->input->isPost()) {

@@ -29,7 +29,7 @@
             <p>预约上门项目</p>
             <ul class="select-server">
                 {% for service in homeservices %}
-                    <li data-visit="1" data-sid="{{service.id}}" > 
+                    <li data-visit="1" data-sid="{{service.id}}" {% if isVisit=='1' and service_id == service.id %} class='selected' {% endif %}> 
                         <i class="sprits"></i>{{ service.name }}</li>
                     {% endfor %}
             </ul>
@@ -38,7 +38,7 @@
             <p>预约到店项目</p>
             <ul class="select-server">
                 {% for service in services %}
-                    <li data-visit="0" data-sid="{{service.id}}" > 
+                    <li data-visit="0" data-sid="{{service.id}}"  {% if isVisit=='0' and service_id == service.id %} class='selected' {% endif %}> 
                         <i class="sprits"></i>{{ service.name }}</li>
                     {% endfor %}
             </ul>
@@ -191,7 +191,14 @@
                     }
 
                 });
+
+
             }();
+            var sid = $('.select-server li.selected').data('sid');
+            var store = '{{store.id}}';
+            var isVisit = '{{ isVisit }}';
+            var url =  '/home/store/onlineOrder?store_id=' + store + '&sid=' + sid + '&visit=' + isVisit;
+            $('.detail-yuyue-bnt').attr('href', url);
 
             var selectServer = function () {
                 $(".select-server").on("click", "li", function () {
@@ -212,6 +219,7 @@
                 var len = $('ul.select-server li.selected').length;
                 if (len === 0) {
                     alert('请先选择服务项目');
+                    $('.detail-yuyue-bnt').attr('href', 'javascript:;');
                 }
             }
             );

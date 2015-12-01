@@ -48,14 +48,14 @@
             <div class="form-group">
                 <label class="col-md-2 control-label">功效</label>
                 <div class="col-md-4">
-                     <textarea name="efficacy" style="width:100%;height: 160px;" ></textarea>
+                      <script id="efficacy" name="efficacy" style="width:100%;" type="text/plain"></script>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-md-2 control-label">禁忌</label>
                 <div class="col-md-4">
-                    <textarea name="taboo" style="width:100%;height: 160px;" ></textarea>
+                     <script id="taboo" name="taboo" style="width:100%;" type="text/plain"></script>
                 </div>
             </div>
              <div class="form-group">
@@ -94,8 +94,50 @@
     <script type="text/javascript" src="/static/lib/jqform/jquery.form.js"></script>
     <script type="text/javascript" src="/static/lib/jqvalidation/js/languages/jquery.validationEngine-zh_CN.js"></script>
     <script type="text/javascript" src="/static/lib/jqvalidation/js/jquery.validationEngine.js"></script>
+      <script type="text/javascript" src="/static/ueditor/ueditor.config.js"></script>
+    <!-- 编辑器源码文件 -->
+    <script type="text/javascript" src="/static/ueditor/ueditor.all.js"></script>
+    <!-- 实例化编辑器 -->
     <script>
         $(function () {
+            var toolbars = [
+                [
+                    'undo', //撤销
+                    'redo', //重做
+                    'bold', //加粗
+                    'indent', //首行缩进
+                    'italic', //斜体
+                    'underline', //下划线
+                    'strikethrough', //删除线
+                    'fontborder', //字符边框
+                    'horizontal', //分隔线
+                    'unlink', //取消链接
+                    'fontfamily', //字体
+                    'fontsize', //字号
+                    'link', //超链接
+                    'justifyleft', //居左对齐
+                    'justifyright', //居右对齐
+                    'justifycenter', //居中对齐
+                    'justifyjustify', //两端对齐
+                    'forecolor', //字体颜色
+                    'backcolor', //背景色
+                    'insertorderedlist', //有序列表
+                    'insertunorderedlist', //无序列表
+                    'fullscreen', //全屏
+                    'imagecenter', //居中
+                    'lineheight', //行间距
+                    'edittip ', //编辑提示
+                ]
+            ];
+            var ue = UE.getEditor('efficacy', {
+                toolbars: toolbars,
+                autoHeight: false
+            });
+            var ue_2 = UE.getEditor('taboo', {
+                toolbars: toolbars,
+                autoHeight: false
+            });
+
             $('form').validationEngine();
             $('form').ajaxForm({
                 beforeSubmit: function (formData, jqForm, options) {
@@ -103,8 +145,10 @@
                 success: function (data) {
                     if (data.status) {
                         layer.alert(data.msg, {icon: 6});
+                        history.go(-1);
                     } else {
                         layer.alert(data.msg, {icon: 5});
+                        history.go(-1);
                     }
                 }
             });

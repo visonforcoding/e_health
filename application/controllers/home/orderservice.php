@@ -239,16 +239,11 @@ class Orderservice extends Home_Controller {
         $user = $this->checkLogin();
         $user_id = $user['id'];
         $store_id = $this->input->get('store_id');
-        $engineer_id = $this->input->get('eid');
         $sid = $this->input->get('sid');  //服务id
         if (!empty($store_id)) {
             $good_name = 'store_id';
             $query_good = $this->db->select('storeName as name,id')->where('id', $store_id)->get('store');
             $query_good_detail = $this->db->select('orderTime')->where('sid', $store_id)->get('store_detail');
-        }
-        if (!empty($engineer_id)) {
-            $good_name = 'engineer_id';
-            $query_good = $this->db->where('id', $engineer_id)->get('engineer');
         }
         $good = $query_good->row_array();
         if ($query_good_detail) {
@@ -256,7 +251,7 @@ class Orderservice extends Home_Controller {
             $orderTime = unserialize($good_detail['orderTime']);
         }
         
-        $query_service = $this->db->where('id', $sid)->get('service');
+        $query_service = $this->db->where('id', $sid)->get('store_service');
         $service = $query_service->row_array();
         
 

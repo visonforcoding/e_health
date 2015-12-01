@@ -188,15 +188,24 @@ class Order extends Home_Controller {
         if (!$order) {
             show_error('服务器错误！');
         }
+
+       //var_dump($order);
+        $orderType = "";
         if ($order['orderStatus'] == 1 && $order['payStatus'] == 1) {
             $orderType = 'waitPay';
         }
         if ($order['orderStatus'] == 3 && $order['payStatus'] == 2) {
             $orderType = 'waitService';
-        }
-        if ($order['orderStatus'] == 2) {
+        } 
+
+        if ($order['orderStatus'] == 5 && $order['payStatus'] == 2) {
+            $orderType = 'comment';
+        }  
+      
+        if ($order['orderStatus'] !=5 && $order['payStatus'] ==5) {
             $orderType = 'cancel';
         }
+        //var_dump($orderType);exit;
         $this->twig->render('home/order/order_detail.twig', array(
             'order' => $order,
             'orderType' => $orderType
@@ -329,5 +338,6 @@ class Order extends Home_Controller {
             }
         }
     }
+
 
 }

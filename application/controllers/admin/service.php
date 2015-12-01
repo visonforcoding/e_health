@@ -29,7 +29,7 @@ class Service extends LM_Controller {
             $where = "`nick` like '$name%'";
         }
         $this->load->model('Service_model', 'service_model');
-        $rows = $this->service_model->getJsonRows('service', $curPage, $pageSize, $sort, $order, $where);
+        $rows = $this->service_model->getJsonRows('store_service', $curPage, $pageSize, $sort, $order, $where);
         $this->output->set_content_type('application/json')
                 ->set_output(json_encode($rows));
     }
