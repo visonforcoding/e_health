@@ -12,6 +12,7 @@ class Store extends Home_Controller {
 
     public function __construct() {
         parent::__construct();
+        $this->load->model('Service_model', 'service_model'); //引入服务模型
     }
 
     /**
@@ -31,7 +32,6 @@ class Store extends Home_Controller {
                         ->where("`pid` = '$location_id' and `status` = '1'")->get('area'); //查区级位置
         $sub_areas = $query_subarea->result_array();
         $get = $this->input->gets();
-        $this->load->model('Service_model', 'service_model'); //引入服务模型
         $serviceArr = $this->service_model->getServiceArrPlus();  //查询所有服务项目
 
         $search_area = '';
@@ -70,6 +70,12 @@ class Store extends Home_Controller {
             $order = 'store.id';
             $sort = 'desc';
         }
+
+        $search_sortType = array(
+            'dist' => "离我最近",
+            'comment' => "人气最高",
+            'score' => "评价最好",
+        );
         
         $where['store.status'] = 1;
         if (!empty($service_id) && !empty($service_stores_ids)) {
@@ -91,14 +97,26 @@ class Store extends Home_Controller {
         $stores = $query_stores->result_array();
         //格式化门店数据
         $stores = $this->service_model->formatStores($stores, true, $position['coordinate']);
+       
+        if($type == "dist"){ //按距离最近
+            if($stores){
+                foreach ($stores as $k => $v) {
+                   $distance[] = $v['distance'];
+                }  
+                 
+                array_multisort($distance, SORT_ASC, $stores); 
+            }
+        }
         $this->twig->render('home/store/store.twig', array(
             'stores' => $stores,
             'areas' => $sub_areas,
             'services' => $serviceArr,
             'search_area' => $search_area,
+            'sortType' => isset($search_sortType[$type])?$search_sortType[$type]:"",
             'pos_address' => $position['pos_address']
         ));
     }
+
 
     /**
      * 优惠商家
@@ -114,22 +132,48 @@ class Store extends Home_Controller {
                         ->where("`pid` = '$location_id' and `status` = '1'")->get('area'); //查区级位置
         $sub_areas = $query_subarea->result_array();
         $get = $this->input->gets();
-        if (isset($get['area'])) {
+
+
+        $search_area = '';
+        if (!empty($get['area'])) {
+            //该区域的门店
             $where['store.areaId'] = $get['area'];
+            $this->load->model('Area_model', 'area_model');
+            $area = $this->area_model->findAreaById($get['area']);
+            $search_area = $area['name'];
         } else {
             $where['store.cityId'] = $location_id;
         }
+
         $where['store.status'] = 1;
+
+         $type = $this->input->get("sortType");
+ 
+        if($type == "comment"){  //人气最高
+            $order = 'store.commentNums';
+            $sort = 'desc';
+        }elseif($type == "score" ){  //评价最高
+            $order = 'store.score';
+            $sort = 'desc';
+        }else{
+            $order = 'store.id';
+            $sort = 'desc';
+        }
+
+         $search_sortType = array(
+            'dist' => "离我最近",
+            'comment' => "人气最高",
+            'score' => "评价最好",
+        );
 
         //组织 有 优惠活动的 店铺列表
         $time =  date("Y-m-d H:i:s");
-        $query_promo_stores = $this->db->select('store_service.name,store_service.cover,store_service.id as service_id,store_promo.price'
+        $query_promo_stores = $this->db->select('store_service.name,store_service.cover,store_service.id as service_id,,store_promo.price,store_promo.id,store_promo.isVisit'
                         . ',store_promo.mprice,store_promo.sid as store_id,store_promo.title')
                 ->join('store_service', 'store_service.id = store_promo.serviceId', 'left')
                 ->where("store_promo.`status` = '1' and store_promo.`begintime` < '$time' and store_promo.`endtime` > '$time' ")
                 ->get('store_promo');
         $promo_stores = $query_promo_stores->result_array();
-        //var_dump($promo_stores);exit;
         $store_ids = array();
         if ($promo_stores) {
             foreach ($promo_stores as $key => $value) {
@@ -139,9 +183,22 @@ class Store extends Home_Controller {
 
         if( $store_ids){
             $store_ids = array_values(array_flip(array_flip($store_ids)));
-            $query_stores = $this->db->select('id as store_id,storeName,commentNums,score')->where($where)
-                            ->where_in('id', $store_ids)->get('store');
+            $query_stores = $this->db->select('id,storeName,commentNums,score')->where($where)
+                            ->where_in('id', $store_ids)->order_by($order,$sort)->get('store');
             $stores = $query_stores->result_array();
+              //格式化门店数据
+            $stores = $this->service_model->formatStores($stores, true, $position['coordinate']);
+
+            if($type == "dist"){ //按距离最近
+                if($stores){
+                    foreach ($stores as $k => $v) {
+                       $distance[] = $v['distance'];
+                    }  
+                    array_multisort($distance, SORT_ASC, $stores); //通过距离排序
+                }
+            }
+
+
             $new_promo_stores = array();
             //查询订单
             $query_orders = $this->db->select('count(1) as orderCount,sid,serviceId', false)
@@ -154,11 +211,11 @@ class Store extends Home_Controller {
                 foreach ($promo_stores as $k => $v) {
                     $v['orderCount'] = '0';
                     foreach ($orders_info as $km => $vm) {
-                        if ($vm['sid'] == $value['store_id'] && $v['service_id'] == $vm['serviceId']) {
+                        if ($vm['sid'] == $value['id'] && $v['service_id'] == $vm['serviceId']) {
                             $v['orderCount'] = $vm['orderCount'];
                         }
                     }
-                    if ($value['store_id'] == $v['store_id']) {
+                    if ($value['id'] == $v['store_id']) {
                         $new_promo_stores[$i]['promo_services'][] = $v;
                     }
                 }
@@ -168,12 +225,15 @@ class Store extends Home_Controller {
         }else{
             $new_promo_stores = $sub_areas = array();
         }
-       
+
+        //var_dump($new_promo_stores);exit;
         //组织结束
         $this->twig->render('home/store/promo_store.twig', array(
             'stores' => $new_promo_stores,
             'areas' => $sub_areas,
-            'pos_address' => $position['pos_address']
+            'pos_address' => $position['pos_address'],
+            'search_area' =>$search_area,
+            'sortType' => isset($search_sortType[$type])?$search_sortType[$type]:"",
         ));
     }
 
@@ -237,7 +297,8 @@ class Store extends Home_Controller {
      */
     public function storeOrder() {
         $store_id = $this->input->get('id');
-        $service_id = $this->input->get('sid');
+        $service_id = $this->input->get('service_id');
+        $isVisit = $this->input->get('isVisit'); //店铺优惠活动id
         if (!empty($store_id)) {
             $where['store.id'] = $store_id;
             $where['store.status'] = 1;
@@ -251,7 +312,6 @@ class Store extends Home_Controller {
                 $this->load->model('Service_model', 'service_model');
                 $services = $this->service_model->fetchServicesByStoreid($store_id);
                 $home_services = $this->service_model->fetchServicesByStoreid($store_id, true);
-
                 $service_area_ids = unserialize($store['serviceArea']);
                 if($service_area_ids){
                     foreach($service_area_ids as $value){
@@ -277,11 +337,13 @@ class Store extends Home_Controller {
         } else {
             show_404();
         }
+       
         $this->twig->render('home/store/store_order.twig', array(
             'store' => $store,
             'services' => $services,
             'service_area' => $area_str,
             'service_id' => $service_id,
+            'isVisit' => $isVisit,
             'homeservices' => $home_services
         ));
     }
@@ -381,6 +443,21 @@ class Store extends Home_Controller {
 
         $query_service = $this->db->where('id', $sid)->get('store_service');
         $service = $query_service->row_array();
+        //查找当前服务是否有优惠价
+        $where = array(
+            'serviceId'=>$sid,
+            'sid'=>$store_id,
+            'isVisit'=>$isVisit,
+            'status'=>'1',
+            'begintime <' => date('Y-m-d H:i:s'),
+            'endtime >' => date('Y-m-d H:i:s'),
+            );
+
+        $query = $this->db->where($where)->get('store_promo');
+        $promo = $query->row_array();
+        if($promo){
+            $service['price'] = $promo['price'];
+        }
         $this->twig->render('home/store/online_order.twig', array(
             'service' => $service,
             'store' => $store,

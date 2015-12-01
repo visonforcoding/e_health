@@ -91,6 +91,8 @@
     {% elseif orderType == 'waitService' %}
         <a data-id="{{order.id}}" data-url="/home/order/confirmService" class="wait-order-bnt submit-link-2 wait-comment-order">完成服务</a>
         <a data-id="{{order.id}}" data-url="/home/order/refund" class="wait-order-bnt submit-link">申请退款</a>
+    {% elseif orderType == 'comment' %}
+        <a data-id="{{order.id}}" data-url="/home/order/comment" class="wait-order-bnt submit-link-2 wait-comment-order">去评价</a>
     {% endif %}
 {%endblock%}
 {% block script %}
@@ -109,7 +111,7 @@
                         if (res.status === true) {
                             window.location.href = res.url;
                         }
-                    }
+                    
                 });
             });
         });

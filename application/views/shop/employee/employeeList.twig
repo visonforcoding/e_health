@@ -30,14 +30,15 @@
                         url: "/shop/employee/getEmployeeList",
                         datatype: "json",
                         mtype: "POST",
-                        colNames: ["员工编号", "入职日期", "真实姓名", "email", "身份证", "性别", "手机", "离职状态", "操作"],
+                        colNames: ["员工编号","职位","入职日期", "真实姓名", "email", "身份证", "性别", "手机", "离职状态", "操作"],
                         colModel: [
-                            {name: "employee_no", editable: false},
+                            {name: "employee_no", editable: false,width:100,},
+                            {name: "job", editable: true, frozen: true,width:80},
                             {name: "ctime", editable: true, frozen: true},
-                            {name: "truename", editable: true, align: "center"},
+                            {name: "truename", editable: true, align: "center",width:100},
                             {name: "email", editable: true, align: "center"},
                             {name: "id_no", editable: true, editrules: {edithidden: true}},
-                            {name: "gender",width:40, editable: true, editrules: {edithidden: true}, formatter: function (cellvalue, options, rowObject) {
+                            {name: "gender",width:50, editable: true,editrules: {edithidden: true}, formatter: function (cellvalue, options, rowObject) {
                                     if (cellvalue === '1') {
                                         return '男';
                                     } else {
@@ -45,7 +46,7 @@
                                     }
                                 }},
                             {name: "tel", editable: true, editrules: {edithidden: true}},
-                            {name: "status", editable: true, editrules: {edithidden: true}, formatter: function (cellvalue, options, rowObject) {
+                            {name: "status", editable: true, editrules: {edithidden: true}, width:50,formatter: function (cellvalue, options, rowObject) {
                                     switch (cellvalue) {
                                         case '1':
                                             return '在职';

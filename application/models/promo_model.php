@@ -12,7 +12,7 @@ class Promo_model extends LM_Model{
 
     public function getJsonData($tableName, $page, $rows, $sort = '', $order = '', $where = '') {
     	$offset = ($page - 1) * $rows; //分页起始条数
-        $selectStr = 'store_promo.id as cid,store_promo.title,store_promo.mprice,store_promo.price,store_promo.begintime,store_promo.endtime,store_promo.status,store_service.name as service';
+        $selectStr = 'store_promo.id,store_promo.title,store_promo.mprice,store_promo.price,store_promo.begintime,store_promo.endtime,store_promo.isVisit,store_promo.status,store_service.name as service';
         if (!empty($where)) {
             $nums = $this->db->where($where)->count_all_results($tableName); //总条数
             if (!empty($order)) {
@@ -48,6 +48,12 @@ class Promo_model extends LM_Model{
         	}else{
         		$res[$key]['status']='关闭';
         	}
+
+            if($value['isVisit']=='1'){
+                $res[$key]['isVisit']='上门+到店';
+            }else{
+                $res[$key]['isVisit']='上门';
+            }
         }
 
         if (empty($res)) {
@@ -63,5 +69,11 @@ class Promo_model extends LM_Model{
         $arr_json = array('page' => $page, 'total' => $total_pages, 'records' => $nums, 'rows' => $res);
         return $arr_json;
 	}
+
+    public function getPromoById($id){
+        $query = $this->db->where(array('id'=>$id))->get('store_promo');
+        $promo = $query->row_array();
+        return $promo;
+    }
 }
 

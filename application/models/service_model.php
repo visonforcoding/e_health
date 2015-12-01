@@ -224,7 +224,11 @@ class Service_model extends LM_Model {
         }
         return $services;
     }
-    //获取店铺下的服务项
+    /**
+     * 通过店铺id查找店铺服务项
+     * @param int $store_id  店铺id
+     * @return array
+     */
     public function getStoreService($store_id){
         $query = $this->db->select('store_service.id as serviceId,store_service.name,store_service.isVisit,store_service.price')
                 ->where(array('store_service.storeId' => $store_id))
@@ -237,6 +241,17 @@ class Service_model extends LM_Model {
         }
 
         return $services;
+    }
+
+    /**
+     * 通过服务项id获取服务项信息
+     * @param int $id  店铺id
+     * @return array
+     */
+    public function getServiceById($id){
+        $query = $this->db->where(array('id'=>$id))->get('store_service');
+        $service = $query->row_array();
+        return $service;
     }
        
 

@@ -10,6 +10,13 @@
 {% endblock %}
 {% block main %}
     <div class="col-xs-12">
+         <div class="table-bar">
+            <label>活动名称:</label>
+            <input type="text" name="keyword" style="width:260px;" class="form-control" placeholder="填写活动名称"/>
+            <label></label>
+            <button onclick="doSearch();" class="btn btn-info"><i class="icon icon-search"></i>搜索</button>
+            <a href="/shop/promo/promoAdd" class="btn btn-small btn-warning">新增优惠活动<i class="icon icon-plus-sign"></i></a>
+        </div>
         <table id="list"><tr><td></td></tr></table> 
         <div id="pager"></div>
     </div>
@@ -23,47 +30,18 @@
                 url: "/shop/promo/getPromoData",
                 datatype: "json",
                 mtype: "POST",
-                colNames: ["cid","优惠名称", "优惠服务", "原价", "优惠价", "开始时间", "结束时间", "状态","操作"],
+                colNames: ["id","优惠名称", "优惠服务", "原价", "优惠价", "开始时间", "结束时间", "服务类型","状态","操作"],
                 colModel: [
-                    {name: "cid", index:'cid',editable: true, align: "center",hidden:true,key:true},
+                    {name: "id", index:'id',editable: true, align: "center",hidden:true,key:true},
                     {name: "title", editable: true, align: "center",editrules:{required:true}},
-                    {name: "service", index:'service',editable: true, edittype:"select",editoptions:{value:"{{ serviceStr }}" },editselected:'service'},
+                    {name: "service", index:'service',editable: true, },
                     {name: "mprice",  align: "center"},
-                    {name: "price",  editable: true, align: "center",editrules:{required:true,number:true,custom:true, custom_func:mypricecheck}},
-                    {name: "begintime",  editable: true, editoptions:{
-                        dataInit:function(el){
-                           
-                               $(el).datetimepicker({
-                                    language: "zh-CN",
-                                    weekStart: 1,
-                                    todayBtn: 1,
-                                    autoclose: 1,
-                                    todayHighlight: 1,
-                                    startView: 2,
-                                    showMeridian: 1,
-                                    forceParse: 1,
-                                    format: "yyyy-mm-dd hh:ii:ss"
-                                });
-                        }
-                    },editrules:{required:true}},
-                    {name: "endtime",viewable:false, editable: true,editoptions:{
-                            dataInit:function(el){
-                                   $(el).datetimepicker({
-                                        language: "zh-CN",
-                                        weekStart: 1,
-                                        todayBtn: 1,
-                                        autoclose: 1,
-                                        todayHighlight: 1,
-                                        startView: 2,
-                                        showMeridian: 1,
-                                        forceParse: 1,
-                                        format: "yyyy-mm-dd hh:ii:ss"
-                                    });
-                            }
-                       },editrules:{required:true}
-                    },
-                    {name: "status",fixed:true,iddex:'status',viewable:false,  editable: true,sortable: false,edittype:"select",editoptions:{value:"1:启用;0:关闭"},editselected:'status'},
-                    {name: "operator", editrules:{ edithidden: true }, formatter: "actions" },
+                    {name: "price",  editable: true, align: "center",},
+                    {name: "begintime",  editable: true, width:200,},
+                    {name: "endtime",viewable:false, editable: true,width:200,},
+                    {name: "isVisit",fixed:true,index:'isVisit',viewable:false,width:100,},
+                    {name: "status",fixed:true,index:'status',viewable:false,  editable: true,sortable: false,width:100,},
+                    {name: "operator", formatter: operateFormatter },
                 ],
                 pager: "#pager",
                 rowNum: 10,
@@ -86,23 +64,11 @@
                 },
                 editurl:"/shop/promo/edit",
 
-            }).navGrid('#pager', {search:false,add: true,  edit:true,view: true,del: true,}, searchFn, editFn, addFn, delFn, viewFn);
+            }).navGrid('#pager', {search:false,add: false,  edit:false,view: true,del: true,}, searchFn, editFn, addFn, delFn, viewFn);
         });
          var searchFn = {         
         };
         var editFn = {
-            //jqModal: true,
-            //reloadAfterSubmit: true,
-            //closeAfterEdit:true,
-            //closeOnEscape: true,
-           // savekey: [true, 13],
-            afterSubmit: function (response) {
-                var responseText = $.parseJSON(response.responseText);
-                var success = responseText.success;
-                var message = responseText.message;
-                return [success, message];
-            }
-       
         };
         var delFn={
 
@@ -120,15 +86,41 @@
             console.log('view');
         }
 
-        function mypricecheck(value, colname){
-            if(value<0){
-               return [false,'优惠价不能小于0'];
-            }else{
-               return [true,''];
-            }
-           
+        function operateFormatter(cellvalue, options, rowObject) {
+                 
+            var editDelStr = '<button onClick="delRecord(' + rowObject.id + ');" data-id="' + rowObject.id + '" class="grid-btn btn btn-primary btn-mini del-record"><i class="icon icon-trash"></i> 删除</button>';
+
+            editDelStr += '<a href="/shop/promo/promoEdit?id=' + rowObject.id + '" class="grid-btn btn btn-primary btn-mini"><i class="icon icon-pencil"></i> 修改</a>';
+
+            return editDelStr;
         }
-      
+
+         function delRecord(id) {
+            layer.confirm('确定要删除该条记录？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    url: '/shop/promo/promoDel',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {id: id},
+                    success: function (res) {
+                        layer.msg(res.msg, {icon: 1});
+                        if (res.status) {
+                            $('#list').trigger('reloadGrid');
+                        }
+                    }
+                });
+            }, function () {
+                
+            });
+        }
+         function doSearch() {
+            var keyword = $('input[name="keyword"]').val();
+            $("#list").jqGrid('setGridParam', {
+                postData: {keyword: keyword}
+            }).trigger("reloadGrid");
+        }
     
 
     </script>
