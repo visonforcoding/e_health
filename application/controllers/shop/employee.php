@@ -50,12 +50,12 @@ class Employee extends Shop_Controller {
                         ->set_output(json_encode($response));
                 return;
             }
-            $query_last_employee = $this->db->where("`store_id` = '$store_id'")->order_by('employee_no','desc')->get('store_employee');
+            $query_last_employee = $this->db->where("`store_id` = '$store_id'")->order_by('employee_no', 'desc')->get('store_employee');
             $last_employee = $query_last_employee->row_array();
-            if($last_employee){
-                $employee_no = $last_employee['employee_no']+1;
-            }else{
-                $employee_no = date('ymd').'001';
+            if ($last_employee) {
+                $employee_no = $last_employee['employee_no'] + 1;
+            } else {
+                $employee_no = date('ymd') . '001';
             }
             $insert_data['truename'] = $this->input->post('truename');
             $insert_data['tel'] = $this->input->post('tel');
@@ -130,23 +130,72 @@ class Employee extends Shop_Controller {
         $user = $this->user;
         $keywords = $this->input->get('keywords');
         $where = '';
-        if(!empty($keywords)){
-          $where =  " and (`employee_no` like '%$keywords%' or `truename` like '%$keywords%' or `tel` like '%$keywords%')";
+        if (!empty($keywords)) {
+            $where = " and (`employee_no` like '%$keywords%' or `truename` like '%$keywords%' or `tel` like '%$keywords%')";
         }
         $store_id = $user['id'];
         $query_employees = $this->db->select('employee_no,id_no,truename,gender,job,tel,intime,status')
                 ->where("`store_id` = '$store_id'$where")
                 ->get('store_employee');
         $employees = $query_employees->result_array();
-        foreach($employees as $key=>$value){
+        foreach ($employees as $key => $value) {
             $gender = $value['gender'];
-            $employees[$key]['gender'] = $gender=='1'?'男':'女';
+            $employees[$key]['gender'] = $gender == '1' ? '男' : '女';
             $status = $value['status'];
-            $employees[$key]['status'] = $status=='1'?'在职':'离职';
+            $employees[$key]['status'] = $status == '1' ? '在职' : '离职';
         }
-        $columnArr= array('编号', '身份证号', '姓名', '性别', '职务','手机号','入职时间', '状态');
+        $columnArr = array('编号', '身份证号', '姓名', '性别', '职务', '手机号', '入职时间', '状态');
         $filename = '员工记录.csv';
         exportExcel($columnArr, $employees, $filename);
+    }
+
+    /**
+     * 员工业绩图表
+     */
+    public function employeeOrderChart() {
+        $this->twig->render('/shop/employee/employeeOrderChart.twig', array(
+            'realTimeInfo' => $this->getRealtimeInfo(),
+        ));
+    }
+
+    public function getEmployeeOrderData() {
+        if ($this->input->isPost()) {
+            $user = $this->user;
+            $store_id = $user['id'];
+            $posts = $this->input->posts();
+            $time = $posts['time'];
+            $user = $this->user;
+            $store_id = $user['id'];
+            $time = $this->input->post('time');
+            $timeStr = '最近7天';
+            switch ($time) {
+                case '7day':
+                    $where = " and TIMESTAMPDIFF(day,date(seo.ctime),date(now())) <= 7 ";
+                    $timeStr = '最近7天';
+                    break;
+                case '1month':
+                    $where = " and TIMESTAMPDIFF(day,date(seo.ctime),date(now())) <= 30 ";
+                    $timeStr = '最近1月';
+                    break;
+                case '3month':
+                    $where = " and TIMESTAMPDIFF(day,date(seo.ctime),date(now())) <= 3*30 ";
+                    $timeStr = '最近3月';
+                    break;
+                case '6month':
+                    $where = " and TIMESTAMPDIFF(day,date(seo.ctime),date(now())) <= 6*30 ";
+                    $timeStr = '最近半年';
+                    break;
+                default:
+                    $where = " and TIMESTAMPDIFF(day,date(seo.ctime),date(now())) <= 7 ";
+                    break;
+            }
+
+            $this->load->model('Employee_model', 'employee_model');
+            $andwhere = "seo.status = '2' and `seo`.`store_id` = '$store_id' $where";
+            $data = $this->employee_model->getChartData($timeStr, $andwhere);
+            $this->output->set_content_type('application/json')
+                    ->set_output(json_encode($data));
+        }
     }
 
 }

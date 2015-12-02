@@ -17,7 +17,7 @@ class Order_model extends LM_Model {
         $selectStr = 'order.id as id,order.isVisit,order.ctime,order.payStatus,order.orderStatus,'
                 . 'store_service.name,order.orderNo,order.remark,member.nick,member.tel,'
                 . 'order.price,order.amount,member.gender,order.serviceTime,order.type,'
-                . 'order.address,store_employee.truename,order.consignee,order.ucid,order.card_id';
+                . 'order.address,store_employee.truename,order.consignee,order.ucid,order.card_id,order.nums';
         if (!empty($where)) {
             $nums = $this->db->where($where)->count_all_results($tableName); //总条数
             if (!empty($order)) {
@@ -73,7 +73,7 @@ class Order_model extends LM_Model {
                 //未付款 
                 $res[$key]['statusText'] = '已取消';
             }
-            if ($value['payStatus'] == '2' && $value['orderStatus'] == '3') {
+            if ($value['orderStatus'] == '3') {
                 //已支付
                 $res[$key]['statusText'] = '待服务';
             }
@@ -108,6 +108,25 @@ class Order_model extends LM_Model {
         }
         $arr_json = array('page' => $page, 'total' => $total_pages, 'records' => $nums, 'rows' => $res);
         return $arr_json;
+    }
+    
+    
+    /**
+     * 店铺线下挂单号的生成
+     * 要短 每天都会从1开始
+     * 格式为A1 A2
+     * @param int $store_id 店铺id
+     * @return string 挂单号
+     */
+    public function getEmployeeOrderFlagNo($store_id){
+        $flag_no = 'A1';
+        $today_order_nums = $this->db->where("`store_id` = '$store_id' and date(ctime) = date(now()) order by ctime desc")->count_all_results('store_employee_order');
+        if(!$today_order_nums){
+           $flag_no = 'A1'; 
+        }else{
+           $flag_no = 'A'.intval($today_order_nums+1);
+        }
+        return $flag_no;
     }
 
 }

@@ -79,6 +79,10 @@
                     success: function (data) {
                         if (data.status) {
                             layer.alert(data.msg, {icon: 6});
+                            var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                            parent.$('#list').jqGrid('setGridParam', {
+                            }).trigger("reloadGrid");
+                            parent.layer.close(index);
                         } else {
                             layer.alert(data.msg, {icon: 5});
                         }

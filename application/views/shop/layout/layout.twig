@@ -31,6 +31,13 @@
                 <div class="collapse navbar-collapse navbar-collapse-example">
                     <ul class="nav navbar-nav navbar-avatar navbar-right">
                         <li class="has-num">
+                            <a onClick="openDesk();" class="header-tooltip"  style="margin-top:8px;" data-toggle="tooltip"
+                               data-placement="bottom" data-container="body" title="" data-original-title= "收银台">
+                                <i style="font-size: 25px;" class="icon-calculator icon-xlarge text-default"></i>
+                                <b style="display: block;" class="badge badge-notes bg-important count-n">{{realTimeInfo.unDoOffOrderNums}}</b>
+                            </a>
+                        </li>
+                        <li class="has-num">
                             <a href="/shop/order/orderList" class="header-tooltip"  style="margin-top:8px;" data-toggle="tooltip"
                                data-placement="bottom" data-container="body" title="" data-original-title= "{{realTimeInfo.unDoOrderNums}}条未处理订单">
                                 <i style="font-size: 25px;" class="icon-shopping-cart icon-xlarge text-default"></i>
@@ -52,9 +59,7 @@
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Action</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
+                                <li><a onClick="fullScreen(document.documentElement);"><i class="icon icon-screenshot"></i>全屏查看</a></li>
                                 <li class="divider"></li>
                                 <li><a href="/shop/index/loginOut.html"><i class="icon icon-off"></i> 注销</a></li>
                             </ul>
@@ -86,6 +91,8 @@
                                 <a href="/shop/employee/employeeList">员工管理</a></li>
                             <li{% if page_tag is defined %}{% if page_tag == 'shop_vacate_vacateList' %} class="active" {% endif %}{% endif %}>
                                 <a href="/shop/vacate/vacateList">员工考勤</a></li>
+                            <li{% if page_tag is defined %}{% if page_tag == 'shop_employee_employeeOrderChart' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/employee/employeeOrderChart">员工业绩</a></li>
                             <li{% if page_tag is defined %}{% if page_tag == 'shop_salary_index' %} class="active" {% endif %}{% endif %}>
                                 <a href="/shop/salary/index">薪资统计</a></li>
                         </ul>
@@ -103,7 +110,7 @@
                             </li>
 
                             <li {% if page_tag is defined %}{% if page_tag == 'shop_order_add' %} class="active" {% endif %}{% endif %}>
-                                <a href="/shop/order/add"><i class="icon-shopping-cart"></i>收银开单</a>
+                                <a href="/shop/order/add"><i class="icon-shopping-cart"></i>挂单</a>
                             </li>
 
                             <li {% if page_tag is defined %}{% if page_tag == 'shop_chart_index' %} class="active" {% endif %}{% endif %}>
@@ -183,7 +190,21 @@
                 $('#left-bar').add('#main-content').height($(window).height() - $('header').height());
                 $('.header-tooltip').tooltip();
                 $('#left-menu ul.nav-primary ul.nav li.active').parents('li').addClass('active show');
+           
             });
+                //
+                function openDesk(id) {
+                    //指派店员
+                    url = '/shop/order/desk';
+                    layer.open({
+                        type: 2,
+                        title: '收银台',
+                        shadeClose: false,
+                        shade: 0.8,
+                        area: ['900px', '80%'],
+                        content: url//iframe的url
+                    });
+                }
         </script>
         {% block script %}
         {% endblock %}

@@ -224,6 +224,7 @@ class Service_model extends LM_Model {
         }
         return $services;
     }
+
     /**
      * 通过店铺id查找店铺服务项
      * @param int $store_id  店铺id

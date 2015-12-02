@@ -33,11 +33,15 @@
                 </div>
                 <div class="payfor-order-text">
                     <span class="orange">
-                    <select name="coupon">
-                        {% for coupon in coupons %}
-                        <option value="{{coupon.id}}">{{coupon.amount2}}元优惠券</option>
-                        {% endfor %}
-                    </select>
+                        <select name="coupon">
+                            {% if coupons is not empty %}
+                                {% for coupon in coupons %}
+                                    <option value="{{coupon.id}}">{{coupon.amount2}}元优惠券</option>
+                                {% endfor %}
+                            {% else %}
+                                <option value="0">无可用优惠券</option>
+                            {% endif %}
+                        </select>
                     </span>
                 </div>
             </li>

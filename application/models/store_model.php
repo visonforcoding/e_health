@@ -22,7 +22,7 @@ class Store_model extends LM_Model {
                             . 'area.name,store.coordinate')
                     ->join('store', 'store.id = view_log.storeId')
                     ->join('area', 'area.id = store.regionId', 'left')
-                    ->where("view_log.userId = '$user_id'")
+                    ->where("view_log.userId = '$user_id' and store.status = '1'")
                     ->order_by('view_log.vtime', 'desc')
                     ->limit(5)
                     ->get('view_log');

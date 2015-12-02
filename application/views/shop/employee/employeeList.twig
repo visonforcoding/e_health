@@ -38,7 +38,7 @@
                             {name: "truename", editable: true, align: "center",width:100},
                             {name: "email", editable: true, align: "center"},
                             {name: "id_no", editable: true, editrules: {edithidden: true}},
-                            {name: "gender",width:50, editable: true,editrules: {edithidden: true}, formatter: function (cellvalue, options, rowObject) {
+                            {name: "gender", editable: true,align: "center", editrules: {edithidden: true}, formatter: function (cellvalue, options, rowObject) {
                                     if (cellvalue === '1') {
                                         return '男';
                                     } else {
@@ -66,9 +66,9 @@
                         viewrecords: true,
                         gridview: true,
                         autoencode: true,
-                        caption: '职员管理',
+                        caption: '',
                         autowidth: true,
-                        shrinkToFit: false,
+                        shrinkToFit: true,
                         height: 'auto',
                         rownumbers: true,
                         jsonReader: {
