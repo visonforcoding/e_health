@@ -111,14 +111,24 @@ class Shop_Controller extends CI_Controller {
         );
     }
 
+    /**
+     * 头部导航数据
+     * @return type
+     */
     public function getRealtimeInfo() {
         $user = $this->checkLogin();
         $store_id = $user['id'];
         $unReadMsg = $this->db->where("isRead = '0' and `sid` = '$store_id'")->count_all_results('store_msg');
+        //未处理的线上订单
         $unDoOrder = $this->db->where("(`orderStatus` = '3' or `orderStatus` = '40') and `sid` = '$store_id' and `type` = '1'")->count_all_results('order');
+        //未处理的线下今日订单
+        $unDoOffOrder = $this->db
+                ->where("`status` = '0'  and `store_id` = '$store_id' and date(ctime) = date(now())")
+                ->count_all_results('store_employee_order');
         return array(
             'unReadMsgNums' => $unReadMsg,
-            'unDoOrderNums' => $unDoOrder
+            'unDoOrderNums' => $unDoOrder,
+            'unDoOffOrderNums'=>$unDoOffOrder
         );
     }
     
@@ -135,6 +145,40 @@ class Shop_Controller extends CI_Controller {
             $this->output->set_content_type('application/json')
                     ->set_output(json_encode($response));
             return;
+        }
+    }
+    
+    /**
+     * 权限检测
+     * @author allen caowenpeng1990@126.com
+     */
+    protected function check_acl() {
+        $controller = $this->uri->rsegment(1) ? $this->uri->rsegment(1) : getgpc("mod");
+        $action = $this->uri->rsegment(2) ? $this->uri->rsegment(2) : getgpc("act");
+        $node_str = $controller . '/' . $action;
+        $query_node = $this->db->get_where('admin_node', array('node' => $node_str, 'status' => 1));
+        $node = $query_node->row_array(); //查出被权限的节点
+        if (is_array($node) && count($node) > 0) {
+            $admin_id = $_SESSION['admin_userid'];
+            $query_acl = $this->db->select('admin_group.acl')
+                    ->from('admin_group')
+                    ->join('manager', 'manager.role = admin_group.id')
+                    ->where(array('manager.id' => $admin_id))
+                    ->get();
+            $acl = unserialize($query_acl->row_array()['acl']);
+            if (!in_array($node['id'], $acl)) {
+                if ($this->input->is_ajax_request()) {
+                    $data['status'] = false;
+                    $data['msg'] = '您没有权限进行此操作!';
+                    $this->output->set_content_type('application/json')
+                            ->set_output(json_encode($data));
+                    exit();
+                } else {
+                    header("Content-type:text/html;charset=utf-8");
+                    alert("您没有权限进行此操作！");
+                    exit();
+                }
+            }
         }
     }
 

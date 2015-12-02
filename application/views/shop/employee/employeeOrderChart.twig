@@ -1,0 +1,89 @@
+{# empty Twig template #}
+{%  extends "/shop/layout/layout.twig" %}
+{% set page_header_title = '数据统计' %}
+{% set page_tag = 'shop_employee_employeeOrderChart'%}
+{% block static %}
+    <style>
+        .order-box ul li span{
+            margin-right:10px;
+        }
+    </style>
+{% endblock %}
+{% block main %}
+    <div class="row work-copy">
+        <div class="panel">
+            <div class="panel-heading">
+                <i class="icon-list-ul"></i> 数据统计
+                <div class="panel-actions pull-right">
+                    <button role="button" class="btn btn-mini close-panel" data-toggle="dropdown"><span class="caret"></span></button>
+                </div>
+            </div>
+            <div id="intChart" class="chart-bar row" style="margin:10px;">
+                <div  id="initMemberBuy" class="chart-bar row" style="margin:10px;">
+                    <input type="hidden" id="chart-column" value="order" />
+                    <button data-val="7day" class="btn btn-primary  chart-column-btn">最近7天</button>
+                    <button data-val="1month" class="btn  chart-column-btn"> 最近一月</button>
+                    <button data-val="3month" class="btn  chart-column-btn">最近三月</button>
+                    <button data-val="6month" class="btn  chart-column-btn">半年</button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <div id="chart_3" >
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="/static/highcharts/highcharts.js" type="text/javascript"></script> 
+    <script src="/static/highcharts/modules/exporting.js" type="text/javascript"></script> 
+    <script>
+        $(function () {
+            initServicePrice('');
+            $('.chart-column-btn').click(function () {
+                $(this).parents('div.chart-bar').find('.chart-column-btn').removeClass('btn-primary');
+                $(this).addClass('btn-primary');
+                var time = $(this).data('val');
+                initServicePrice(time);
+            });
+        });
+        function initServicePrice(time) {
+            $.ajax({
+                type: 'post',
+                url: '/shop/employee/getEmployeeOrderData',
+                dataType: 'json',
+                data: {time:time},
+                success: function (res) {
+                    $('#chart_3').highcharts({
+                        chart: {
+                            type: 'column'
+                        },
+                        xAxis: {categories: res.Xcategories},
+                        yAxis: {title: {text: res.Ytext}},
+                        colors: ['#ED561B', '#50B432', '#058DC7', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+                        title: {
+                            text: '服务客单价'
+                        },
+                        tooltip: {
+                            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}处理: </td>' +
+                                    '<td style="padding:0"><b>{point.y:.1f}个</b></td></tr>',
+                            footerFormat: '</table>',
+                            shared: true,
+                            useHTML: true
+                        },
+                        plotOptions: {
+                            column: {
+                                pointPadding: 0.2,
+                                borderWidth: 0
+                            }
+                        },
+                        series: res.series
+                    });
+                }
+            });
+        }
+    </script>
+{% endblock %}

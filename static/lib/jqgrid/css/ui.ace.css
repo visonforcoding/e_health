@@ -743,3 +743,25 @@ th[aria-selected=true] .ui-jqgrid-sortable {
     margin-right: 5px;
     text-decoration: none;
 }
+
+/*去除水平滚动条有时候不应该出现的bug*/
+div.ui-jqgrid-view table.ui-jqgrid-btable
+{
+    border-style:none;
+    border-top-style:none;
+    border-collapse:separate;
+}
+div.ui-jqgrid-view table.ui-jqgrid-btable td
+{
+    border-left-style:none
+}
+div.ui-jqgrid-view table.ui-jqgrid-htable
+{
+    border-style:none;
+    border-top-style:none;
+    border-collapse:separate;
+}
+div.ui-jqgrid-view table.ui-jqgrid-btable th
+{
+    border-left-style:none
+}

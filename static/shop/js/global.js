@@ -27,9 +27,9 @@ $(function () {
         forceParse: 0,
         format: 'hh:ii'
     });
-    
+
     //关闭panel
-    $(".close-panel").on('click',function(){
+    $(".close-panel").on('click', function () {
         $(this).parents('div.panel').find('div.panel-body,div.chart-bar').slideToggle("slow");
     });
 
@@ -158,7 +158,7 @@ function validateIdCard(idCard) {
                 if (idCardLast == "X" || idCardLast == "x") {
                     return true;
                 } else {
-                   return false;
+                    return false;
                 }
             } else {
                 //用计算出的验证码与最后一位身份证号码匹配，如果一致，说明通过，否则是无效的身份证号码
@@ -171,5 +171,27 @@ function validateIdCard(idCard) {
         }
     } else {
         return false;
+    }
+}
+
+
+/**
+ * 浏览器全屏
+ * @param {type} element
+ * @returns {undefined}
+ * @example   下面的代码就是整个页面调用全屏模式 
+ *    var html = document.documentElement; 
+*   fullScreen(html); 
+*   下面的则是对指定元素，比如 
+*  var canvas = document.getElementById('mycanvas'); 
+*  fullScreen(canvas);  
+ */
+function fullScreen(element) {
+    if (element.requestFullScreen) {
+        element.requestFullScreen();
+    } else if (element.webkitRequestFullScreen) {
+        element.webkitRequestFullScreen();
+    } else if (element.mozRequestFullScreen) {
+        element.mozRequestFullScreen();
     }
 }

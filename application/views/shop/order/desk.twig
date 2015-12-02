@@ -1,0 +1,104 @@
+{# empty Twig template #}
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{page_title|default('灸疗管理后台')}}</title>
+        <!-- zui -->
+        <link href="/static/zui/css/zui.min.css" rel="stylesheet">
+        <link href="/static/shop/css/base.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/static/lib/jqgrid/css/ui.jqgrid.css">
+        <link rel="stylesheet" type="text/css" href="/static/lib/jqgrid/css/ui.ace.css">
+        <link href="/static/lib/jqvalidation/css/validationEngine.jquery.css" rel="stylesheet">
+        <style>
+        </style>
+    </head>
+    <body>
+        <div class="work-copy" style="width:880px;margin:5px auto auto auto;">
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>时间</th>
+                        <th>排序号</th>
+                        <th>客户</th>
+                        <th>应收款</th>
+                        <th>服务项目</th>
+                        <th>指定技师</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{order.ctime}}</td>
+                            <td>{{order.flag_no}}</td>
+                            <td>{{order.consignee}}</td>
+                            <td>{{order.price}}</td>
+                            <td>{{order.service_name}}</td>
+                            <td>{{order.truename|default('未指定技师')}}</td>
+                            {% if order.status== '0'%}
+                                <td class="red">未开始</td>
+                            {% endif %}
+                            {% if order.status== '1'%}
+                                <td class="red">服务中...</td>
+                            {% endif %}
+                            {% if order.status== '2'%}
+                                <td class="green">结算完毕</td>
+                            {% endif %}
+                            <td>
+                                {% if order.truename is null %}
+                                    <a title="指派" clas="btn-icon"><i class="icon-task-assignTo icon-hand-right"></i></a>
+                                {% endif %}
+                                <button  title="开始" onClick="taskStart({{order.id}});" class="btn {% if order.truename is null or order.status != '0' %}disabled{% endif %} btn-icon"><i class=" icon-task-start icon-play"></i></button>
+                                <button  title="结账" onClick="taskDone({{order.id}});" class="btn {% if order.truename is null %}disabled{% endif %} btn-icon"><i class=" icon-task-start icon-ok-sign"></i></button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+        </div>
+        <!-- 在此处挥洒你的创意 -->
+        <!-- jQuery (ZUI中的Javascript组件依赖于jQuery) -->
+        <script src="/static/Js/jquery.js"></script>
+        <!-- ZUI Javascript组件 -->
+        <script src="/static/zui/js/zui.min.plus.js"></script>
+        {#layer弹出层组件#}
+        <script src="/static/layer/layer.js"></script>
+        <script type="text/javascript" src="/static/lib/jqform/jquery.form.js"></script>
+        <script type="text/javascript" src="/static/lib/jqvalidation/js/languages/jquery.validationEngine-zh_CN.js"></script>
+        <script type="text/javascript" src="/static/lib/jqvalidation/js/jquery.validationEngine.js"></script>
+        <script>
+            $(function () {
+            });
+            function taskStart(id){
+                $.ajax({
+                   url:'/shop/order/taskStart',
+                   data:{order_id:id},
+                   type:'post',
+                   dataType:'json',
+                   success:function(msg){
+                       window.location.reload();
+                   }
+                });
+            }
+            function taskDone(id){
+                $.ajax({
+                   url:'/shop/order/taskDone',
+                   data:{order_id:id},
+                   type:'post',
+                   dataType:'json',
+                   success:function(msg){
+                       window.location.reload();
+                   }
+                });
+            }
+        </script>
+    </body>
+</html>

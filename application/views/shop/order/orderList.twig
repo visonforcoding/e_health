@@ -4,7 +4,6 @@
 {% set page_header_title = '订单管理' %}
 {% set page_tag = 'shop_order_orderList' %}
 {% block static %}
-    {#    <link rel="stylesheet" type="text/css" href="/static/lib/jqgrid/css/ui.jqgrid-bootstrap.css">#}
     <link rel="stylesheet" type="text/css" href="/static/lib/jqgrid/css/ui.jqgrid.css">
     <link rel="stylesheet" type="text/css" href="/static/lib/jqgrid/css/ui.ace.css">
 {% endblock %}
@@ -81,13 +80,14 @@
                         url: "/shop/order/getOrderList",
                         datatype: "json",
                         mtype: "POST",
-                        colNames: ["订单编号", "下单日期", "服务名", "预约类型", "原价", "实付款", "电话", "状态",
+                        colNames: ["订单编号", "下单日期", "服务名", "预约类型", "预约人数", "原价", "实付款", "电话", "状态",
                             "操作", '备注', '用户', "预约时间", '客户地址'],
                         colModel: [
                             {name: "orderNo", editable: true, width: 40},
                             {name: "ctime", editable: true, width: 40},
                             {name: "name", width: 40, editable: true, align: "center"},
                             {name: "isVisitStr", width: 30, editable: true, align: "center"},
+                            {name: "nums", hidden: true, editable: true, editrules: {edithidden: true}},
                             {name: "price", width: 30, editable: true, align: "center"},
                             {name: "amount", width: 30, hidden: false, align: "center", editable: true, edittype: 'text'},
                             {name: "tel", hidden: false, width: 30, editable: true, editrules: {edithidden: true}},
@@ -106,7 +106,7 @@
                         viewrecords: true,
                         gridview: true,
                         autoencode: true,
-                        caption: '订单列表',
+                        caption: false,
                         autowidth: true,
                         height: 'auto',
                         rownumbers: true,
@@ -236,12 +236,17 @@
                         postData: {keywords: keywords, type: type}
                     }).trigger("reloadGrid");
                 }
+                function updateGrid() {
+                    //更新grid 数据 供iframe 方法调用
+                    $("#list").jqGrid('setGridParam', {
+                    }).trigger("reloadGrid");
+                }
                 function appointEmployee(id) {
                     //指派店员
                     url = '/shop/order/appoint?id=' + id;
                     layer.open({
                         type: 2,
-                        title: '查看详情',
+                        title: '指派店员',
                         shadeClose: true,
                         shade: 0.8,
                         area: ['380px', '50%'],
