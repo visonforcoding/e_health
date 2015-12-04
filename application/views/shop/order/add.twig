@@ -53,7 +53,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">预约人数</label>
                             <div class="col-md-4">
-                                <input type='text' name='nums' id='nums' class='form-control' />
+                                <input type='text' name='nums' id='nums' class='nums form-control' />
                             </div>
                         </div>
 
@@ -120,7 +120,7 @@
                             <div class="form-group">
                                 <label class="col-md-2 control-label">预约人数</label>
                                 <div class="col-md-4">
-                                    <input type='text' name='nums' id='nums' class='form-control' />
+                                    <input type='text' name='nums' id='nums' class='nums form-control' />
                                 </div>
                             </div>
 
@@ -199,7 +199,14 @@
             $('.choice-service').change(function () {
                 var $obj = $(this);
                 doSearchCard($obj);
+                getCargo($obj);
             });
+
+            $('.nums').focusout(function () {
+                var $obj = $(this);
+                getCargo($obj);
+            });
+
         });
 
         function doSearchCard($obj) {
@@ -221,6 +228,31 @@
                     }
                 }
             });
+        }
+
+         function getCargo($obj){
+            var service = $obj.parents('form').find('select[name="serviceId"] option:selected').val();
+            var nums =  $obj.parents('form').find('input[name="nums"]').val();
+            $.ajax({
+                url: '/shop/cargo/getServiceCargo',
+                type: 'post',
+                dataType: 'json',
+                data: {serviceId: service,nums:nums},
+                success: function (res) {
+                        if(typeof(res)=='object'){
+                            $.each(res, function (i, item) {
+                                 $obj.parents('form').find('input[name="cargo[]"]').each(function(index, el) {
+                                    if( $(this).val() == i){
+                                           $(this).next().val(item);  
+                                       
+                                    }
+                                 });
+                            }); 
+                        }else{
+                            $obj.parents('form').find('input[name="num[]"]').val('');
+                        }  
+                }
+           });
         }
 
         function viewRecord() {
