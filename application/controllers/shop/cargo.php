@@ -187,4 +187,31 @@ class Cargo extends Shop_Controller {
         ));
     }
 
+    public function getServiceCargo(){
+        if($this->input->post()){
+            $serviceId = $this->input->post('serviceId');
+            $nums = $this->input->post('nums');
+            $user = $this->user;
+            $store_id = $user['id'];
+
+            $query_service = $this->db->where(array('id' => $serviceId))->get('store_service');
+            $service = $query_service->row_array();
+            $service_cargos = $service['cargo'];
+            $service_cargos_arr = unserialize($service_cargos);
+            //var_dump($service_cargos_arr);exit;
+            $service_cargos_array= "";
+            if ($service_cargos) {
+                foreach ($service_cargos_arr as $value) {
+                    $service_cargos_array[$value['cargo_id']] = $value['nums']*$nums;
+                }
+            }
+
+            $this->output->set_content_type('application/json')
+                    ->set_output(json_encode($service_cargos_array));
+            return;
+
+        }
+       
+    }
+
 }
