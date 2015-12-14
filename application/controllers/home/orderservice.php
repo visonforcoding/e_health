@@ -21,7 +21,6 @@ class Orderservice extends Home_Controller {
      * 预约上门服务选项目
      */
     public function service() {
-        var_dump(__FILE__);
         $this->session->set_userdata('isVisit', '1'); //上门服务
         $type = $this->input->get('type');
         if (!empty($type)) {
