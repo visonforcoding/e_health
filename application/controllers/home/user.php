@@ -571,16 +571,27 @@ class User extends Home_Controller {
     public function myFavorable() {
         $user = $this->checkLogin();
         $user_id = $user['id'];
-        $this->load->model('Usercoupon_model','usercoupon_model');
+        $where = "user_coupon.uid = '$user_id'";
+        $type = $this->input->get('type') ? $this->input->get('type'):'1' ;
+        $time = date('Y-m-d H:i:s');
+        if($type == '1'){ //未使用的
+            $where .= " and user_coupon.flag = '1'";
+        }elseif($type == '2'){ //已使用
+            $where .= " and user_coupon.flag = '2'";
+        }else{
+            $where .= " and user_coupon.flag = '3' or user_coupon.flag = '4' or user_coupon.endTime < '$time'"; //已经过期或取消的
+        }
+        //$this->load->model('Usercoupon_model','usercoupon_model');
         $query_mycoupons = $this->db->select('user_coupon.*,coupon.amount1,coupon.amount2,member.tel')
                 ->join('coupon','coupon.id = user_coupon.cid')
                 ->join('member','member.id = user_coupon.uid')
-                ->where("user_coupon.flag != '4' and user_coupon.uid = '$user_id'")
+                ->where($where)
                 ->order_by('user_coupon.ctime','desc')
                 ->get('user_coupon');
         $mycoupons = $query_mycoupons->result_array();
         $this->twig->render('/home/user/my_favorable.twig', array(
-            'mycoupons'=>$mycoupons
+            'mycoupons'=>$mycoupons,
+            'type' => $type
         ));
     }
 

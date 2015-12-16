@@ -38,6 +38,22 @@ class Order extends Home_Controller {
 
             $query_service = $this->db->where('id', $service_id)->get('store_service');
             $service = $query_service->row_array();
+             //查找当前服务是否有优惠价
+            $where = array(
+                'serviceId'=>$service_id,
+                'sid'=>$oid,
+                'isVisit'=>$isVisit,
+                'status'=>'1',
+                'begintime <' => date('Y-m-d H:i:s'),
+                'endtime >' => date('Y-m-d H:i:s'),
+                );
+
+            $query = $this->db->where($where)->get('store_promo');
+            $promo = $query->row_array();
+            if($promo){
+                $service['price'] = $promo['price'];
+            }
+
             if ($good && $service) {
                 $order_name = $service['name'];
                 $nums = $post['num'];

@@ -281,6 +281,8 @@ class Store extends Home_Controller {
         } else {
             show_404();
         }
+
+        //var_dump($comments);exit;
         $this->twig->render('home/store/store_detail.twig', array(
             'store' => $store,
             'promos' => $promos,

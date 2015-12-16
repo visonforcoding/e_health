@@ -12,14 +12,14 @@
 {% endblock %}
 {%block main %}
     <ul class="youhuijuan-kind">
-        <li class="current">
-            <a href="#">未使用</a>
+        <li {% if type=='1'%} class="current"{% endif %}>
+            <a href="?type=1" >未使用</a>
         </li>
-        <li>
-            <a href="#">已使用</a>
+        <li {% if type=='2'%} class="current"{% endif %}>
+            <a href="?type=2" >已使用</a>
         </li>
-        <li>
-            <a href="#">已过期</a>
+        <li {% if type=='3'%} class="current"{% endif %}>
+            <a href="?type=3" >已过期</a>
         </li>
     </ul>
     <ul class="youhuijuan-list">

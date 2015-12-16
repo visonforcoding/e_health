@@ -14,8 +14,8 @@ class Order_model extends LM_Model {
 
     public function getJsonData($tableName, $page, $rows, $sort = '', $order = '', $where = '') {
         $offset = ($page - 1) * $rows; //分页起始条数
-        $selectStr = 'order.id as id,order.isVisit,order.ctime,order.payStatus,order.orderStatus,'
-                . 'store_service.name,order.orderNo,order.remark,member.nick,member.tel,'
+        $selectStr = 'order.id as id,order.isVisit,order.ctime,order.nums,order.payStatus,order.orderStatus,'
+                . 'store_service.name,order.orderNo,order.serviceTime,order.finishTime,order.remark,member.nick,member.tel,'
                 . 'order.price,order.amount,member.gender,order.serviceTime,order.type,'
                 . 'order.address,store_employee.truename,order.consignee,order.ucid,order.card_id,order.nums';
         if (!empty($where)) {
@@ -96,6 +96,10 @@ class Order_model extends LM_Model {
             if ($value['payStatus'] == '2' && $value['orderStatus'] == '5') {
                 //已支付 退款中
                 $res[$key]['statusText'] = '已服务';
+            }
+            if ($value['payStatus'] == '2' && $value['orderStatus'] == '6') {
+                //已支付 退款中
+                $res[$key]['statusText'] = '已评价';
             }
         }
         if (empty($res)) {
