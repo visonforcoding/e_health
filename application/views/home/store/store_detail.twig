@@ -27,9 +27,9 @@
             </div>
             <div class="goods-score">
                 <div class="score-start sprits">
-                    <div class="current-score sprits"></div>
+                    <div class="current-score sprits" style="width:{{store.score*10 }}%" data-score="{{store.score}}"></div>
                 </div>
-                <span class="comment-count">{{comments_info.avgscore}}分</span>
+                <span class="comment-count">{{store.score}}分</span>
             </div>
             <div class="shop-deatil-juli">
                 805km
@@ -68,7 +68,7 @@
                 <a href="#">
                     <i class="sprits daijinjuan"></i>
                     <div class="detail-daijinjuan-text">
-                        <p>{{promo.title}}</p>
+                        <p>{{promo.title}}{% if promo.isVisit=='1' %}(上门){% else %}(到店){% endif %}</p>
                         <p><span>¥{{promo.price}}</span><b>¥{{promo.mprice}}</b></p>
                     </div>
                     <i class="sprits gonext"></i>
@@ -81,9 +81,9 @@
     <div class="shop-detail-comment">
         <div class="goods-score">
             <div class="score-start sprits">
-                <div class="current-score sprits"></div>
+                <div class="current-score sprits" style="width:{{store.score*10 }}%" data-score="{{store.score}}"></div>
             </div>
-            <span class="comment-count">{{comments_info.avgscore}}分</span>
+            <span class="comment-count">{{store.score}}分</span>
         </div>
 
         <div class="shop-gocomment">
@@ -104,7 +104,7 @@
                         <p>{{comment.tel}}</p>
                         <div class="goods-score">
                             <div class="score-start sprits">
-                                <div class="current-score sprits"></div>
+                                <div class="current-score sprits" style="width:{{comment.score*10 }}%" data-score="{{comment.score}}"></div>
                             </div>
                             <span class="comment-count">{{comment.ctime}}</span>
                         </div>
