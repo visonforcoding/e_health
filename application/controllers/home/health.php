@@ -41,9 +41,10 @@ class Health extends Home_Controller {
             $query_health = $this->db
                             ->where($where1)->get('health');
             $health = $query_health->row_array();
-            // comment表查询
+            
             $this->load->model('Comment_model','comment_model');
-            $comments  = $this->comment_model->fetchComments(3,$health_id);
+            $where = "comment.sid = '$health_id' and comment.type='3' ";
+            $comments  = $this->comment_model->fetchComments($where,'ctime','desc');
             if ($health) {
                 
             } else {

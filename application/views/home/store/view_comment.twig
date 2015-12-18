@@ -3,7 +3,7 @@
 {% block title %}查看评论{% endblock%}
 {%block header %}
     <div class="goback">
-        <a href="javascript:history.go(-1)">
+        <a href="javascript:window.location.href='/home/store/storeDetail/id/{{sid}}.html'">
             <i class="sprits"></i>
         </a>
     </div>
@@ -15,7 +15,7 @@
             <li data-kinds="all-kinds">
                 <a href="javascript:;">
                     <div class="all-kinds">
-                        全部星级
+                        {{ scortStr| default('全部星级') }}
                         <i class="sprits"></i>
                     </div>
                 </a>
@@ -23,7 +23,7 @@
             <li data-kinds="all-zhineng">
                 <a href="javascript:;" class="nob">
                     <div class="zhineng">
-                        默认排序
+                        {%  if sort == 'desc' %} 默认排序{% else %} 时间倒序 {% endif %}
                         <i class="sprits"></i>
                     </div>
                 </a>
@@ -32,34 +32,34 @@
 
         <div class="select-kinds-layer" data-kinds="all-kinds">
             <ol class="select-condition">
-                <li class="current">
-                    <a href="javascript:;">全部星级</a>
+                <li {% if score=='0' %}class="current" {% endif %}>
+                     <a data-type="score" data-val="0">全部星级</a>
                 </li>
-                <li>
-                    <a href="javascript:;">五星级点评</a>
+                <li {% if score=='5' %}class="current" {% endif %}>
+                    <a data-type="score" data-val="5">五星级点评</a>
                 </li>
-                <li>
-                    <a href="javascript:;">四星级点评</a>
+                <li {% if score=='4' %}class="current" {% endif %}>
+                    <a data-type="score" data-val="4">四星级点评</a>
                 </li>
-                <li>
-                    <a href="javascript:;">三星级点评</a>
+                <li {% if score=='3' %}class="current" {% endif %}>
+                    <a data-type="score" data-val="3">三星级点评</a>
                 </li>
-                <li>
-                    <a href="javascript:;">二星级点评</a>
+                <li {% if score=='2' %}class="current" {% endif %}>
+                    <a data-type="score" data-val="2">二星级点评</a>
                 </li>
-                <li>
-                    <a href="javascript:;">一星级点评</a>
+                <li {% if score=='1' %}class="current" {% endif %}>
+                    <a data-type="score" data-val="1">一星级点评</a>
                 </li>
             </ol>
         </div>
 
         <div class="select-kinds-layer" data-kinds="all-zhineng">
             <ol class="select-condition">
-                <li class="current">
-                    <a href="javascript:;">默认排序</a>
+                <li {% if sort=='desc' %} class="current" {% endif %}>
+                    <a data-type="sort" data-val="desc">默认排序</a>
                 </li>
-                <li>
-                    <a href="javascript:;">时间排序</a>
+                <li {% if sort=='asc' %} class="current" {% endif %}>
+                    <a data-type="sort" data-val="asc">时间倒序</a>
                 </li>
             </ol>
         </div>
@@ -74,7 +74,7 @@
                     <p>{{comment.tel}}</p>
                     <div class="goods-score">
                         <div class="score-start sprits">
-                            <div class="current-score sprits"></div>
+                            <div class="current-score sprits" style="width:{{comment.score*10 }}%" data-score="{{comment.score}}"></div>
                         </div>
                         <span class="comment-count">{{comment.ctime}}</span>
                     </div>
@@ -93,6 +93,23 @@
 {% block script %}
     <script>
         $(function () {
+
+             $('.select-condition a').click(function () {
+                console.log();
+                //多条件筛选
+                var type = $(this).data('type');
+                var val = $(this).data('val');
+                var search = GetRequest();
+                if ($.isEmptyObject(search)) {
+
+                    window.location.href = '/home/store/viewComment?'+type + '=' + val;
+                } else {
+                    search[type] = val;
+                    var params = $.param(search);
+                    window.location.href = '/home/store/viewComment?' + params;
+                }
+            });
+
             FastClick.attach(document.body);
             var selectKinds = function () {
                 var $selectHandle = $(".goods-kinds-ul li"),
@@ -122,6 +139,19 @@
                 });
             }();
         })
+
+        function GetRequest() {
+            var url = location.search; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
+                }
+            }
+            return theRequest;
+        }
 
     </script>
 {% endblock %}

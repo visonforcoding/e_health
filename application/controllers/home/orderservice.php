@@ -272,6 +272,9 @@ class Orderservice extends Home_Controller {
      * 优惠券
      */
     public function useFavorable() {
+        $user = $this->checkLogin();
+        $user_id = $user['id'];
+        
         $this->twig->render('home/orderservice/use_favorable.twig', array(
         ));
     }
