@@ -8,23 +8,25 @@ class Comment_model extends LM_Model {
 
     /**
      * 查阅评论
-     * @param type $type
-     * @param type $id
-     * @return type
+     * @param $where
+     * @param $order
+     * @param $where
+     * @param $limit  
+     * @return array
      */
-    public function fetchComments($type, $id, $limit = null) {
+    public function fetchComments($where,$order,$sort,$limit = null) {
         if (!empty($limit)) {
             $query_comments = $this->db->select('member.tel,member.avatar,comment.ctime,comment.desc,comment.score')
                     ->join('member', 'member.id = comment.uid')
-                    ->where("`sid` = '$id' and comment.type = '$type'")
-                    ->order_by('comment.ctime', 'desc')
+                    ->where($where)
+                    ->order_by($order, $sort)
                     ->limit($limit)
                     ->get('comment');
         } else {
             $query_comments = $this->db->select('member.tel,member.avatar,comment.ctime,comment.desc,comment.score')
                     ->join('member', 'member.id = comment.uid')
-                    ->where("`sid` = '$id' and `type` = '$type'")
-                    ->order_by('comment.ctime', 'desc')
+                    ->where($where)
+                    ->order_by($order, $sort)
                     ->get('comment');
         }
         $comments = $query_comments->result_array();

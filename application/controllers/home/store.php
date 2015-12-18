@@ -261,7 +261,8 @@ class Store extends Home_Controller {
                 //查询门店评论
                 $this->load->model('Comment_model', 'comment_model');
                 $comments_info = $this->comment_model->fetchCommentInfo(1, $store_id);
-                $comments = $this->comment_model->fetchComments(1, $store_id, 2);
+                $where = "`sid` = '$store_id' and comment.type = '1'";
+                $comments = $this->comment_model->fetchComments($where,'ctime','desc',2);
 
                 //登录信息
                 $login_user = $this->session->userdata('user');
@@ -410,13 +411,51 @@ class Store extends Home_Controller {
     }
 
     public function viewComment() {
-        $id = $this->input->get('id');
+        $id = $this->input->get('id'); //店铺id
         $type = $this->input->get('type');
+        $where = "`sid` = '$id' and comment.type = '$type'";
+        $score = $this->input->get('score');
+        if($score){
+            switch (intval($score)) {
+                case 5:
+                    $where .= "and comment.score >8 and comment.score <=10";
+                    break;
+                case 4:
+                    $where .= "and comment.score >6 and comment.score <=8";
+                    break;
+                case 3:
+                    $where .= "and comment.score >4 and comment.score <=6";
+                    break;
+                case 2:
+                    $where .= "and comment.score >4 and comment.score <=2";
+                    break;
+                case 1:
+                    $where .= "and comment.score >0 and comment.score < 2";
+                    break;
+                default:
+                    break;
+            }
+        }
+        $sort = $this->input->get('sort') ? $this->input->get('sort'):'desc';
+        if($sort=='desc'){
+            $order = 'ctime';
+            $sort = 'desc';
+        }else{
+            $order = 'ctime';
+            $sort = 'asc';
+        }
+        $scoreArr = array('全部星级','一星级点评','二星级点评','三级星级点评','四星级点评','五星级点评');
+        //var_dump($where);exit;
         $this->load->model('Comment_model', 'comment_model');
-        $comments = $this->comment_model->fetchComments($type, $id);
+        $comments = $this->comment_model->fetchComments($where,$order,$sort);
         $this->twig->render('home/store/view_comment.twig', array(
             'comments' => $comments,
+            'score' =>$score,
+            'sort' => $sort,
+            'scortStr' => $scoreArr[$score],
+            'sid'=>$id
         ));
+        
     }
 
     public function storeMap() {

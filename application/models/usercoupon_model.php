@@ -101,6 +101,7 @@ class Usercoupon_model extends LM_Model {
                 ->where("user_coupon.uid = '$user_id' and (coupon.shopId = '$shop_id' or coupon.shopId = '0')"
                         . " and (coupon.serviceId = '$service_id' or coupon.serviceId = '0')"
                         . " and curdate() >= user_coupon.beginTime and curdate() <= user_coupon.endTime"
+                        . " and $amount >=coupon.amount1 "
                         . " and user_coupon.flag = '1'")
                 ->order_by('coupon.amount2', 'desc')
                 ->get('user_coupon');
