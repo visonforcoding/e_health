@@ -74,10 +74,13 @@ class User_model extends LM_Model {
                 $arr2=array();
                 foreach ($value as $k1 => $v1) {
                     $arr=array();
-                    foreach ($v1 as $k2 => $v2) {
-                       $arr[$k2]=$this->getAreaName($v2);  
+                    if(is_array($v1)){
+                        foreach ($v1 as $k2 => $v2) {
+                            $arr[$k2]=$this->getAreaName($v2);  
                       
+                        }
                     }
+                    
                     $arr2[$this->getAreaName($k1)]=$arr;
                    
                 }

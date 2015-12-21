@@ -271,37 +271,35 @@ class User extends Shop_Controller {
         if ($this->input->isPost()) {
             $posts = $this->input->posts();
             $cityId = $posts['cityId'];
-            $regionId = $posts['regionId'];
+            $areaId = $posts['areaId'];
             //获取当前店铺服务商圈
             $query = $this->db->select('ServiceArea')->where(array('sid' => $sid))->get('store_detail');
             $re = $query->row();
             $serviceArea = $re->ServiceArea;
-
+            $regionId = isset( $posts['ids'])? $posts['ids']:'';
             if ($serviceArea) {
                 $serviceArea = unserialize($serviceArea);
                 foreach ($serviceArea as $key => $value) {
                     if ($key == $cityId) {
                         foreach ($value as $k1 => $v1) {
-                            if ($regionId == $k1) {
-                                $serviceArea[$key][$k1] = $posts['ids'];
+                            if ($areaId == $k1) {
+                                $serviceArea[$key][$k1] = $regionId;
                                 break 2;
                             } else {
-                                $serviceArea[$key][$regionId] = $posts['ids'];
+                                $serviceArea[$key][$areaId] = $regionId;
                                 //var_dump($serviceArea);exit;
                                 break 2;
                             }
                         }
                     } else {
                         //城市不同时，直接在当前数组的后面添加
-                        $serviceArea[$cityId] = array($regionId => $posts['ids']);
+                        $serviceArea[$cityId] = array($areaId => $regionId);
                     }
                 }
             } else {
                 //当前店铺不存在服务商圈
-                $serviceArea = array($cityId => array($regionId => $posts['ids']));
+                $serviceArea = array($cityId => array($areaId => $regionId));
             }
-
-            //var_dump( $serviceArea);exit;
             $serviceArea = array('serviceArea' => serialize($serviceArea));
             $query = $this->db->where(array('sid' => $sid))->update('store_detail', $serviceArea);
             if ($query) {
@@ -368,6 +366,7 @@ class User extends Shop_Controller {
             $query = $this->db->select('ServiceArea')->where(array('sid' => $sid))->get('store_detail');
             $re = $query->row();
             $serviceArea = $re->ServiceArea;
+            $chooseArea ="";
             if ($serviceArea) {
                 $serviceArea = unserialize($serviceArea);
                 //获取当前店铺在当前区域下所选服务商圈
@@ -378,19 +377,21 @@ class User extends Shop_Controller {
                         }
                     }
                 }
-                //给所选商圈添加一个标记
-                foreach ($chooseArea as $key => $value) {
-                    foreach ($data as $k => $v) {
-                        if ($v['id'] == $value) {
-                            $data[$k]['type'] = '1';
+                if(is_array($chooseArea)){
+                    //给所选商圈添加一个标记
+                    foreach ($chooseArea as $key => $value) {
+                        foreach ($data as $k => $v) {
+                            if ($v['id'] == $value) {
+                                $data[$k]['type'] = '1';
+                            }
                         }
                     }
                 }
             }
         }
-        if ($data) {
-            array_unshift($data, array('id' => 0, 'name' => '全部'));
-        }
+      
+        array_unshift($data, array('id' => 0, 'name' => '全部'));
+   
         //var_dump($data);exit;
         $this->output->set_content_type('application/json')
                 ->set_output(json_encode($data));

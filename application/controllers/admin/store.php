@@ -35,10 +35,10 @@ class Store extends LM_Controller {
     public function addStore() {
         if ($this->input->isPost()) {
             $post = $this->input->posts();
-            $regionId = $post['regionId'];
-            $regionId = empty($regionId) ? -1 : $regionId;
+            $areaId = $post['areaId'];
+            $areaId = empty($areaId) ? -1 : $areaId;
             $this->load->model('Area_model', 'area_model');
-            $area = $this->area_model->findAreaById($regionId);
+            $area = $this->area_model->findAreaById($areaId);
             if (!$area) {
                 $response['status'] = 0;
                 $response['msg'] = '区域类型错误！';
@@ -47,7 +47,7 @@ class Store extends LM_Controller {
                 return;
             } else {
                 $areaType = $area['type'];
-                if ($areaType != 5) {
+                if ($areaType != 4) {
                     $response['status'] = 0;
                     $response['msg'] = '区域类型错误！';
                     $this->output->set_content_type('application/json')
@@ -65,10 +65,8 @@ class Store extends LM_Controller {
                         ->set_output(json_encode($response));
                 return;
             }
-            $areaId = $this->area_model->findPidByAreaId($regionId);
             $cityId = $this->area_model->findPidByAreaId($areaId);
             $data = array(
-                'regionId' => $regionId,
                 'areaId' => $areaId,
                 'cityId' => $cityId,
                 'storeName' => $post['storeName'],
@@ -89,10 +87,12 @@ class Store extends LM_Controller {
             $ck_ins = $this->db->insert('store', $data);
             $last_insert_id = $this->db->insert_id();
             $orderTime =  array('timeArr' => array(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),'num'=>'5');
+            $serviceNotice = $post['serviceNotice']?$post['serviceNotice']:'';
+            $orderNotice = $post['orderNotice']?$post['orderNotice']:'';
             $detail_data = array(
                 'sid' => $last_insert_id,
-                'serviceNotice' => $post['serviceNotice'],
-                'orderNotice' => $post['orderNotice'],
+                'serviceNotice' =>$serviceNotice ,
+                'orderNotice' =>  $orderNotice,
                 'orderTime' => serialize($orderTime),
             );
             $this->db->insert('store_detail', $detail_data);
@@ -136,6 +136,17 @@ class Store extends LM_Controller {
                     return;
                 }
             }
+
+            $bossTel = $post['bossTel'];
+            $query = $this->db->where(array('bossTel'=>$bossTel))->get('store');
+            $store = $query->row_array();
+            if($store && $store['id'] != $id){
+                 $response['status'] = 0;
+                 $response['msg'] = '当前电话号码已经存在店铺！';
+                 $this->output->set_content_type('application/json')
+                        ->set_output(json_encode($response));
+                return;
+            }
             $areaId = $this->area_model->findPidByAreaId($regionId);
             $cityId = $this->area_model->findPidByAreaId($areaId);
             $data = array(
@@ -157,9 +168,11 @@ class Store extends LM_Controller {
             //开启事务
             $this->db->trans_start();
             $ck_ins = $this->db->where("id = '$id'")->update('store', $data);
+            $serviceNotice = $post['serviceNotice']?$post['serviceNotice']:'';
+            $orderNotice = $post['orderNotice']?$post['orderNotice']:'';
             $detail_data = array(
-                'serviceNotice' => $post['serviceNotice'],
-                'orderNotice' => $post['orderNotice']
+                'serviceNotice' =>  $serviceNotice,
+                'orderNotice' => $orderNotice
             );
             $this->db->where("sid = '$id'")->update('store_detail', $detail_data);
             $this->db->trans_complete();
