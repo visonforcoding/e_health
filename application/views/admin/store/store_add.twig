@@ -10,7 +10,7 @@
             <form id="node-form" class="form-inline"  action="/admin/store/addStore" method="post" enctype="multipart/form-data">
                 <div class="input-group">
                     <span class="input-group-addon">所属商圈</span>
-                    <input name="regionId" id="area-region" value="0">
+                    <input name="regionId" id="area-region" value="0"><span style='color:red'>&nbsp;&nbsp;（所属商圈要选取到某个区域下的服务商圈）</span>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon" >店名</span>
@@ -45,7 +45,6 @@
                     <span class="input-group-addon">营业执照</span>
                     <input name="license" value="" type="hidden"/>
                     <div id="license" class="dropzone" >
-                        <img id="license-img" style="width:130px;" src=""/>
                     </div>
                     <a href="javascript:void(0)" style="vertical-align: top;" id="clear_button" class="easyui-linkbutton license-reset" iconCls="icon-clear">重置图片</a>
                 </div>
@@ -79,7 +78,7 @@
                 <div class="input-group">
                     <span class="input-group-addon"></span>
                     <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm('node-form');">提交</a>
-                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm();">清除</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm();">清除</a><span style='color:red'>&nbsp;&nbsp;（新增的店铺初始密码默认为123456）</span>
                 </div>
             </form>
         </div>
@@ -162,7 +161,7 @@
                     if (typeof msg === 'object') {
                         if (msg.status) {
                             alert(msg.msg);
-                            //window.location.href = msg.url;
+                            window.location.href = msg.url;
                         } else {
                             alert(msg.msg);
                         }

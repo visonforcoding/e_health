@@ -28,6 +28,32 @@ class Article extends LM_Controller {
                 ->set_output(json_encode($rows));
     }
 
+    public function addArticle() { 
+        if ($this->input->isPost()) {
+            $post = $this->input->posts();
+            $id = $post['id'];
+            $data = array(
+                'title' => $post['title'],
+                'abstract' => $post['abstract'],
+                'from' => $post['from'],
+                'detail' => $post['detail'],
+                'status' => $post['status'],
+                'utime' => date('Y-m-d H:i:s'),
+            );
+            $ck_ins = $this->db->insert('health', $data);
+            $response['status'] = $ck_ins;
+            if ($ck_ins) {
+                $response['msg'] = '添加成功！';
+            } else {
+                $response['msg'] = '添加失败！';
+            }
+            $this->output->set_content_type('application/json')
+                    ->set_output(json_encode($response));
+            return;
+        }
+        $this->twig->render('admin/article/article_add.twig');
+    }
+
     public function editArticle() { 
         if ($this->input->isPost()) {
             $post = $this->input->posts();
@@ -60,6 +86,20 @@ class Article extends LM_Controller {
         $this->twig->render('admin/article/article_edit.twig', array(
             'article'=>$article
         ));
+    }
+
+    public function delArticle(){
+        $id = $this->input->post('data');
+        $query = $this->db->delete('health',array('id'=>$id));
+        if ($query) {
+            $response['msg'] = '删除成功！';
+        } else {
+            $response['msg'] = '删除失败！';
+        }
+        $this->output->set_content_type('application/json')
+                ->set_output(json_encode($response));
+        return;
+
     }
 
 }

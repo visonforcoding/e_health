@@ -15,6 +15,14 @@
                     <input name="name" id="name" class="easyui-validatebox" data-options="required:true" value="{{service.name}}">
                 </div>
                 <div class="input-group">
+                    <span class="input-group-addon" >适用店铺</span>
+                    <select name="store">
+                        {% for shop in shops %}
+                         <option value="{{ shop.id }}" {% if shop.id == service.storeId %}   {{ "selected='selected'" }}  {% endif %}>{{ shop.storeName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group">
                     <span class="input-group-addon" >售价</span>
                     <input type="text" name="price" value="{{service.price}}" class="easyui-numberbox" precision="2" data-options="required:true"  aria-describedby="basic-addon1">
                 </div>
@@ -138,6 +146,7 @@
                         if (msg.status) {
                            alert(msg.msg);
                             //window.location.href = msg.url;
+                            history.go(-1);
                         } else {
                            alert(msg.msg);
                         }

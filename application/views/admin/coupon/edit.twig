@@ -79,7 +79,8 @@
                     if (typeof msg === 'object') {
                         if (msg.status) {
                            alert(msg.msg);
-                            window.location.href = msg.url;
+                            //window.location.href = msg.url;
+                            history.go(-1);
                         } else {
                            alert(msg.msg);
                         }

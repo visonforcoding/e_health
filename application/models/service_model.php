@@ -6,6 +6,58 @@ class Service_model extends LM_Model {
         parent::__construct();
     }
 
+     /**
+     * 通用型获取适用jesyui datagird 的数据形式
+     * @param type $tableName 表名
+     * @param type $curPage  当前页码
+     * @param type $pageSize 每页数量
+     * @param type $sort   排序字段
+     * @param type $order  排序方式 asc desc
+     * @param type $where  查询条件
+     * @return array
+     */
+    public function getJsonRows($tableName, $curPage, $pageSize, $sort = '', $order = '', $where = '') {
+        $offset = ($curPage - 1) * $pageSize; //分页起始条数
+        $selectStr = "store_service.*,store.storeName as store";
+        if (!empty($where)) {
+            $nums = $this->db->where($where)->count_all_results($tableName); //总条数
+            if (!empty($order)) {
+                $res = $this->db->select($selectStr)
+                                ->where($where)
+                                ->join('store','store_service.storeId=store.id')
+                                ->limit($pageSize, $offset)
+                                ->order_by($sort, $order)
+                                ->get($tableName);
+            } else {
+                $res = $this->db
+                            ->select($selectStr)
+                            ->join('store','store_service.storeId=store.id')
+                            ->where($where)
+                            ->limit($pageSize, $offset)
+                            ->get($tableName);
+            }
+        } else {
+            $nums = $this->db->count_all_results($tableName); //总条数
+            if (!empty($order)) {
+                $res = $this->db->select($selectStr)
+                                ->join('store','store_service.storeId=store.id')
+                                ->limit($pageSize, $offset)
+                                ->order_by($sort, $order)->get($tableName);
+            } else {
+                $res = $this->db->select($selectStr)
+                                ->join('store','store_service.store.storeId=store.id')
+                                ->limit($pageSize, $offset)->get($tableName);
+            }
+        }
+        $res = $res->result_array();
+        if (empty($res)) {
+            $res = array();
+        }
+        $arr_json = array('total' => $nums, 'rows' => $res);
+        return $arr_json;
+    }
+
+
     /**
      * 查出id 对应 服务名的数组结构
      * @return type

@@ -34,7 +34,7 @@
                 height: 450,
                 toolbar: '#tb',
                 pageList: [5, 10, 20, 30, 40, 50, 60],
-                autoRowHeight: false,
+                autoRowHeight: true,
                 sortName:'id',
                 columns: [[
                         {field: 'ck', checkbox: true},
@@ -68,7 +68,8 @@
 				}
 			}},
                         {field: 'action', title: "操作", width: 20, formatter: function (value, row, index) {
-                                return "<a class='cwp-btn' title='编辑' href='/admin/member/editMember/id/" + row.id + "'><span style='color:#E66A3C' class='icon-pencil2'></span> 编辑</a>" ;
+                                return "<a class='cwp-btn' title='编辑' href='/admin/member/editMember/id/" + row.id + "' style='margin-left:10px; ><span style='color:#E66A3C' class='icon-pencil2'></span> 编辑</a>" ;
+
                             }}
                     ]]
             });
