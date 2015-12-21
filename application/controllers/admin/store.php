@@ -87,8 +87,8 @@ class Store extends LM_Controller {
             $ck_ins = $this->db->insert('store', $data);
             $last_insert_id = $this->db->insert_id();
             $orderTime =  array('timeArr' => array(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),'num'=>'5');
-            $serviceNotice = $post['serviceNotice']?$post['serviceNotice']:'';
-            $orderNotice = $post['orderNotice']?$post['orderNotice']:'';
+            $serviceNotice = isset($post['serviceNotice'])?$post['serviceNotice']:'';
+            $orderNotice = isset($post['orderNotice'])?$post['orderNotice']:'';
             $detail_data = array(
                 'sid' => $last_insert_id,
                 'serviceNotice' =>$serviceNotice ,
@@ -168,8 +168,8 @@ class Store extends LM_Controller {
             //开启事务
             $this->db->trans_start();
             $ck_ins = $this->db->where("id = '$id'")->update('store', $data);
-            $serviceNotice = $post['serviceNotice']?$post['serviceNotice']:'';
-            $orderNotice = $post['orderNotice']?$post['orderNotice']:'';
+            $serviceNotice = isset($post['serviceNotice'])?$post['serviceNotice']:'';
+            $orderNotice = isset($post['orderNotice'])?$post['orderNotice']:'';
             $detail_data = array(
                 'serviceNotice' =>  $serviceNotice,
                 'orderNotice' => $orderNotice
