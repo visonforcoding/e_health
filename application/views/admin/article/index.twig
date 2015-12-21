@@ -119,7 +119,7 @@
                 if (r) {
                     $.ajax({
                         type: "POST",
-                        url: "/admin/sys/delNode",
+                        url: "/admin/article/delArticle",
                         data: {"data": ss},
                         success: function (res) {
                             $.messager.alert('消息', res.msg, 'info');

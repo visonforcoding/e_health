@@ -17,6 +17,24 @@
         </a>
     </div>
 {% endblock %}
+{% block static %}
+    <style type="text/css">
+        .detail-yuyue-price li em {
+        color: #999;
+        font-size: 2.4rem;
+        font-style: normal;
+        margin-left: 20px;
+        text-decoration: line-through;
+    }
+
+    .detail-yuyue-price li span {
+        color: #f84e4e;
+        font-size: 2.4rem;
+        line-height: 70px;
+    }
+
+    </style>
+{% endblock %}
 {%block main %}
     <div class="shop-detail-banner">
         <img src="{{store.cover}}" alt="">
@@ -51,10 +69,17 @@
         </div>
         {% for service in services %}
             <ul class="detail-yuyue-price">
-                <li style="width:50%">{{service.name}}</li>
-                <li style="width:50%;text-align:right"><span>{{service.price}}元</span></li>
-            </ul>
+                <li style="width:30%">{{service.name}}</li>
+                <li style="width:70%;text-align:right">
+                        {% if service.isVisitPromoPrice!='' or service.PromoPrice!='' %}
+                        <span>{%if service.isVisitPromoPrice!=''%} 上门：{{service.isVisitPromoPrice}}元{% endif %}&nbsp;&nbsp;{%if service.PromoPrice!=''%} 到店：{{service.PromoPrice}}元{% endif %}
+                        </span><em>{{service.price}}</em>
+                       {% else %}
+                        <span>{{service.price}}元</span>
+                       {% endif %}
 
+                </li>
+            </ul>
             <ul class="detail-server-list">
                 <li>
                     服务时长：<span>{{service.stime}}分钟</span>

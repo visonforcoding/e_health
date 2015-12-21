@@ -55,6 +55,16 @@ class Store extends LM_Controller {
                     return;
                 }
             }
+            $bossTel = $post['bossTel'];
+            $query = $this->db->where(array('bossTel'=>$bossTel))->get('store');
+            $store = $query->row_array();
+            if($store){
+                 $response['status'] = 0;
+                 $response['msg'] = '当前电话号码已经存在店铺！';
+                 $this->output->set_content_type('application/json')
+                        ->set_output(json_encode($response));
+                return;
+            }
             $areaId = $this->area_model->findPidByAreaId($regionId);
             $cityId = $this->area_model->findPidByAreaId($areaId);
             $data = array(
@@ -63,10 +73,11 @@ class Store extends LM_Controller {
                 'cityId' => $cityId,
                 'storeName' => $post['storeName'],
                 'bossName' => $post['bossName'],
+                'pwd' =>  setPlainPassword('123456'),
                 'idNum' => $post['idNum'],
                 'idPic' => $post['idPic'],
                 'cover' => $post['cover'],
-                'bossTel' => $post['bossTel'],
+                'bossTel' => $bossTel,
                 'openTime' => $post['openTime'],
                 'coordinate' => $post['coordinate'],
                 'status' => $post['status'],
@@ -77,16 +88,19 @@ class Store extends LM_Controller {
             $this->db->trans_start();
             $ck_ins = $this->db->insert('store', $data);
             $last_insert_id = $this->db->insert_id();
+            $orderTime =  array('timeArr' => array(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),'num'=>'5');
             $detail_data = array(
                 'sid' => $last_insert_id,
                 'serviceNotice' => $post['serviceNotice'],
-                'orderNotice' => $post['orderNotice']
+                'orderNotice' => $post['orderNotice'],
+                'orderTime' => serialize($orderTime),
             );
             $this->db->insert('store_detail', $detail_data);
             $this->db->trans_complete();
             $response['status'] = $ck_ins;
             if ($this->db->trans_status()) {
                 $response['msg'] = '添加成功！';
+                $response['url'] = '/admin/store/index';
             } else {
                 $response['msg'] = '添加失败！';
             }

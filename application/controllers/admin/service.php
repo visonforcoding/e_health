@@ -38,6 +38,7 @@ class Service extends LM_Controller {
         if ($this->input->isPost()) {
             $post = $this->input->posts();
             $data = array(
+                'storeId'=>$posts['store'],
                 'name' => $post['name'],
                 'price' => $post['price'],
                 'ctime' => date('Y-m-d H:i:s'),
@@ -47,7 +48,7 @@ class Service extends LM_Controller {
                 'cover' => $post['cover'],
                 'status' => $post['status'],
             );
-            $query_ck = $this->db->where(array('name' => $post['name']))->get('service');
+            $query_ck = $this->db->where(array('name' => $post['name']))->get('store_service');
             $ck_node = $query_ck->row_array();
             //检测是否已被存在
             if (is_array($ck_node) && count($ck_node) > 0) {
@@ -57,7 +58,7 @@ class Service extends LM_Controller {
                         ->set_output(json_encode($response));
                 return;
             }
-            $ck_ins = $this->db->insert('service', $data);
+            $ck_ins = $this->db->insert('store_service', $data);
             $response['status'] = $ck_ins;
             if ($ck_ins) {
                 $response['msg'] = '添加成功！';
@@ -68,7 +69,12 @@ class Service extends LM_Controller {
                     ->set_output(json_encode($response));
             return;
         }
-        $this->twig->render('admin/service/addService.twig');
+
+        $query = $this->db->get('store');
+        $store = $query->result_array();
+        $this->twig->render('admin/service/addService.twig',array(
+            'shops' => $store,
+        ));
     }
 
     /**
@@ -101,22 +107,26 @@ class Service extends LM_Controller {
 //                        ->set_output(json_encode($response));
 //                return;
 //            }
-            $ck_edit = $this->db->where("`id` = '$id'")->update('service', $data);
+            $ck_edit = $this->db->where("`id` = '$id'")->update('store_service', $data);
             $response['status'] = $ck_edit;
             if ($ck_edit) {
-                $response['msg'] = '添加成功！';
+                $response['msg'] = '修改成功！';
             } else {
-                $response['msg'] = '添加失败！';
+                $response['msg'] = '修改失败！';
             }
             $this->output->set_content_type('application/json')
                     ->set_output(json_encode($response));
             return;
         }
         $id = $this->input->get('id');
-        $query_service = $this->db->where("id = '$id'")->get('service');
+        $query_service = $this->db->where("id = '$id'")->get('store_service');
         $service = $query_service->row_array();
+
+        $query = $this->db->get('store');
+        $store = $query->result_array();
         $this->twig->render('admin/service/editService.twig', array(
-            'service' => $service
+            'service' => $service,
+            'shops' => $store
         ));
     }
 

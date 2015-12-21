@@ -65,10 +65,11 @@
     <div class="shop-detail-daijinqun">
         {% if promos %}
             {% for promo in promos %}
-                <a href="#">
+                 <a href="/home/store/storeOrder/id/{{store.id}}/service_id/{{promo.serviceId}}/isVisit/{{promo.isVisit}}">
                     <i class="sprits daijinjuan"></i>
                     <div class="detail-daijinjuan-text">
                         <p>{{promo.title}}{% if promo.isVisit=='1' %}(上门){% else %}(到店){% endif %}</p>
+                        <p>{{promo.name}}</p>
                         <p><span>¥{{promo.price}}</span><b>¥{{promo.mprice}}</b></p>
                     </div>
                     <i class="sprits gonext"></i>

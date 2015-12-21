@@ -56,6 +56,7 @@
                         if (msg.status) {
                             $.messager.alert('消息', msg.msg, 'info');
                             //window.location.href = msg.url;
+                             history.go(-1);
                         } else {
                             $.messager.alert('消息', msg.msg, 'error');
                         }

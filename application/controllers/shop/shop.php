@@ -106,4 +106,38 @@ class Shop extends Shop_Controller {
         ));
     }
 
+    public function changePwd(){
+        $store = $this->user;
+        $store_id = $store['id'];
+        if($this->input->isPost()){
+            $posts = $this->input->post();
+            $pwd = $posts['pwd'];
+            $repwd = $posts['repwd'];
+            if( $pwd != $repwd){
+                $response['status'] = false;
+                $response['msg'] = '两次输入的密码不一致';
+                $this->output->set_content_type('application/json')
+                    ->set_output(json_encode($response));
+                return;
+            }
+
+            $update['pwd'] = setPlainPassword($pwd);
+            $query = $this->db->update('store',$update,array('id'=>$store_id));
+            if($query ){
+                $response['status'] = true;
+                $response['msg'] = '修改成功';
+            } else {
+                $response['status'] = false;
+                $response['msg'] = '修改失败';
+            }
+            $this->output->set_content_type('application/json')
+                    ->set_output(json_encode($response));
+            return;
+        }
+
+        $this->twig->render('shop/shop/changePwd.twig',array(
+            'realTimeInfo' => $this->getRealtimeInfo()
+        ));
+    }
+
 }

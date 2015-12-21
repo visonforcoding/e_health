@@ -256,7 +256,10 @@ class Store extends Home_Controller {
                 //查询门店是否有促销
                 $time = date("Y-m-d H:i:s");
                 $query_promos = $this->db
-                                ->where("`status` = '1' and `begintime` < '$time' and `endtime` > '$time' and `sid` = '$store_id'")->get('store_promo');
+                                ->select('store_promo.*,store_service.name')
+                                ->where("`store_promo.status` = '1' and store_promo.`sid` = '$store_id'  and store_promo.`begintime` < '$time' and store_promo.`endtime` > '$time' ")
+                                ->join('store_service','store_service.id = store_promo.serviceId')
+                                ->get('store_promo');
                 $promos = $query_promos->result_array();
                 //查询门店评论
                 $this->load->model('Comment_model', 'comment_model');
@@ -314,6 +317,31 @@ class Store extends Home_Controller {
                 //查询所有服务项目 组装门店服务字符串
                 $this->load->model('Service_model', 'service_model');
                 $services = $this->service_model->fetchServicesByStoreid($store_id);
+                //获取店铺的优惠活动
+                $time = date('Y-m-d H:i:s');
+                $query_promo_stores = $this->db
+                                           ->where("store_promo.`status` = '1' and store_promo.`begintime` < '$time' and store_promo.`endtime` > '$time' and store_promo.sid='$store_id'")
+                                           ->get('store_promo');
+                $promo_stores = $query_promo_stores->result_array();
+                //var_dump($promo_stores);
+                //组装店铺的服务的优惠价格
+              
+                $new_promo_services = array();
+                foreach ($services as $key => $value) {
+                    $new_promo_services[$key] = $value;
+                    $new_promo_services[$key]['isVisitPromoPrice']='';
+                    $new_promo_services[$key]['PromoPrice'] = "";
+                    foreach ($promo_stores as $k => $v) {
+                        if ($value['id'] == $v['serviceId']) {
+                            if($v['isVisit'] == '1'){
+                                $new_promo_services[$key]['isVisitPromoPrice'] = $v['price'];
+                            }else{
+                                $new_promo_services[$key]['PromoPrice'] = $v['price'];
+                            }    
+                        }
+                    }
+                }
+             
                 $home_services = $this->service_model->fetchServicesByStoreid($store_id, true);
                 $service_area_ids = unserialize($store['serviceArea']);
                 if($service_area_ids){
@@ -340,10 +368,10 @@ class Store extends Home_Controller {
         } else {
             show_404();
         }
-       
+        //var_dump($new_promo_services);exit;
         $this->twig->render('home/store/store_order.twig', array(
             'store' => $store,
-            'services' => $services,
+            'services' => $new_promo_services,
             'service_area' => $area_str,
             'service_id' => $service_id,
             'isVisit' => $isVisit,
