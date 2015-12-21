@@ -343,23 +343,21 @@ class Store extends Home_Controller {
                 }
              
                 $home_services = $this->service_model->fetchServicesByStoreid($store_id, true);
-                $service_area_ids = unserialize($store['serviceArea']);
-                if($service_area_ids){
-                    foreach($service_area_ids as $value){
-                        foreach ($value as $v) {
-                            $service_area_arr[] = $v[0]; 
-                        }
-                    }
-                    $query_services_area = $this->db->select('name')->where_in('id', $service_area_arr)->get('area');
-                    $services_areas = $query_services_area->result_array();
-                    $area_arr = array();
-                    foreach ($services_areas as $value) {
-                        $area_arr[] = $value['name'];
-                    }
-                    $area_str = implode('、', $area_arr);
+                $this->load->model('User_model', 'user_model');
+                $areaData = $this->user_model->getServiceArea($store_id);
+                $area_str = "";
+                if($areaData){
+                     foreach ($areaData as $value) {
+                           foreach ($value as $key => $v) {
+                               if($v){
+                                    $area_str .= $key.':'.implode(',', $v).'&nbsp;&nbsp;';
+                               }else{
+                                     $area_str .= $key.'&nbsp;&nbsp;';
+                               }
+                               
+                           }
+                     }
 
-                }else{
-                    $area_str = "";
                 }
                 
             } else {

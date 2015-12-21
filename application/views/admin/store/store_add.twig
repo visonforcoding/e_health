@@ -10,7 +10,7 @@
             <form id="node-form" class="form-inline"  action="/admin/store/addStore" method="post" enctype="multipart/form-data">
                 <div class="input-group">
                     <span class="input-group-addon">所属商圈</span>
-                    <input name="regionId" id="area-region" value="0"><span style='color:red'>&nbsp;&nbsp;（所属商圈要选取到某个区域下的服务商圈）</span>
+                    <input name="areaId" id="area" value="0"><span style='color:red'>&nbsp;&nbsp;（所属商圈要选取到某个区域）</span>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon" >店名</span>
@@ -93,7 +93,7 @@
     <!-- 实例化编辑器 -->
     <script>
         $(function () {
-            $('#area-region').combotree({
+            $('#area').combotree({
                 url: '/admin/area/asy_area_tree',
                 required: true
             });
