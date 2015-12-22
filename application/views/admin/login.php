@@ -55,7 +55,7 @@
 
     <div class="navbar navbar-default" role="navigation">
         <div class="navbar-header">
-          <a class="" href="index.html"><span class="navbar-brand"><span class="fa fa-paper-plane"></span>灸疗</span></a></div>
+          <a class="" href="index.html"><span class="navbar-brand"><span class="fa fa-paper-plane"></span>E店通</span></a></div>
 
         <div class="navbar-collapse collapse" style="height: 1px;">
 

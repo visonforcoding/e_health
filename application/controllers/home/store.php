@@ -343,6 +343,7 @@ class Store extends Home_Controller {
                 }
              
                 $home_services = $this->service_model->fetchServicesByStoreid($store_id, true);
+                
                 $this->load->model('User_model', 'user_model');
                 $areaData = $this->user_model->getServiceArea($store_id);
                 $area_str = "";

@@ -160,6 +160,27 @@
             });
         });
         function delIt() {
+            var ss = [];
+            var rows = $('#dg').datagrid('getSelections');
+            for (var i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                ss.push(row.id); //这行记录的ID值 
+            }
+            ;
+            $.messager.confirm('Confirm', '确定要删除记录?', function (r) {
+                if (r) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/store/storeDel",
+                        data: {"data[]": ss},
+                        success: function (msg) {
+                            showMessage(msg.info);
+                            $('#dg').datagrid('load', {
+                            });
+                        }
+                    });
+                }
+            });
         }
         
         function editIt() {

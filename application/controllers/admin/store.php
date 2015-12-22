@@ -128,7 +128,7 @@ class Store extends LM_Controller {
                 return;
             } else {
                 $areaType = $area['type'];
-                if ($areaType != 5) {
+                if ($areaType != 4) {
                     $response['status'] = 0;
                     $response['msg'] = '区域类型错误！';
                     $this->output->set_content_type('application/json')
@@ -197,6 +197,25 @@ class Store extends LM_Controller {
         $this->twig->render('admin/store/store_edit.twig', array(
             'store' => $store
         ));
+    }
+
+    //删除店铺
+    public function storeDel(){
+        if($this->input->isPost()){
+            $ids = $this->input->post('data');
+            $this->db->where_in('id',$ids);
+            $query = $this->db->delete('store');
+            if($query){
+                $response['status'] =1;
+                $response['msg'] = '删除成功';
+            }else{
+                $response['status'] = 0;
+                $response['msg'] = '删除失败';
+            }  
+
+            $this->output->set_content_type('application/json')
+                        ->set_output(json_encode($response));
+        }
     }
 
     /**
