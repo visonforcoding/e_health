@@ -78,6 +78,8 @@
                         <ul class="nav">
                             <li {% if page_tag is defined %}{% if page_tag == 'shop_shop_shopInfo' %} class="active" {% endif %}{% endif %}>
                                 <a href="/shop/shop/shopInfo">店铺信息</a></li>
+                            <li {% if page_tag is defined %}{% if page_tag == 'shop_shop_changePwd' %} class="active" {% endif %}{% endif %}>
+                                <a href="/shop/shop/changePwd">修改登陆密码</a></li>
                             <li{% if page_tag is defined %}{% if page_tag == 'shop_shop_orderTime' %} class="active" {% endif %}{% endif %}>
                                 <a href="/shop/shop/orderTime">预约时间管理</a></li>
                             <li{% if page_tag is defined %}{% if page_tag == 'shop_user_service' %} class="active" {% endif %}{% endif %}><a href="/shop/user/service">服务项目管理</a></li>
