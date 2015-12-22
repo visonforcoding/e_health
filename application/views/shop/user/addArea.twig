@@ -125,15 +125,20 @@
                  if(id=='0'){
                          $('.choose ul').html(''); //清除当前已选的服务商圈
                          var html=$('.content .btn-group').find('button'); 
-                          for (var i = 1; i < html.length; i++) {
-                              $(html[i]).css('background','');  //把其他按钮的背景色去掉
-                              $('.choose ul').append('<li class="'+html[i].id+'">'+html[i].innerHTML+'</li>');
-                              $(html[i]).removeAttr('name'); //移除其他按钮的name值，点击没效果
-                          }
-                  }else{
 
+                         if(html.length >1){
+                                for (var i = 1; i < html.length; i++) {
+                                    $(html[i]).css('background','');  //把其他按钮的背景色去掉
+                                    $('.choose ul').append('<li class="'+html[i].id+'">'+html[i].innerHTML+'</li>');
+                                    $(html[i]).removeAttr('name'); //移除其他按钮的name值，点击没效果
+                                }
+                         }else{
+                              var regionId=$('#district').val();
+                              var a= $('#district').find('option[value='+regionId+']').text();
+                              $('.choose ul').append('<li class="">'+a+'</li>');
+                         }
+                          
                   }
-
 
                 if(name==''){
                     var value=$(this).html();
@@ -162,21 +167,28 @@
               //提交服务商圈
             $('#submit').click(function(){
                var cityId=$('#city').val();
-               var areaId=$('#district').val();
+               var regionId=$('#district').val();
                var ids=[]; //服务商圈id
                var lis=$('.choose ul').find('li');
+               if(lis.length < 1 ){
+                   return false;
+               }
                for (var i = 0; i < lis.length; i++) {
-                   ids.push($(lis[i]).attr('class'));
+                   if($(lis[i]).attr('class')){
+                      ids.push($(lis[i]).attr('class'));
+                   }
+                   
                };
+
                $.ajax({
                  url: '',
                  type: 'POST',
-                 data: {cityId: cityId,areaId:areaId,ids:ids},
+                 data: {cityId: cityId,areaId:regionId,ids:ids},
                  success:function(msg){
                           if(msg.status=='1'){
                               window.location.href='/shop/user/serviceArea';
                           }else{
-                             alert(msg.msg);
+                            alert(msg.msg);
 
                           }
                          
@@ -185,8 +197,6 @@
                
             });
 
-      
-     
        });
    
     </script>
