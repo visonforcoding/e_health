@@ -77,7 +77,7 @@ class Useraction extends Home_Controller {
     public function uploadAvatar() {
         if ($this->input->isPost()) {
             $posts = $this->input->posts();
-            var_dump($posts);
+            echo base64_decode($posts['data']);exit();
             $base64_body = substr(strstr($base64_image, ','), 1);
             $file = base64_decode($base64_body);
 

@@ -82,8 +82,9 @@
             </form>
         </div>
     </div>
-    <p class="pull-right" style=""><a href="http://www.portnine.com" target="blank" style="font-size: .75em; margin-top: .25em;">联系管理员</a></p>
+    <p class="pull-right" style=""><a href="" target="blank" style="font-size: .75em; margin-top: .25em;">联系管理员</a></p>
     <p><a href="reset-password.html">忘记密码?</a></p>
 </div>
     <script src="/static/Js/bootstrap.js"></script>
-</body></html>
+</body>
+</html>
