@@ -7,6 +7,7 @@
 class Pay extends Home_Controller {
 
     public function submitPay() {
+        header("Content-type:text/html;charset=utf-8");
         $order_id = $this->input->get('id');
         $query_order = $this->db->select('*')->where("`id` = '$order_id'")->get('order');
         $order= $query_order->row_array();
