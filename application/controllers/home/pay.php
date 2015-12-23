@@ -25,10 +25,8 @@ class Pay extends Home_Controller {
 
     protected function alipay($order_data) {
         $alipay_config = require_once APPPATH . '/third_party/Alipay/alipay.config.php';
-        var_dump($alipay_config);
         require_once APPPATH . '/third_party/Alipay/lib/alipay_submit.class.php';
         $server_name = $_SERVER['SERVER_NAME'];
-        var_dump($server_name);
         //构造要请求的参数数组，无需改动
         $payment_type = "1";          //支付类型
         //服务器异步通知页面路径
