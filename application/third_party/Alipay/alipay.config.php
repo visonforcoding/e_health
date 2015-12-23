@@ -21,7 +21,7 @@
 
 //↓↓↓↓↓↓↓↓↓↓请在这里配置您的基本信息↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 //合作身份者id，16位纯数字  APPID
-$alipay_config['partner'] = '2015122101017188';
+$alipay_config['partner'] = '2088121421143067';
 
 //收款支付宝账号，一般情况下收款账号就是签约账号
 $alipay_config['seller_id'] = $alipay_config['partner'];
