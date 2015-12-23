@@ -495,6 +495,7 @@ class Store extends Home_Controller {
      * 预约到店服务
      */
     public function onlineOrder() {
+        $user = $this->checkLogin();
         $get = $this->input->gets();
         $store_id = $get['store_id'];
         $sid = $get['sid'];
