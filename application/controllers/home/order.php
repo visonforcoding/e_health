@@ -31,26 +31,26 @@ class Order extends Home_Controller {
                 $good = $query_good->row_array();
                 $provider = $good['storeName'];
                 $isVisit = $post['isVisit'];
-            }else{
-                 show_error('数据错误!');
+            } else {
+                show_error('数据错误!');
             }
             $service_id = $post['sid'];
 
             $query_service = $this->db->where('id', $service_id)->get('store_service');
             $service = $query_service->row_array();
-             //查找当前服务是否有优惠价
+            //查找当前服务是否有优惠价
             $where = array(
-                'serviceId'=>$service_id,
-                'sid'=>$oid,
-                'isVisit'=>$isVisit,
-                'status'=>'1',
+                'serviceId' => $service_id,
+                'sid' => $oid,
+                'isVisit' => $isVisit,
+                'status' => '1',
                 'begintime <' => date('Y-m-d H:i:s'),
                 'endtime >' => date('Y-m-d H:i:s'),
-                );
+            );
 
             $query = $this->db->where($where)->get('store_promo');
             $promo = $query->row_array();
-            if($promo){
+            if ($promo) {
                 $service['price'] = $promo['price'];
             }
 
@@ -79,6 +79,7 @@ class Order extends Home_Controller {
                 if (!$ins_order) {
                     show_error('服务器错误!');
                 } else {
+                    $order_id = $this->db->insert_id();
                     $this->session->unset_userdata('token');
                 }
             } else {
@@ -95,6 +96,7 @@ class Order extends Home_Controller {
             if (!$order) {
                 show_error('该订单不存在或该订单不可支付！');
             } else {
+                $order_id = $order['id'];
                 $order_name = $order['name'];
                 $amount = $order['price'];
                 $store_id = $order['sid'];
@@ -103,11 +105,12 @@ class Order extends Home_Controller {
         }
         // 查询可用优惠券
         $this->load->model('Usercoupon_model', 'usercoupon_model');
-        $coupons = $this->usercoupon_model->getUserCouponByUser($amount,$user_id, $service_id, $store_id);
+        $coupons = $this->usercoupon_model->getUserCouponByUser($amount, $user_id, $service_id, $store_id);
         $this->twig->render('home/order/order_pay.twig', array(
             'order_name' => $order_name,
             'amount' => $amount,
-            'coupons'=>$coupons
+            'coupons' => $coupons,
+            'order_id' => $order_id
         ));
     }
 
@@ -205,20 +208,20 @@ class Order extends Home_Controller {
             show_error('服务器错误！');
         }
 
-       //var_dump($order);
+        //var_dump($order);
         $orderType = "";
         if ($order['orderStatus'] == 1 && $order['payStatus'] == 1) {
             $orderType = 'waitPay';
         }
         if ($order['orderStatus'] == 3 && $order['payStatus'] == 2) {
             $orderType = 'waitService';
-        } 
+        }
 
         if ($order['orderStatus'] == 5 && $order['payStatus'] == 2) {
             $orderType = 'comment';
-        }  
-      
-        if ($order['orderStatus'] !=5 && $order['payStatus'] ==5) {
+        }
+
+        if ($order['orderStatus'] != 5 && $order['payStatus'] == 5) {
             $orderType = 'cancel';
         }
         //var_dump($orderType);exit;
@@ -354,6 +357,5 @@ class Order extends Home_Controller {
             }
         }
     }
-
 
 }
