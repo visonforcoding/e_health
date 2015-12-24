@@ -10,7 +10,7 @@ class Pay extends Home_Controller {
         header("Content-type:text/html;charset=utf-8");
         $order_id = $this->input->get('id');
         $query_order = $this->db->select('*')
-                ->where("`id` = '$order_id' and `payStatus` = '1' and `orderStauts` = '1' ")
+                ->where("`id` = '$order_id' and `payStatus` = '1' and `orderStatus` = '1' ")
                 ->get('order');
         $order = $query_order->row_array();
         if (empty($order)) {
@@ -74,7 +74,7 @@ class Pay extends Home_Controller {
                 //支付宝端交易交易成功
                 //本端更改订单状态
                 $query_order = $this->db->select('*')
-                        ->where("`orderNo` = '$out_trade_no' and `payStatus` = '1' and `orderStauts` = '1' ")
+                        ->where("`orderNo` = '$out_trade_no' and `payStatus` = '1' and `orderStatus` = '1' ")
                         ->get('order');
                 $order = $query_order->row_array();
                 if (!$order) {
