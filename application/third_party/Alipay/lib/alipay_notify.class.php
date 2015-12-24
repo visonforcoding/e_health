@@ -70,8 +70,6 @@ class AlipayNotify {
             if (preg_match("/true$/i", $responseTxt) && $isSign) {
                 return true;
             } else {
-                var_dump($isSign);
-                var_dump($responseTxt);
                 return false;
             }
         }
@@ -109,6 +107,8 @@ class AlipayNotify {
             if (preg_match("/true$/i", $responseTxt) && $isSign) {
                 return true;
             } else {
+                var_dump($isSign);
+                var_dump($responseTxt);
                 return false;
             }
         }
