@@ -96,12 +96,13 @@ function fcache($name, $data = '') {
  * @param type $info
  * @throws Exception
  */
-function lmdebug($info) {
+function lmdebug($info,$filePrefix='lm') {
     $name = date('Ymd');
     if (!is_string($info)) {
         throw new Exception('参数必须为字符串类型');
     }
-    $filename = APPPATH . '/logs/' . 'lm_' . $name;
+    $info = date('Y-m-d H:i:s').' '.$info;
+    $filename = APPPATH . '/logs/' .$filePrefix.'_' . $name;
     if (file_exists($filename)) {
         file_put_contents($filename, $info . "\r\n", FILE_APPEND);
     } else {
