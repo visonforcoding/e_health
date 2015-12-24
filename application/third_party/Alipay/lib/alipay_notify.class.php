@@ -85,9 +85,6 @@ class AlipayNotify {
         } else {
             //生成签名结果
             $data = $_GET;
-            unset($data['sign']);
-            unset($data['sign_type']);
-            var_dump($data);
             $isSign = $this->getSignVeryfy($data, $_GET["sign"]);
             //获取支付宝远程服务器ATN结果（验证是否是支付宝发来的消息）
             $responseTxt = 'false';
@@ -111,8 +108,6 @@ class AlipayNotify {
             if (preg_match("/true$/i", $responseTxt) && $isSign) {
                 return true;
             } else {
-                var_dump($isSign);
-                var_dump($responseTxt);
                 return false;
             }
         }
