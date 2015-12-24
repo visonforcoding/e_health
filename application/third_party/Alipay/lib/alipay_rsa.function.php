@@ -36,7 +36,7 @@ function rsaVerify($data, $ali_public_key_path, $sign)  {
 	$pubKey = file_get_contents($ali_public_key_path);
     $res = openssl_get_publickey($pubKey);
 //    $result = (bool)openssl_verify($data, base64_decode($sign), $res);
-    $result = openssl_verify($data, base64_decode($sign), $res);
+    $result = openssl_verify($data, $sign, $res);
     var_dump($result);
     openssl_free_key($res);    
     return $result;
