@@ -84,14 +84,14 @@ class Pay extends Home_Controller {
                     return;
                 }
                 $order_id = $order['id'];
-                $update_order = $this->db->where("`id` = '$order_id'")->update([
+                $update_order = $this->db->where("`id` = '$order_id'")->update('order',[
                     'payStatus' => '2',
                     'orderStatus' => '3',
                     'payTime' => date('Y-m-d H:i:s'),
                     'true_amount' => $total_fee,
                     'out_trade_no' => $trade_no,
-                    'utime'=>date('Y-m-d H:i:s')
-                ]); 
+                    'utime' => date('Y-m-d H:i:s')
+                ]);
                 if ($update_order) {
                     echo '支付成功';
                 } else {
