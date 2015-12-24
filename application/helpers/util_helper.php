@@ -102,7 +102,7 @@ function lmdebug($info,$filePrefix='lm') {
         throw new Exception('参数必须为字符串类型');
     }
     $info = date('Y-m-d H:i:s').' '.$info;
-    $filename = APPPATH . '/logs/' .$filePrefix.'_' . $name;
+    $filename = APPPATH . 'logs/' .$filePrefix.'_' . $name;
     if (file_exists($filename)) {
         file_put_contents($filename, $info . "\r\n", FILE_APPEND);
     } else {

@@ -101,7 +101,8 @@ class Pay extends Home_Controller {
         } else {
             //验证失败
             //如要调试，请看alipay_notify.php页面的verifyReturn函数
-            lmdebug('支付宝支付端验证失败:订单号', 'pay');
+            lmdebug('支付宝支付端验证失败:', 'pay');
+            var_dump($_GET);
             echo "验证失败";
         }
     }
