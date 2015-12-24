@@ -27,6 +27,7 @@ class Pay extends Home_Controller {
     }
 
     protected function alipay($order_data) {
+        header("Content-Type: text/html;charset=utf-8");
         $alipay_config = require_once APPPATH . '/third_party/Alipay/alipay.config.php';
         require_once APPPATH . '/third_party/Alipay/lib/alipay_submit.class.php';
         $server_name = $_SERVER['SERVER_NAME'];
@@ -61,6 +62,7 @@ class Pay extends Home_Controller {
     }
 
     public function alipayCallback() {
+        header("Content-Type: text/html;charset=utf-8");
         $alipay_config = require_once APPPATH . '/third_party/Alipay/alipay.config.php';
         require_once APPPATH . '/third_party/Alipay/lib/alipay_notify.class.php';
         //计算得出通知验证结果
