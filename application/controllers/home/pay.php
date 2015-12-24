@@ -66,7 +66,7 @@ class Pay extends Home_Controller {
         //计算得出通知验证结果
         $alipayNotify = new AlipayNotify($alipay_config);
         $verify_result = $alipayNotify->verifyReturn();
-        $verify_result = TRUE;  //暂时
+//        $verify_result = TRUE;  //暂时
         if ($verify_result) {//验证成功
             $out_trade_no = $this->input->get('out_trade_no'); //商户订单号
             $trade_no = $this->input->get('trade_no');   //支付宝交易号
@@ -93,7 +93,7 @@ class Pay extends Home_Controller {
                     'utime' => date('Y-m-d H:i:s')
                 ]);
                 if ($update_order) {
-                    echo '支付成功';
+                    echo '支付成功success';
                 } else {
                     lmdebug('支付宝本端数据更新失败:' . $this->db->last_query(), 'pay');
                     echo '支付失败';
@@ -106,7 +106,7 @@ class Pay extends Home_Controller {
             //验证失败
             //如要调试，请看alipay_notify.php页面的verifyReturn函数
             lmdebug('支付宝支付端验证失败:', 'pay');
-            echo "验证失败";
+            echo "sing error";
         }
     }
 
