@@ -30,11 +30,11 @@ class Baby extends Home_Controller {
 
         //猜你喜欢
         $stores = $this->store_model->guessYouLike($login_user, $location_id);
-        $stores = $this->service_model->formatStores($stores, true,$position['coordinate']);
+        $stores = $this->service_model->formatStores($stores, true, $position['coordinate']);
         $this->twig->render('home/index.twig', array(
             'stores' => $stores,
             'banners' => $banners,
-            'location'=>$location
+            'location' => $location
         ));
     }
 
