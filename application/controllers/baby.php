@@ -6,6 +6,7 @@ if (!defined('BASEPATH'))
 class Baby extends Home_Controller {
 
     public function index() {
+        phpinfo();
         $login_user = $this->session->userdata('user');
         $position = $this->getLocation();
         $location = $position['location'];
