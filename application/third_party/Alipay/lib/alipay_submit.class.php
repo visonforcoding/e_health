@@ -104,7 +104,7 @@ class AlipaySubmit {
             $sHtml.= "<input type='hidden' name='" . $key . "' value='" . $val . "'/>";
         }
         //submit按钮控件请不要含有name属性
-        $sHtml = $sHtml . "<input type='submit' style='dispaly:none;' value='" . $button_name . "'></form>";
+        $sHtml = $sHtml . "<input type='submit' style='display:none;' value='" . $button_name . "'></form>";
 
         $sHtml = $sHtml."正前往支付宝支付...";
         $sHtml = $sHtml . "<script>document.forms['alipaysubmit'].submit();</script>";
