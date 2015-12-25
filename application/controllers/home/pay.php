@@ -97,6 +97,7 @@ class Pay extends Home_Controller {
                     'utime' => date('Y-m-d H:i:s')
                 ]);
                 if ($update_order) {
+                    $this->load->helper('url');
                     redirect("http://" . $_SERVER['SERVER_NAME'].'/home/store/storeDetail/id/'.$order['sid'].'html');
                 } else {
                     lmdebug('支付宝本端数据更新失败:' . $this->db->last_query(), 'pay');
