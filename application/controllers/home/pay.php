@@ -9,8 +9,9 @@ class Pay extends Home_Controller {
     public function submitPay() {
         header("Content-type:text/html;charset=utf-8");
         $order_id = $this->input->get('id');
-        $query_order = $this->db->select('*')
-                ->where("`id` = '$order_id' and `payStatus` = '1' and `orderStatus` = '1' ")
+        $query_order = $this->db->select('*,store_service.name')
+                ->join('store_service','store_service.id = order.serviceId')
+                ->where("order.`id` = '$order_id' and order.`payStatus` = '1' and order.`orderStatus` = '1' ")
                 ->get('order');
         $order = $query_order->row_array();
         if (empty($order)) {
@@ -18,9 +19,11 @@ class Pay extends Home_Controller {
         }
         if ($order['payStatus'] == '1') {
             $pay_data['order_no'] = $order['orderNo'];
-            $pay_data['subject'] = '这是个测试订单';
+            $pay_data['subject'] = $order['name'];
+//            $pay_data['total_fee'] =  $order['amount'];
             $pay_data['total_fee'] = '0.01';
-            $pay_data['show_url'] = "http://" . $_SERVER['SERVER_NAME'];
+            $show_url = "http://" . $_SERVER['SERVER_NAME'].'/home/store/storeDetail/id/'.$order['sid'].'html';
+            $pay_data['show_url'] = $show_url;
             $pay_data['body'] = '0.01';
             $this->alipay($pay_data);
         }
@@ -68,7 +71,6 @@ class Pay extends Home_Controller {
         //计算得出通知验证结果
         $alipayNotify = new AlipayNotify($alipay_config);
         $verify_result = $alipayNotify->verifyReturn();
-//        $verify_result = TRUE;  //暂时
         if ($verify_result) {//验证成功
             $out_trade_no = $this->input->get('out_trade_no'); //商户订单号
             $trade_no = $this->input->get('trade_no');   //支付宝交易号
@@ -95,7 +97,7 @@ class Pay extends Home_Controller {
                     'utime' => date('Y-m-d H:i:s')
                 ]);
                 if ($update_order) {
-                    echo '支付成功success';
+                    redirect("http://" . $_SERVER['SERVER_NAME'].'/home/store/storeDetail/id/'.$order['sid'].'html');
                 } else {
                     lmdebug('支付宝本端数据更新失败:' . $this->db->last_query(), 'pay');
                     echo '支付失败';
