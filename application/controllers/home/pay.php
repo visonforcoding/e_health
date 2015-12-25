@@ -11,7 +11,7 @@ class Pay extends Home_Controller {
         $order_id = $this->input->get('id');
         $query_order = $this->db->select('*,store_service.name')
                 ->join('store_service','store_service.id = order.serviceId')
-                ->where("order.`id` = '$order_id' and order.`payStatus` = '1' and order.`orderStatus` = '1' ")
+                ->where("`order`.`id` = '$order_id' and `order`.`payStatus` = '1' and `order`.`orderStatus` = '1' ")
                 ->get('order');
         $order = $query_order->row_array();
         if (empty($order)) {
