@@ -59,14 +59,13 @@ function createLinkstringUrlencode($para) {
  */
 function paraFilter($para) {
     $para_filter = array();
-    var_dump($para);
-    while (list ($key, $val) = each($para)) {
-        if ($key == "sign" || $key == "sign_type" || $val == "")
+    foreach ($para as $key => $value) {
+        if ($key == "sign" || $key == "sign_type" || $value == "") {
             continue;
-        else
+        } else {
             $para_filter[$key] = $para[$key];
+        }
     }
-    var_dump($para_filter);
     return $para_filter;
 }
 
