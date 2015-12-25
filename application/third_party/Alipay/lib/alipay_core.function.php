@@ -66,7 +66,7 @@ function paraFilter($para) {
         else
             $para_filter[$key] = $para[$key];
     }
-    var_dump($para_filter);exit();
+    var_dump($para_filter);
     return $para_filter;
 }
 
