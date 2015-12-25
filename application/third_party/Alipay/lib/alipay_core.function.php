@@ -60,11 +60,13 @@ function createLinkstringUrlencode($para) {
 function paraFilter($para) {
     $para_filter = array();
     while (list ($key, $val) = each($para)) {
+        echo current($para);
         if ($key == "sign" || $key == "sign_type" || $val == "")
             continue;
         else
             $para_filter[$key] = $para[$key];
     }
+    var_dump($para_filter);exit();
     return $para_filter;
 }
 
