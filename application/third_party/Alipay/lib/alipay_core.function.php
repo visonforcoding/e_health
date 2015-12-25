@@ -59,8 +59,8 @@ function createLinkstringUrlencode($para) {
  */
 function paraFilter($para) {
     $para_filter = array();
+    var_dump($para);
     while (list ($key, $val) = each($para)) {
-        echo current($para);
         if ($key == "sign" || $key == "sign_type" || $val == "")
             continue;
         else
