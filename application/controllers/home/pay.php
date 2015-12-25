@@ -9,8 +9,9 @@ class Pay extends Home_Controller {
     public function submitPay() {
         header("Content-type:text/html;charset=utf-8");
         $order_id = $this->input->get('id');
-        $query_order = $this->db->select('*,store_service.name')
+        $query_order = $this->db->select('*,store_service.name,store.storeName')
                 ->join('store_service','store_service.id = order.serviceId')
+                ->join('store','store.id = order.sid')
                 ->where("`order`.`id` = '$order_id' and `order`.`payStatus` = '1' and `order`.`orderStatus` = '1' ")
                 ->get('order');
         $order = $query_order->row_array();
@@ -24,7 +25,7 @@ class Pay extends Home_Controller {
             $pay_data['total_fee'] = '0.01';
             $show_url = "http://" . $_SERVER['SERVER_NAME'].'/home/store/storeDetail/id/'.$order['sid'].'html';
             $pay_data['show_url'] = $show_url;
-            $pay_data['body'] = '0.01';
+            $pay_data['body'] = $order['storeName'].':'.$order['name'];
             $this->alipay($pay_data);
         }
     }
