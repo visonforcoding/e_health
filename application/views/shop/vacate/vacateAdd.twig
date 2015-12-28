@@ -74,7 +74,7 @@
                 success: function (data) {
                     if (data.status) {
                         layer.alert(data.msg, {icon: 6});
-                        history.go(-1)
+                        history.go(-1);
                     } else {
                         layer.alert(data.msg, {icon: 5});
                     }
