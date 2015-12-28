@@ -366,8 +366,8 @@ class Order extends Shop_Controller {
                 return;
             }else if($order){
                 $update_data['employee_id'] = $employee_id;
-                $where['order_id'] = $order_id;
-                $query = $this->db->update('store_employee_order', $update_data,$where);
+                $where['id'] = $order['id'];
+                $query = $this->db->update('store_employee_order',$update_data,$where);
                 if ($query) {
                         $response['status'] = true;
                         $response['msg'] = '添加成功';
@@ -377,7 +377,6 @@ class Order extends Shop_Controller {
                     }
 
             }else{
-
 
                     $ins_data['order_id'] = $order_id;
                     $ins_data['store_id'] = $store_id;
