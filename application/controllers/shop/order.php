@@ -223,10 +223,36 @@ class Order extends Shop_Controller {
 
             $orderData = array('sid' => $store_id, 'uid' => $user_id, 'type' => $type, 'serviceId' => $serviceId,
                 'type' => $type, 'nums' => $nums, 'amount' => $price, 'price' => $mprice,
-                'orderNo' => 's_' . str_pad($store_id, 4, '0') . date("YmdHis"),
+                'orderNo' => 's_'. date("YmdHis"),
                 'payType' => $payType, 'payStatus' => $payStatus, 'orderStatus' => $orderStatus,
                 'cTime' => $date, 'serviceTime' => $date, 'payTime' => $date, 'finishTime' => $date,
                 'isVisit' => $isVisit, 'consignee' => $phone);
+
+            $nums = $this->input->post('num');
+            $cargo = $this->input->post('cargo');
+
+            if($nums && $cargo){
+                $query_cargos = $this->db->where("`store_id` = '$store_id'")->get('store_cargo');
+
+                $cargos = $query_cargos->result_array();
+                $cargo_num = []; //cargo id 对应 数量 数组
+                foreach ($cargos as $key => $value) {
+                    $cargo_num[$value['id']] = $value['nums'];
+                }
+
+                foreach ($cargo as $key => $value){
+                       $num = $cargo_num[$value] - $nums[$key]; 
+                       if( $num < 0){
+                            $response['status'] = false;
+                            $response['msg'] = '库存不足，请先入库';
+                            $this->output->set_content_type('application/json')
+                                    ->set_output(json_encode($response));
+                            return;
+                       }
+                 }
+
+            }
+            
             //开启事务
             $this->db->trans_start();
             if (!empty($card_id)) {
@@ -262,33 +288,27 @@ class Order extends Shop_Controller {
             $this->db->insert('store_employee_order', $ins_orderm_data);
 
             //组织数据
-            $nums = $this->input->post('num');
-            $cargo = $this->input->post('cargo');
-            $query_cargos = $this->db->where("`store_id` = '$store_id'")->get('store_cargo');
-
-            $cargos = $query_cargos->result_array();
-            $cargo_num = []; //cargo id 对应 数量 数组
-            foreach ($cargos as $key => $value) {
-                $cargo_num[$value['id']] = $value['nums'];
+        
+            if($nums &&  $cargo){
+                $insert_cargo_log_data = [];
+                foreach ($cargo as $key => $value) {
+                    $num = $cargo_num[$value] - $nums[$key];
+                    //更新库存数据
+                    $this->db->where("`id` = '$value'")->update('store_cargo', ['nums' => $num, 'utime' => date('Y-m-d H:i:s')]);
+                    $insert_cargo_log_data[] = array(
+                        'store_id' => $store_id,
+                        'cargo_id' => $value,
+                        'num' => $nums[$key],
+                        'relation_id' => $insert_order_id,
+                        'do_type' => '2',
+                        'ctime' => date('Y-m-d H:i:s'),
+                        'remark' => '线下开单消耗物品'
+                    );
+                }
+                //更新出入库记录
+                $this->db->insert_batch('cargo_log', $insert_cargo_log_data);
             }
-
-            $insert_cargo_log_data = [];
-            foreach ($cargo as $key => $value) {
-                $num = $cargo_num[$value] - $nums[$key];
-                //更新库存数据
-                $this->db->where("`id` = '$value'")->update('store_cargo', ['nums' => $num, 'utime' => date('Y-m-d H:i:s')]);
-                $insert_cargo_log_data[] = array(
-                    'store_id' => $store_id,
-                    'cargo_id' => $value,
-                    'num' => $nums[$key],
-                    'relation_id' => $insert_order_id,
-                    'do_type' => '2',
-                    'ctime' => date('Y-m-d H:i:s'),
-                    'remark' => '线下开单消耗物品'
-                );
-            }
-            //更新出入库记录
-            $this->db->insert_batch('cargo_log', $insert_cargo_log_data);
+           
             $this->db->trans_complete();
             if ($this->db->trans_status()) {
                 $response['status'] = true;
@@ -338,7 +358,7 @@ class Order extends Shop_Controller {
             $order_id = $this->input->post('order_id');
             $query_order = $this->db->where("`order_id` = '$order_id'")->get('store_employee_order');
             $order = $query_order->row_array();
-            if ($order) {
+            if ($order && $order['employee_id'] >0) {
                 $response['status'] = false;
                 $response['msg'] = '该订单已经被指派过';
                 $this->output->set_content_type('application/json')
@@ -361,6 +381,17 @@ class Order extends Shop_Controller {
             foreach ($cargos as $key => $value) {
                 $cargo_num[$value['id']] = $value['nums'];
             }
+
+            foreach ($cargo as $key => $value){
+                   $num = $cargo_num[$value] - $nums[$key]; 
+                   if( $num < 0){
+                        $response['status'] = false;
+                        $response['msg'] = '库存不足，请先入库';
+                        $this->output->set_content_type('application/json')
+                                ->set_output(json_encode($response));
+                        return;
+                   }
+             }
 
             //开启事务
             $this->db->trans_start();
@@ -397,6 +428,9 @@ class Order extends Shop_Controller {
             return;
         }
         $order_id = $this->input->get('id');
+        $query_order = $this->db->where("id = $order_id")->get('order');
+        $order = $query_order->row_array();
+
         $where = '';
         $where .= "store_employee.store_id = '$store_id' "; //条件查询 本店和店铺类型
         $query_employees = $this->db->where("store_id = '$store_id' and `status` = '1'")->get('store_employee');
@@ -407,7 +441,7 @@ class Order extends Shop_Controller {
         $this->twig->render('/shop/order/appoint.twig', array(
             'cargos' => $cargos,
             'employees' => $employees,
-            'order_id' => $order_id
+            'order' => $order
         ));
     }
 
