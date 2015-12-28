@@ -364,64 +364,78 @@ class Order extends Shop_Controller {
                 $this->output->set_content_type('application/json')
                         ->set_output(json_encode($response));
                 return;
-            }
-            $ins_data['order_id'] = $order_id;
-            $ins_data['store_id'] = $store_id;
-            $ins_data['employee_id'] = $employee_id;
-            $ins_data['employee_id'] = $employee_id;
-            $ins_data['status'] = 1;
-            $ins_data['ctime'] = date('Y-m-d H:i:s');
-
-            $nums = $this->input->post('num');
-            $cargo = $this->input->post('cargo');
-            $query_cargos = $this->db->where("`store_id` = '$store_id'")->get('store_cargo');
-
-            $cargos = $query_cargos->result_array();
-            $cargo_num = []; //cargo id 对应 数量 数组
-            foreach ($cargos as $key => $value) {
-                $cargo_num[$value['id']] = $value['nums'];
-            }
-
-            foreach ($cargo as $key => $value){
-                   $num = $cargo_num[$value] - $nums[$key]; 
-                   if( $num < 0){
+            }else if($order){
+                $update_data['employee_id'] = $employee_id;
+                $where['order_id'] = $order_id;
+                $query = $this->db->update('store_employee_order', $update_data,$where);
+                if ($query) {
+                        $response['status'] = true;
+                        $response['msg'] = '添加成功';
+                    } else {
                         $response['status'] = false;
-                        $response['msg'] = '库存不足，请先入库';
-                        $this->output->set_content_type('application/json')
-                                ->set_output(json_encode($response));
-                        return;
-                   }
-             }
+                        $response['msg'] = '添加失败';
+                    }
 
-            //开启事务
-            $this->db->trans_start();
-            $this->db->insert('store_employee_order', $ins_data);
-            $insert_cargo_log_data = [];
-            foreach ($cargo as $key => $value) {
-                if($nums[$key]>0){
-                    $num = $cargo_num[$value] - $nums[$key];
-                    //更新库存数据
-                    $this->db->where("`id` = '$value'")->update('store_cargo', ['nums' => $num, 'utime' => date('Y-m-d H:i:s')]);
-                    $insert_cargo_log_data[] = array(
-                        'store_id' => $store_id,
-                        'cargo_id' => $value,
-                        'num' => $nums[$key],
-                        'relation_id' => $order_id,
-                        'do_type' => '2',
-                        'ctime' => date('Y-m-d H:i:s'),
-                        'remark' => '线上订单消耗物品'
-                    );
-                }
-            }
-            //更新出入库记录
-            $this->db->insert_batch('cargo_log', $insert_cargo_log_data);
-            $this->db->trans_complete();
-            if ($this->db->trans_status()) {
-                $response['status'] = true;
-                $response['msg'] = '添加成功';
-            } else {
-                $response['status'] = false;
-                $response['msg'] = '添加失败';
+            }else{
+
+
+                    $ins_data['order_id'] = $order_id;
+                    $ins_data['store_id'] = $store_id;
+                    $ins_data['employee_id'] = $employee_id;
+                    $ins_data['status'] = 1;
+                    $ins_data['ctime'] = date('Y-m-d H:i:s');
+
+                    $nums = $this->input->post('num');
+                    $cargo = $this->input->post('cargo');
+                    $query_cargos = $this->db->where("`store_id` = '$store_id'")->get('store_cargo');
+
+                    $cargos = $query_cargos->result_array();
+                    $cargo_num = []; //cargo id 对应 数量 数组
+                    foreach ($cargos as $key => $value) {
+                        $cargo_num[$value['id']] = $value['nums'];
+                    }
+
+                    foreach ($cargo as $key => $value){
+                           $num = $cargo_num[$value] - $nums[$key]; 
+                           if( $num < 0){
+                                $response['status'] = false;
+                                $response['msg'] = '库存不足，请先入库';
+                                $this->output->set_content_type('application/json')
+                                        ->set_output(json_encode($response));
+                                return;
+                           }
+                     }
+
+                    //开启事务
+                    $this->db->trans_start();
+                    $this->db->insert('store_employee_order', $ins_data);
+                    $insert_cargo_log_data = [];
+                    foreach ($cargo as $key => $value) {
+                        if($nums[$key]>0){
+                            $num = $cargo_num[$value] - $nums[$key];
+                            //更新库存数据
+                            $this->db->where("`id` = '$value'")->update('store_cargo', ['nums' => $num, 'utime' => date('Y-m-d H:i:s')]);
+                            $insert_cargo_log_data[] = array(
+                                'store_id' => $store_id,
+                                'cargo_id' => $value,
+                                'num' => $nums[$key],
+                                'relation_id' => $order_id,
+                                'do_type' => '2',
+                                'ctime' => date('Y-m-d H:i:s'),
+                                'remark' => '线上订单消耗物品'
+                            );
+                        }
+                    }
+                    //更新出入库记录
+                    $this->db->insert_batch('cargo_log', $insert_cargo_log_data);
+                    $this->db->trans_complete();
+                    if ($this->db->trans_status()) {
+                        $response['status'] = true;
+                        $response['msg'] = '添加成功';
+                    } else {
+                        $response['status'] = false;
+                        $response['msg'] = '添加失败';
+                    }
             }
             $this->output->set_content_type('application/json')
                     ->set_output(json_encode($response));
