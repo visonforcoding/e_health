@@ -182,8 +182,10 @@
                     success: function (data) {
                         if (data.status) {
                             layer.alert(data.msg, {icon: 6});
+                            window.location.href="/shop/order/orderList"
                         } else {
                             layer.alert(data.msg, {icon: 5});
+                           
                         }
                     }
                 });
@@ -258,7 +260,7 @@
         function viewRecord() {
             //查看明细
             var id = $('select[name="card"] option:selected').val();
-            if (typeof id === 'undefined') {
+            if (typeof id === 'undefined' || id=='0') {
                 layer.alert('没有会员卡');
                 return false;
             }

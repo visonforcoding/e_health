@@ -35,7 +35,7 @@
     <body>
         <div class="work-copy" style="width:350px;margin:5px auto auto auto;">
             <form class="form-horizontal" role="form" method="post" >
-                <input type="hidden" name="order_id" value="{{order_id}}"/>
+                <input type="hidden" name="order_id" value="{{order.id}}"/>
                 <div class="form-group">
                     <label class="col-md-2 control-label required">选择店员</label>
                     <div class='col-md-4'>
@@ -88,7 +88,33 @@
                         }
                     }
                 });
+                var serviceId = {{ order.serviceId }};
+                var nums = {{ order.nums}};
+                getCargo(serviceId,nums)
             });
+
+            function getCargo(serviceId,nums){
+                $.ajax({
+                    url: '/shop/cargo/getServiceCargo',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {serviceId: serviceId,nums:nums},
+                    success: function (res) {
+                            if(typeof(res)=='object'){
+                                $.each(res, function (i, item) {
+                                       $('input[name="cargo[]"]').each(function(index, el) {
+                                            if( $(this).val() == i){
+                                                   $(this).next().val(item);  
+                                               
+                                            }
+                                       });
+                                }); 
+                            }else{
+                                $('input[name="num[]"]').val('');
+                            }  
+                    }
+               });
+            }
         </script>
     </body>
 </html>
