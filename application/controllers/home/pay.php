@@ -158,7 +158,7 @@ class Pay extends Home_Controller {
         $input->SetBody($pay_data['body']);
         $input->SetAttach($pay_data['attach']);
         $input->SetOut_trade_no($pay_data['order_no']);
-        $input->SetTotal_fee($pay_data['total_fee']);
+        $input->SetTotal_fee(intval($pay_data['total_fee']));
         $input->SetTime_start(date("YmdHis"));
         $input->SetTime_expire(date("YmdHis", time() + 600));
         $input->SetGoods_tag("test");
