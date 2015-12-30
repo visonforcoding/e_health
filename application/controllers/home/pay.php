@@ -31,8 +31,7 @@ class Pay extends Home_Controller {
             $this->alipay($pay_data);
         }
         if ($payType == 'wx') {
-            $pay_data['attach'] = 'test';
-            $this->wxpay($pay_data);
+            redirect("http://" . $_SERVER['SERVER_NAME'] . '/home/pay/wxpay?id='.$order_id);
         }
     }
 
@@ -131,13 +130,15 @@ class Pay extends Home_Controller {
         }
     }
 
-    protected function wxpay($order_data) {
+    public function wxpay() {
         ini_set('date.timezone', 'Asia/Shanghai');
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.Api.php';
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.JsApiPay.php';
         //①、获取用户openid
         $tools = new JsApiPay();
-        $openId = $tools->GetOpenid();
+        $redirect_uri = "http://" . $_SERVER['SERVER_NAME'] . '/home/pay/wxpay?id='.$order_id; //获取openid
+        $openId = $tools->GetOpenid($redirect_uri);
+        var_dump($openId);
 
         //②、统一下单
         $input = new WxPayUnifiedOrder();
@@ -164,6 +165,10 @@ class Pay extends Home_Controller {
         $this->twig->render('home/pay/pay.twig', array(
 //            'jsApiParameters' => $jsApiParameters,
         ));
+    }
+    
+    public function getOpenid(){
+        $order_id = $this->input->get('id');
     }
 
 }

@@ -38,14 +38,12 @@ class JsApiPay
 	 * 
 	 * @return 用户的openid
 	 */
-	public function GetOpenid()
+	public function GetOpenid($url)
 	{
 		//通过code获得openid
 		if (!isset($_GET['code'])){
 			//触发微信返回code码
-			$baseUrl = urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].$_SERVER['QUERY_STRING']);
-                        var_dump($baseUrl);exit();
-			$url = $this->__CreateOauthUrlForCode($baseUrl);
+			$url = $this->__CreateOauthUrlForCode($url);
 			Header("Location: $url");
 			exit();
 		} else {
