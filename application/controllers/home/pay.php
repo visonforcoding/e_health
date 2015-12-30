@@ -32,11 +32,7 @@ class Pay extends Home_Controller {
         }
         if ($payType == 'wx') {
             $pay_data['attach'] = 'test';
-            $jsApiParameters = $this->wxpay($pay_data);
-            exit();
-            $this->twig->render('home/pay/pay.twig', array(
-                'jsApiParameters'=>$jsApiParameters,
-            ));
+            $this->wxpay($pay_data);
         }
     }
 
@@ -152,14 +148,22 @@ class Pay extends Home_Controller {
         $input->SetTime_start(date("YmdHis"));
         $input->SetTime_expire(date("YmdHis", time() + 600));
         $input->SetGoods_tag("test");
-        $input->SetNotify_url("http://paysdk.weixin.qq.com/example/notify.php");
+        $input->SetNotify_url('http://' . $_SERVER['SERVER_NAME'] . '/home/pay/wxorderNotify');
         $input->SetTrade_type("JSAPI");
         $input->SetOpenid($openId);
         $order = WxPayApi::unifiedOrder($input);
         echo '<font color="#f00"><b>统一下单支付单信息</b></font><br/>';
         printf_info($order);
-        $jsApiParameters = $tools->GetJsApiParameters($order);
-        return $jsApiParameters;
+    }
+
+    public function wxorderNotify() {
+        ini_set('date.timezone', 'Asia/Shanghai');
+        require_once APPPATH . '/third_party/Wxpay/lib/WxPay.Api.php';
+        require_once APPPATH . '/third_party/Wxpay/lib/WxPay.JsApiPay.php';
+        $tools = new JsApiPay();
+        $this->twig->render('home/pay/pay.twig', array(
+//            'jsApiParameters' => $jsApiParameters,
+        ));
     }
 
 }
