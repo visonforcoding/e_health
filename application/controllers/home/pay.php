@@ -32,7 +32,7 @@ class Pay extends Home_Controller {
         }
         if ($payType == 'wx') {
             $this->load->helper('url');
-            redirect("http://" . $_SERVER['SERVER_NAME'] . '/home/pay/wxpay?id='.$order_id);
+            redirect("http://" . $_SERVER['SERVER_NAME'] . '/home/pay/wxpay?id=' . $order_id);
         }
     }
 
@@ -138,16 +138,30 @@ class Pay extends Home_Controller {
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.JsApiPay.php';
         //①、获取用户openid
         $tools = new JsApiPay();
-        $redirect_uri = "http://" . $_SERVER['SERVER_NAME'] . '/home/pay/wxpay?id='.$order_id; //获取openid
+        $redirect_uri = "http://" . $_SERVER['SERVER_NAME'] . '/home/pay/wxpay?id=' . $order_id; //获取openid
         $openId = $tools->GetOpenid($redirect_uri);
-        var_dump($openId);
+        var_dump($openId);exit();
 
+        $query_order = $this->db->select('*,store_service.name,store.storeName')
+                ->join('store_service', 'store_service.id = order.serviceId')
+                ->join('store', 'store.id = order.sid')
+                ->where("`order`.`id` = '$order_id' and `order`.`payStatus` = '1' and `order`.`orderStatus` = '1' ")
+                ->get('order');
+        $order = $query_order->row_array();
+        if (empty($order)) {
+            show_error('该订单不存在！');
+        }
+        $pay_data['order_no'] = $order['orderNo'];
+        $pay_data['subject'] = $order['name'];
+        //$pay_data['total_fee'] =  $order['amount'];
+        $pay_data['total_fee'] = '0.01';
+        $pay_data['body'] = $order['storeName'] . ':' . $order['name'];
         //②、统一下单
         $input = new WxPayUnifiedOrder();
-        $input->SetBody($order_data['body']);
-        $input->SetAttach($order_data['attach']);
-        $input->SetOut_trade_no($order_data['order_no']);
-        $input->SetTotal_fee($order_data['total_fee']);
+        $input->SetBody($pay_data['body']);
+        $input->SetAttach($pay_data['attach']);
+        $input->SetOut_trade_no($pay_data['order_no']);
+        $input->SetTotal_fee($pay_data['total_fee']);
         $input->SetTime_start(date("YmdHis"));
         $input->SetTime_expire(date("YmdHis", time() + 600));
         $input->SetGoods_tag("test");
@@ -168,8 +182,8 @@ class Pay extends Home_Controller {
 //            'jsApiParameters' => $jsApiParameters,
         ));
     }
-    
-    public function getOpenid(){
+
+    public function getOpenid() {
         $order_id = $this->input->get('id');
     }
 
