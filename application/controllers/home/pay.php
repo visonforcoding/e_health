@@ -33,6 +33,8 @@ class Pay extends Home_Controller {
         if ($payType == 'wx') {
             $pay_data['attach'] = 'test';
             $jsApiParameters = $this->wxpay($pay_data);
+            var_dump($jsApiParameters);
+            exit();
             $this->twig->render('home/pay/pay.twig', array(
                 'jsApiParameters'=>$jsApiParameters,
             ));
