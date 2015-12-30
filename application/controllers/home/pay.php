@@ -132,6 +132,7 @@ class Pay extends Home_Controller {
     }
 
     public function wxpay() {
+        $order_id = $this->input->get('id');
         ini_set('date.timezone', 'Asia/Shanghai');
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.Api.php';
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.JsApiPay.php';
