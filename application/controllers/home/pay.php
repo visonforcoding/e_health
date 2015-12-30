@@ -132,15 +132,14 @@ class Pay extends Home_Controller {
     }
 
     public function wxpay() {
-        $order_id = $this->input->get('id');
         ini_set('date.timezone', 'Asia/Shanghai');
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.Api.php';
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.JsApiPay.php';
+        $order_id = $this->input->get('id');
         //①、获取用户openid
         $tools = new JsApiPay();
         $redirect_uri = "http://" . $_SERVER['SERVER_NAME'] . '/home/pay/wxpay?id=' . $order_id; //获取openid
         $openId = $tools->GetOpenid($redirect_uri);
-        var_dump($openId);exit();
 
         $query_order = $this->db->select('*,store_service.name,store.storeName')
                 ->join('store_service', 'store_service.id = order.serviceId')
