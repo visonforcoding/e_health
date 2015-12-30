@@ -31,6 +31,7 @@ class Pay extends Home_Controller {
             $this->alipay($pay_data);
         }
         if ($payType == 'wx') {
+            $this->load->helper('url');
             redirect("http://" . $_SERVER['SERVER_NAME'] . '/home/pay/wxpay?id='.$order_id);
         }
     }
