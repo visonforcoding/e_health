@@ -152,6 +152,7 @@ class Pay extends Home_Controller {
         //$pay_data['total_fee'] =  $order['amount'];
         $pay_data['total_fee'] = '0.01';
         $pay_data['body'] = $order['storeName'] . ':' . $order['name'];
+        $pay_data['attach'] = 'test';
         //②、统一下单
         $input = new WxPayUnifiedOrder();
         $input->SetBody($pay_data['body']);
