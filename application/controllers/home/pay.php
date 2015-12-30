@@ -166,17 +166,16 @@ class Pay extends Home_Controller {
         $input->SetTrade_type("JSAPI");
         $input->SetOpenid($openId);
         $order = WxPayApi::unifiedOrder($input);
-        var_dump($order);
-        if($order->return_code=='SUCCESS'){
-            
+        if($order['return_code']=='SUCCESS'&&$order['result_code']=='SUCCESS'){
+            //echo '<font color="#f00"><b>统一下单支付单信息</b></font><br/>';
+            $tools = new JsApiPay();
+            $jsApiParameters = $tools->GetJsApiParameters($order);
+            $this->twig->render('home/pay/pay.twig', array(
+                'jsApiParameters' => $jsApiParameters,
+            ));
+        }else{
+            echo $order['return_msg'];
         }
-        echo '<font color="#f00"><b>统一下单支付单信息</b></font><br/>';
-//        printf_info($order);
-        $tools = new JsApiPay();
-        $jsApiParameters = $tools->GetJsApiParameters($order);
-        $this->twig->render('home/pay/pay.twig', array(
-            'jsApiParameters' => $jsApiParameters,
-        ));
     }
 
     public function wxorderNotify() {
