@@ -32,7 +32,7 @@ class Pay extends Home_Controller {
         }
         if ($payType == 'wx') {
             $this->load->helper('url');
-            redirect("http://" . $_SERVER['SERVER_NAME'] . '/home/pay/wxpay?id=' . $order_id);
+            redirect("http://" . $_SERVER['SERVER_NAME'] . '/home/pay/getOpenid?id=' . $order_id);
         }
     }
 
@@ -137,12 +137,7 @@ class Pay extends Home_Controller {
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.JsApiPay.php';
         $order_id = $this->input->get('id');
         //①、获取用户openid
-        $tools = new JsApiPay();
-        $redirect_uri = "http://" . $_SERVER['SERVER_NAME'] . '/home/pay/wxpay?id=' . $order_id; //获取openid
-        $openId = $tools->GetOpenid($redirect_uri);
-        if(!$openId){
-            exit();
-        }
+        $openId = $this->input->get('openid');
         $query_order = $this->db->select('*,store_service.name,store.storeName')
                 ->join('store_service', 'store_service.id = order.serviceId')
                 ->join('store', 'store.id = order.sid')
@@ -186,6 +181,18 @@ class Pay extends Home_Controller {
 
     public function getOpenid() {
         $order_id = $this->input->get('id');
+        ini_set('date.timezone', 'Asia/Shanghai');
+        require_once APPPATH . '/third_party/Wxpay/lib/WxPay.Api.php';
+        require_once APPPATH . '/third_party/Wxpay/lib/WxPay.JsApiPay.php';
+        $order_id = $this->input->get('id');
+        //①、获取用户openid
+        $tools = new JsApiPay();
+        $redirect_uri = "http://" . $_SERVER['SERVER_NAME'] . '/home/pay/getOpenid?id=' . $order_id; //获取openid
+        $openId = $tools->GetOpenid($redirect_uri);
+        if(!empty($openId)){
+           $this->load->helper('url');
+            redirect("http://" . $_SERVER['SERVER_NAME'] . '/home/pay/wxpay?id=' . $order_id.'&openid='.$openId); 
+        }
     }
 
 }
