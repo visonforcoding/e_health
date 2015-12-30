@@ -166,8 +166,8 @@ class Pay extends Home_Controller {
         $input->SetTrade_type("JSAPI");
         $input->SetOpenid($openId);
         $order = WxPayApi::unifiedOrder($input);
+        var_dump($order);
         echo '<font color="#f00"><b>统一下单支付单信息</b></font><br/>';
-        printf_info($order);
     }
 
     public function wxorderNotify() {
