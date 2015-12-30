@@ -86,7 +86,7 @@ class Store extends LM_Controller {
             $this->db->trans_start();
             $ck_ins = $this->db->insert('store', $data);
             $last_insert_id = $this->db->insert_id();
-            $orderTime =  array('timeArr' => array(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),'num'=>'5');
+            $orderTime =  array('timeArr' => array(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),'nums'=>'5');
             $serviceNotice = isset($post['serviceNotice'])?$post['serviceNotice']:'';
             $orderNotice = isset($post['orderNotice'])?$post['orderNotice']:'';
             $detail_data = array(
