@@ -3,14 +3,13 @@
         <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/> 
         <title>微信支付样例-支付</title>
-         <script type="text/javascript">
+        <script type="text/javascript">
             //调用微信JS api 支付
-            alert('test');
             function jsApiCall()
             {
                 WeixinJSBridge.invoke(
                         'getBrandWCPayRequest',
-                        {{jsApiParameters}},
+                        <?=$jsApiParameters?>,
                         function (res) {
                             WeixinJSBridge.log(res.err_msg);
                             alert(res.err_code + res.err_desc + res.err_msg);
@@ -20,7 +19,6 @@
 
             function callpay()
             {
-                alert('支付');
                 if (typeof WeixinJSBridge == "undefined") {
                     if (document.addEventListener) {
                         document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
@@ -41,7 +39,7 @@
             <button style="width:210px; height:50px; border-radius: 15px;background-color:#FE6714; border:0px #FE6714 solid; cursor: pointer;  color:white;  font-size:16px;" type="button" onclick="callpay();" >立即支付</button>
         </div>
         <script>
-            window.onload=function(){
+            window.onload = function () {
                 alert(WeixinJSBridge);
             };
         </script>
