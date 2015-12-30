@@ -140,7 +140,7 @@ class Pay extends Home_Controller {
         $tools = new JsApiPay();
         $redirect_uri = "http://" . $_SERVER['SERVER_NAME'] . '/home/pay/wxpay?id=' . $order_id; //获取openid
         $openId = $tools->GetOpenid($redirect_uri);
-
+        var_dump($openId);
         $query_order = $this->db->select('*,store_service.name,store.storeName')
                 ->join('store_service', 'store_service.id = order.serviceId')
                 ->join('store', 'store.id = order.sid')
