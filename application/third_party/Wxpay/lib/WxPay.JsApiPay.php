@@ -43,7 +43,7 @@ class JsApiPay
 		//通过code获得openid
 		if (!isset($_GET['code'])){
 			//触发微信返回code码
-			$url = $this->__CreateOauthUrlForCode($url);
+			$url = $this->__CreateOauthUrlForCode(urlencode($url));
 			Header("Location: $url");
 			exit();
 		} else {
