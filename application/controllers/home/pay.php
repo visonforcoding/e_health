@@ -147,6 +147,7 @@ class Pay extends Home_Controller {
                 ->where("`order`.`id` = '$order_id' and `order`.`payStatus` = '1' and `order`.`orderStatus` = '1' ")
                 ->get('order');
         $order = $query_order->row_array();
+        exit();
         if (empty($order)) {
             show_error('该订单不存在！');
         }
