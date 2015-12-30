@@ -9,27 +9,40 @@ class Pay extends Home_Controller {
     public function submitPay() {
         header("Content-type:text/html;charset=utf-8");
         $order_id = $this->input->get('id');
+        $payType = $this->input->get('paytype');
         $query_order = $this->db->select('*,store_service.name,store.storeName')
-                ->join('store_service','store_service.id = order.serviceId')
-                ->join('store','store.id = order.sid')
+                ->join('store_service', 'store_service.id = order.serviceId')
+                ->join('store', 'store.id = order.sid')
                 ->where("`order`.`id` = '$order_id' and `order`.`payStatus` = '1' and `order`.`orderStatus` = '1' ")
                 ->get('order');
         $order = $query_order->row_array();
+        $payType = 'wx';
         if (empty($order)) {
             show_error('该订单不存在！');
         }
-        if ($order['payStatus'] == '1') {
-            $pay_data['order_no'] = $order['orderNo'];
-            $pay_data['subject'] = $order['name'];
-//            $pay_data['total_fee'] =  $order['amount'];
-            $pay_data['total_fee'] = '0.01';
-            $show_url = "http://" . $_SERVER['SERVER_NAME'].'/home/store/storeDetail/id/'.$order['sid'].'html';
+        $pay_data['order_no'] = $order['orderNo'];
+        $pay_data['subject'] = $order['name'];
+        //$pay_data['total_fee'] =  $order['amount'];
+        $pay_data['total_fee'] = '0.01';
+        $pay_data['body'] = $order['storeName'] . ':' . $order['name'];
+        if ($payType == 'ali') {
+            $show_url = "http://" . $_SERVER['SERVER_NAME'] . '/home/store/storeDetail/id/' . $order['sid'] . 'html';
             $pay_data['show_url'] = $show_url;
-            $pay_data['body'] = $order['storeName'].':'.$order['name'];
             $this->alipay($pay_data);
+        }
+        if ($payType == 'wx') {
+            $pay_data['attach'] = 'test';
+            $jsApiParameters = $this->wxpay($pay_data);
+            $this->twig->render('home/pay/pay.twig', array(
+                'jsApiParameters'=>$jsApiParameters,
+            ));
         }
     }
 
+    /**
+     *  支付宝支付调用
+     * @param type $order_data
+     */
     protected function alipay($order_data) {
         header("Content-Type: text/html;charset=utf-8");
         $alipay_config = require_once APPPATH . '/third_party/Alipay/alipay.config.php';
@@ -65,6 +78,10 @@ class Pay extends Home_Controller {
         echo $html_text;
     }
 
+    /**
+     * 支付宝支付回调
+     * @return type
+     */
     public function alipayCallback() {
         header("Content-Type: text/html;charset=utf-8");
         $alipay_config = require_once APPPATH . '/third_party/Alipay/alipay.config.php';
@@ -89,9 +106,10 @@ class Pay extends Home_Controller {
                     return;
                 }
                 $order_id = $order['id'];
-                $update_order = $this->db->where("`id` = '$order_id'")->update('order',[
+                $update_order = $this->db->where("`id` = '$order_id'")->update('order', [
                     'payStatus' => '2',
                     'orderStatus' => '3',
+                    'payType' => '2', //支付方式 支付宝
                     'payTime' => date('Y-m-d H:i:s'),
                     'true_amount' => $total_fee,
                     'out_trade_no' => $trade_no,
@@ -99,7 +117,7 @@ class Pay extends Home_Controller {
                 ]);
                 if ($update_order) {
                     $this->load->helper('url');
-                    redirect("http://" . $_SERVER['SERVER_NAME'].'/home/store/storeDetail/id/'.$order['sid'].'html');
+                    redirect("http://" . $_SERVER['SERVER_NAME'] . '/home/store/storeDetail/id/' . $order['sid'] . 'html');
                 } else {
                     lmdebug('支付宝本端数据更新失败:' . $this->db->last_query(), 'pay');
                     echo '支付失败';
@@ -114,6 +132,33 @@ class Pay extends Home_Controller {
             lmdebug('支付宝支付端验证失败:', 'pay');
             echo "sing error";
         }
+    }
+
+    protected function wxpay($order_data) {
+        ini_set('date.timezone', 'Asia/Shanghai');
+        require_once APPPATH . '/third_party/Wxpay/lib/WxPay.Api.php';
+        require_once APPPATH . '/third_party/Wxpay/lib/WxPay.JsApiPay.php';
+        //①、获取用户openid
+        $tools = new JsApiPay();
+        $openId = $tools->GetOpenid();
+
+        //②、统一下单
+        $input = new WxPayUnifiedOrder();
+        $input->SetBody($order_data['body']);
+        $input->SetAttach($order_data['attach']);
+        $input->SetOut_trade_no($order_data['order_no']);
+        $input->SetTotal_fee($order_data['total_fee']);
+        $input->SetTime_start(date("YmdHis"));
+        $input->SetTime_expire(date("YmdHis", time() + 600));
+        $input->SetGoods_tag("test");
+        $input->SetNotify_url("http://paysdk.weixin.qq.com/example/notify.php");
+        $input->SetTrade_type("JSAPI");
+        $input->SetOpenid($openId);
+        $order = WxPayApi::unifiedOrder($input);
+        echo '<font color="#f00"><b>统一下单支付单信息</b></font><br/>';
+        printf_info($order);
+        $jsApiParameters = $tools->GetJsApiParameters($order);
+        return $jsApiParameters;
     }
 
 }
