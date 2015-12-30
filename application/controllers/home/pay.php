@@ -158,7 +158,7 @@ class Pay extends Home_Controller {
         $input->SetBody($pay_data['body']);
         $input->SetAttach($pay_data['attach']);
         $input->SetOut_trade_no($pay_data['order_no']);
-        $input->SetTotal_fee($pay_data['total_fee']*100);
+        $input->SetTotal_fee($pay_data['total_fee'] * 100);
         $input->SetTime_start(date("YmdHis"));
         $input->SetTime_expire(date("YmdHis", time() + 600));
         $input->SetGoods_tag("test");
@@ -166,8 +166,13 @@ class Pay extends Home_Controller {
         $input->SetTrade_type("JSAPI");
         $input->SetOpenid($openId);
         $order = WxPayApi::unifiedOrder($input);
-        var_dump($order);
         echo '<font color="#f00"><b>统一下单支付单信息</b></font><br/>';
+        printf_info($order);
+        $tools = new JsApiPay();
+        $jsApiParameters = $tools->GetJsApiParameters($order);
+        $this->twig->render('home/pay/pay.twig', array(
+            'jsApiParameters' => $jsApiParameters,
+        ));
     }
 
     public function wxorderNotify() {
@@ -190,9 +195,9 @@ class Pay extends Home_Controller {
         $tools = new JsApiPay();
         $redirect_uri = "http://" . $_SERVER['SERVER_NAME'] . '/home/pay/getOpenid?id=' . $order_id; //获取openid
         $openId = $tools->GetOpenid($redirect_uri);
-        if(!empty($openId)){
-           $this->load->helper('url');
-            redirect("http://" . $_SERVER['SERVER_NAME'] . '/home/pay/wxpay?id=' . $order_id.'&openid='.$openId); 
+        if (!empty($openId)) {
+            $this->load->helper('url');
+            redirect("http://" . $_SERVER['SERVER_NAME'] . '/home/pay/wxpay?id=' . $order_id . '&openid=' . $openId);
         }
     }
 
