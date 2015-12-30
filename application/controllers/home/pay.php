@@ -170,6 +170,7 @@ class Pay extends Home_Controller {
             //echo '<font color="#f00"><b>统一下单支付单信息</b></font><br/>';
             $tools = new JsApiPay();
             $jsApiParameters = $tools->GetJsApiParameters($order);
+            var_dump($jsApiParameters);
             $this->twig->render('home/pay/pay.twig', array(
                 'jsApiParameters' => $jsApiParameters,
             ));
