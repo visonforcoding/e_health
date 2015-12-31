@@ -62,7 +62,11 @@ class Order_model extends LM_Model {
         foreach ($res as $key => $value) {
             $res[$key]['isVisitStr'] = $value['isVisit'] == '1' ? '上门' : '到店';
             if ($value['type'] == '3') {
-                $res[$key]['isVisitStr'] = '线下开单';
+                if($value['isVisit'] == '1' ){
+                    $res[$key]['isVisitStr'] = '线下开单（上门）';
+                }else{
+                    $res[$key]['isVisitStr'] = '线下开单（到店）';
+                }
                 $res[$key]['tel'] = $value['consignee'];
             }
             if ($value['payStatus'] == '1' && $value['orderStatus'] == '1') {
