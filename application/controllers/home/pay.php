@@ -258,7 +258,7 @@ class Pay extends Home_Controller {
             $order = $query_order->row_array();
             if (!$order) {
                 //数据错误 或者 已成功 执行业务回调 返回success 让微信别请求了
-                lmdebug('微信支付本端订单异常:订单号' . $order_no, 'pay');
+                lmdebug('微信支付回调异常:订单号' . $order_no, 'pay');
                 $WxPayNotify = new WxPayNotifyReply();
                 $WxPayNotify->SetReturn_code('SUCCESS');
                 WxPayApi::replyNotify($WxPayNotify->ToXml());
@@ -278,7 +278,7 @@ class Pay extends Home_Controller {
                 $WxPayNotify = new WxPayNotifyReply();
                 $WxPayNotify->SetReturn_code('SUCCESS');
                 WxPayApi::replyNotify($WxPayNotify->ToXml());
-                lmdebug('微信支付本端数据更新成功:' .$WxPayNotify->GetReturn_code(), 'pay');
+                lmdebug('微信支付本端数据更新成功:' .$WxPayNotify->GetReturn_code().'订单号:'.$order_no, 'pay');
                 return;
             } else {
                 lmdebug('微信支付本端数据更新失败:' . $this->db->last_query(), 'pay');
