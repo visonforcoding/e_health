@@ -174,7 +174,7 @@ class Pay extends Home_Controller {
                 'jsApiParameters' => $jsApiParameters,
             ));
         }else{
-            echo $order['return_msg'];
+            var_dump($order);
         }
     }
 
