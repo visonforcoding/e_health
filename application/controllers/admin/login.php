@@ -39,7 +39,7 @@ class Login extends CI_Controller {
     }
 
     public function logout() {
-        header('content-type:html/text,charset=utf-8');
+        header("Content-Type: text/html; charset=utf-8");
         session_start();
         //退出登录  
         unset($_SESSION['admin_username']);
