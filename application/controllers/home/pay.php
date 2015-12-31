@@ -48,7 +48,7 @@ class Pay extends Home_Controller {
         //构造要请求的参数数组，无需改动
         $payment_type = "1";          //支付类型
         //服务器异步通知页面路径
-        $notify_url = "http://$server_name/alipay.wap.create.direct.pay.by.user-PHP-UTF-8/notify_url.php";
+        $notify_url = "http://$server_name/home/pay/alipayNotify";
         //需http://格式的完整路径，不能加?id=123这类自定义参数
         //页面跳转同步通知页面路径
         $return_url = "http://$server_name/home/pay/alipayCallback";
@@ -75,6 +75,58 @@ class Pay extends Home_Controller {
         echo $html_text;
     }
 
+    /**
+     * 支付宝异步
+     */
+    public function alipayNotify(){
+         $alipay_config = require_once APPPATH . '/third_party/Alipay/alipay.config.php';
+        require_once APPPATH . '/third_party/Alipay/lib/alipay_notify.class.php';
+        //计算得出通知验证结果
+        $alipayNotify = new AlipayNotify($alipay_config);
+        $verify_result = $alipayNotify->verifyReturn();
+        if ($verify_result) {//验证成功
+            $out_trade_no = $this->input->get('out_trade_no'); //商户订单号
+            $trade_no = $this->input->get('trade_no');   //支付宝交易号
+            $trade_status = $this->input->get('trade_status');  //交易状态
+            $total_fee = $this->input->get('total_fee');  //交易状态
+            if ($trade_status == 'TRADE_FINISHED' || $trade_status == 'TRADE_SUCCESS') {
+                //支付宝端交易交易成功
+                //本端更改订单状态
+                $query_order = $this->db->select('*')
+                        ->where("`orderNo` = '$out_trade_no' and `payStatus` = '1' and `orderStatus` = '1' ")
+                        ->get('order');
+                $order = $query_order->row_array();
+                if (!$order) {
+                    lmdebug('支付宝本端订单异常:订单号' . $out_trade_no, 'pay');
+                }
+                $order_id = $order['id'];
+                $update_order = $this->db->where("`id` = '$order_id'")->update('order', [
+                    'payStatus' => '2',
+                    'orderStatus' => '3',
+                    'payType' => '2', //支付方式 支付宝
+                    'payTime' => date('Y-m-d H:i:s'),
+                    'true_amount' => $total_fee,
+                    'out_trade_no' => $trade_no,
+                    'utime' => date('Y-m-d H:i:s')
+                ]);
+                if ($update_order) {
+                    
+                } else {
+                    lmdebug('支付宝本端数据更新失败:' . $this->db->last_query(), 'pay');
+                    echo '支付失败';
+                }
+            } else {
+                lmdebug('支付宝支付端支付异常:订单号' . $out_trade_no.'状态码：'.$this->input->get('trade_status'), 'pay');
+                return;
+            }
+            echo "success";		//请不要修改或删除
+        } else {
+            //验证失败
+            //如要调试，请看alipay_notify.php页面的verifyReturn函数
+            lmdebug('支付宝支付端验证失败:', 'pay');
+            echo "sing error";
+        }
+    }
     /**
      * 支付宝支付回调
      * @return type
@@ -172,9 +224,10 @@ class Pay extends Home_Controller {
             $jsApiParameters = $tools->GetJsApiParameters($order);
             $this->twig->render('home/pay/pay.twig', array(
                 'jsApiParameters' => $jsApiParameters,
+                'url'=>'http://' . $_SERVER['SERVER_NAME'] . '/home/order/orderDetail/type/1/oid/'.$order_id
             ));
         } else {
-            lmdebug('微信支付：订单重复提交,订单ID:' . $order_id, 'pay');
+            lmdebug('微信支付：提交失败,订单ID:' . $order_id.'错误描述：'.$order['err_code_des'], 'pay');
             echo $order['err_code_des'];
         }
     }
