@@ -463,14 +463,16 @@ class Order extends Shop_Controller {
      * 今日订单
      */
     public function desk() {
+        $user = $this->user;
+        $store_id = $user['id'];
         $query_today_orders = $this->db
                 ->select('order.id,order.ctime,order.consignee,order.price,IFNULL(store_employee.truename,null) as truename'
                         . ',store_employee_order.status,store_service.name as service_name,store_employee_order.flag_no', false)
                 ->join('store_service', 'store_service.id = order.serviceId')
                 ->join('store_employee_order', 'store_employee_order.order_id = order.id', 'left')
                 ->join('store_employee', 'store_employee_order.employee_id = store_employee.id', 'left')
-                ->where('date(order.ctime) = date(now())')
-                ->order_by('store_employee_order.status asc,order.ctime asc')
+                ->where("date(order.ctime) = date(now()) and sid = '$store_id'")
+                ->order_by('store_employee_order.status desc,order.ctime desc')
                 ->get('order');
         $orders = $query_today_orders->result_array();
         $this->twig->render('/shop/order/desk.twig', array(
