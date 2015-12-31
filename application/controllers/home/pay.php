@@ -170,7 +170,6 @@ class Pay extends Home_Controller {
             //echo '<font color="#f00"><b>统一下单支付单信息</b></font><br/>';
             $tools = new JsApiPay();
             $jsApiParameters = $tools->GetJsApiParameters($order);
-            var_dump($jsApiParameters);
             $this->twig->render('home/pay/pay.twig', array(
                 'jsApiParameters' => $jsApiParameters,
             ));
@@ -183,10 +182,14 @@ class Pay extends Home_Controller {
         ini_set('date.timezone', 'Asia/Shanghai');
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.Api.php';
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.JsApiPay.php';
-        $tools = new JsApiPay();
-        $this->twig->render('home/pay/pay.twig', array(
-//            'jsApiParameters' => $jsApiParameters,
-        ));
+        $callback_data = $this->input->posts();
+        lmdebug('微信支付回调', 'pay');
+        lmdebug('微信支付回调'.  var_export($callback_data), 'pay');
+        exit();
+//        $tools = new JsApiPay();
+//        $this->twig->render('home/pay/pay.twig', array(
+////            'jsApiParameters' => $jsApiParameters,
+//        ));
     }
 
     public function getOpenid() {
