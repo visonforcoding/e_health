@@ -174,7 +174,7 @@ class Pay extends Home_Controller {
                 'jsApiParameters' => $jsApiParameters,
             ));
         }else{
-            lmdebug('微信支付：订单重复提交,订单ID'.$order_id,'pay');
+            lmdebug('微信支付：订单重复提交,订单ID:'.$order_id,'pay');
             echo $order['err_code_des'];
         }
     }
@@ -183,7 +183,7 @@ class Pay extends Home_Controller {
         ini_set('date.timezone', 'Asia/Shanghai');
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.Api.php';
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.JsApiPay.php';
-        $callback_data = $this->input->posts();
+        $callback_data = $this->input->getData();
         lmdebug('微信支付回调', 'pay');
         lmdebug('微信支付回调'.  var_export($callback_data), 'pay');
         exit();
