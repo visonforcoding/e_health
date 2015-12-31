@@ -20,8 +20,10 @@
                         {{jsApiParameters|raw}},
                         function (res) {
                             WeixinJSBridge.log(res.err_msg);
-                               alert(res.err_msg);
-                               window.location.href = '{{url}}';
+                                 if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                                   alert('支付成功!');
+                                   window.location.href = '{{url}}';
+                                 } 
                             }
                 );
             }
