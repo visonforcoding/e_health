@@ -55,8 +55,10 @@ class Sys extends LM_Controller {
                     ->update('manager', $data);
             $response['status'] = $ck;
             if ($ck) {
+                $response['status'] = true;
                 $response['msg'] = '修改成功！';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '修改失败！';
             }
             $this->output->set_content_type('application/json')
@@ -92,8 +94,10 @@ class Sys extends LM_Controller {
             $ck = $this->db->insert('manager', $data);
             $response['status'] = $ck;
             if ($ck) {
+                $response['status'] = true;
                 $response['msg'] = '添加成功！';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '添加失败！';
             }
             $this->output->set_content_type('application/json')
@@ -117,8 +121,10 @@ class Sys extends LM_Controller {
             $ck = $this->db->delete('manager', array('id' => $id));
             $response['status'] = $ck;
             if ($ck) {
+                $response['status'] = true;
                 $response['msg'] = '删除成功！';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '删除失败！';
             }
             $this->output->set_content_type('application/json')
@@ -168,8 +174,10 @@ class Sys extends LM_Controller {
             $ck = $this->db->insert('admin_group', $data);
             $response['status'] = $ck;
             if ($ck) {
+                $response['status'] = true;
                 $response['msg'] = '添加成功！';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '添加失败！';
             }
             $this->output->set_content_type('application/json')
@@ -202,8 +210,10 @@ class Sys extends LM_Controller {
                     ->update('admin_group', $data);
             $response['status'] = $ck;
             if ($ck) {
+                $response['status'] = true;
                 $response['msg'] = '修改成功！';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '修改失败！';
             }
             $this->output->set_content_type('application/json')
@@ -240,8 +250,10 @@ class Sys extends LM_Controller {
             $ck = $this->db->delete('admin_group', array('id' => $id));
             $response['status'] = $ck;
             if ($ck) {
+                $response['status'] = true;
                 $response['msg'] = '删除成功！';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '删除失败！';
             }
             $this->output->set_content_type('application/json')
@@ -281,8 +293,10 @@ class Sys extends LM_Controller {
             $ck = $this->db->delete('admin_node', array('id' => $node_id));
             $response['status'] = $ck;
             if ($ck) {
+                $response['status'] = true;
                 $response['msg'] = '删除成功！';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '删除失败！';
             }
             $this->output->set_content_type('application/json')
@@ -316,9 +330,11 @@ class Sys extends LM_Controller {
             $ck_ins = $this->db->insert('admin_node', $data);
             $response['status'] = $ck_ins;
             if ($ck_ins) {
+                $response['status'] = true;
                 $response['msg'] = '添加成功！';
                 fcache('node_tree.json', NULL);
             } else {
+                $response['status'] = false;
                 $response['msg'] = '添加失败！';
             }
             $this->output->set_content_type('application/json')

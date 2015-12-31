@@ -173,8 +173,10 @@ class Coupon extends LM_Controller {
             $ck = $this->db->delete('coupon', array('id' => $id));
             $response['status'] = $ck;
             if ($ck) {
+                $response['status'] = 1;
                 $response['msg'] = '删除成功！';
             } else {
+                $response['status'] = 0;
                 $response['msg'] = '删除失败！';
             }
             $this->output->set_content_type('application/json')

@@ -61,8 +61,10 @@ class Service extends LM_Controller {
             $ck_ins = $this->db->insert('store_service', $data);
             $response['status'] = $ck_ins;
             if ($ck_ins) {
+                $response['status'] = true;
                 $response['msg'] = '添加成功！';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '添加失败！';
             }
             $this->output->set_content_type('application/json')
@@ -110,8 +112,10 @@ class Service extends LM_Controller {
             $ck_edit = $this->db->where("`id` = '$id'")->update('store_service', $data);
             $response['status'] = $ck_edit;
             if ($ck_edit) {
+                $response['status'] = true;
                 $response['msg'] = '修改成功！';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '修改失败！';
             }
             $this->output->set_content_type('application/json')
