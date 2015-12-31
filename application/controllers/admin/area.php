@@ -65,8 +65,10 @@ class Area extends LM_Controller {
             $ck_ins = $this->db->insert('area', $data);
             $response['status'] = $ck_ins;
             if ($ck_ins) {
+                $response['status'] = true;
                 $response['msg'] = '添加成功！';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '添加失败！';
             }
             $this->output->set_content_type('application/json')

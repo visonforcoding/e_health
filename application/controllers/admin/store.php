@@ -99,9 +99,11 @@ class Store extends LM_Controller {
             $this->db->trans_complete();
             $response['status'] = $ck_ins;
             if ($this->db->trans_status()) {
+                $response['status'] = true;
                 $response['msg'] = '添加成功！';
                 $response['url'] = '/admin/store/index';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '添加失败！';
             }
             $this->output->set_content_type('application/json')
@@ -178,8 +180,10 @@ class Store extends LM_Controller {
             $this->db->trans_complete();
             $response['status'] = $ck_ins;
             if ($this->db->trans_status()) {
+                $response['status'] = 1;
                 $response['msg'] = '更新成功！';
             } else {
+                $response['status'] = 0;
                 $response['msg'] = '更新失败！';
             }
             $this->output->set_content_type('application/json')
@@ -237,8 +241,10 @@ class Store extends LM_Controller {
             $data['utime'] = date('Y-m-d H:i:s');
             $ck_ins = $this->db->where("id = '$id'")->update('store', $data);
             if ($ck_ins) {
+                $response['status'] = 1;
                 $response['info'] = '更新成功！';
             } else {
+                $response['status'] = 0;
                 $response['info'] = '更新失败！';
             }
             $this->output->set_content_type('application/json')

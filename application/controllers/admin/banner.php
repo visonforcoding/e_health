@@ -46,8 +46,10 @@ class Banner extends LM_Controller {
             $ck_ins = $this->db->insert('banner', $data);
             $response['status'] = $ck_ins;
             if ($ck_ins) {
+                $response['status'] = true;
                 $response['msg'] = '添加成功！';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '添加失败！';
             }
             $this->output->set_content_type('application/json')
@@ -73,8 +75,10 @@ class Banner extends LM_Controller {
             $ck_ins = $this->db->where("id = '$id'")->update('banner', $data);
             $response['status'] = $ck_ins;
             if ($ck_ins) {
+                $response['status'] = true;
                 $response['msg'] = '更新成功！';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '更新失败！';
             }
             $this->output->set_content_type('application/json')

@@ -31,7 +31,6 @@ class Article extends LM_Controller {
     public function addArticle() { 
         if ($this->input->isPost()) {
             $post = $this->input->posts();
-            $id = $post['id'];
             $data = array(
                 'title' => $post['title'],
                 'abstract' => $post['abstract'],
@@ -43,8 +42,10 @@ class Article extends LM_Controller {
             $ck_ins = $this->db->insert('health', $data);
             $response['status'] = $ck_ins;
             if ($ck_ins) {
+                $response['status'] = true;
                 $response['msg'] = '添加成功！';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '添加失败！';
             }
             $this->output->set_content_type('application/json')
@@ -69,8 +70,10 @@ class Article extends LM_Controller {
             $ck_ins = $this->db->where("id = '$id'")->update('health', $data);
             $response['status'] = $ck_ins;
             if ($ck_ins) {
+                $response['status'] = true;
                 $response['msg'] = '修改成功！';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '修改失败！';
             }
             $this->output->set_content_type('application/json')
@@ -92,8 +95,10 @@ class Article extends LM_Controller {
         $id = $this->input->post('data');
         $query = $this->db->delete('health',array('id'=>$id));
         if ($query) {
+            $response['status'] = true;
             $response['msg'] = '删除成功！';
         } else {
+            $response['status'] = fasle;
             $response['msg'] = '删除失败！';
         }
         $this->output->set_content_type('application/json')

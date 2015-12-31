@@ -43,6 +43,7 @@ class Member extends LM_Controller {
             $tel = $post['tel'];
             $ck_tel = $this->db->where("tel = '$tel' and `status` = '1'")->count_all_results('member');
             if ($ck_tel) {
+                $response['status'] = false;
                 $response['msg'] = '该手机号已被注册！';
                 $this->output->set_content_type('application/json')
                         ->set_output(json_encode($response));
@@ -62,8 +63,10 @@ class Member extends LM_Controller {
             //开启事务
             $ck_ins = $this->db->insert('member', $data);
             if ($ck_ins) {
+                $response['status'] = true;
                 $response['msg'] = '添加成功！';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '添加失败！';
             }
             $this->output->set_content_type('application/json')
@@ -82,6 +85,7 @@ class Member extends LM_Controller {
             $tel = $post['tel'];
             $ck_tel = $this->db->where("tel = '$tel' and `id` !='$id'  and `status` = '1'")->count_all_results('member');
             if ($ck_tel) {
+                $response['status'] = false;
                 $response['msg'] = '该手机号已被注册！';
                 $this->output->set_content_type('application/json')
                         ->set_output(json_encode($response));
@@ -101,8 +105,10 @@ class Member extends LM_Controller {
             //开启事务
             $ck_ins = $this->db->where("`id` = '$id'")->update('member', $data);
             if ($ck_ins) {
+                $response['status'] = true;
                 $response['msg'] = '添加成功！';
             } else {
+                $response['status'] = false;
                 $response['msg'] = '添加失败！';
             }
             $this->output->set_content_type('application/json')
@@ -126,8 +132,10 @@ class Member extends LM_Controller {
             $data['utime'] = date('Y-m-d H:i:s');
             $ck_ins = $this->db->where("id = '$id'")->update('member', $data);
             if ($ck_ins) {
+                $response['status'] = true;
                 $response['info'] = '更新成功！';
             } else {
+                $response['status'] = false;
                 $response['info'] = '更新失败！';
             }
             $this->output->set_content_type('application/json')
