@@ -187,6 +187,7 @@ class Pay extends Home_Controller {
         ini_set('date.timezone', 'Asia/Shanghai');
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.Api.php';
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.JsApiPay.php';
+        require_once APPPATH . '/third_party/Wxpay/lib/WxPay.Notify.php';
         $xmlData = file_get_contents("php://input");
         $data = WxPayResults::Init($xmlData); //验证签名 获取数组类型回到数据
         if (!is_array($data)) {
