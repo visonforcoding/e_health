@@ -184,7 +184,9 @@ class Pay extends Home_Controller {
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.Api.php';
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.JsApiPay.php';
         $callback_data = $this->input->getData();
+        $postStr = file_get_contents("php://input");
         lmdebug('微信支付回调', 'pay');
+        lmdebug('微信支付回调'.$postStr, 'pay');
         lmdebug('微信支付回调'.  var_export($callback_data), 'pay');
         exit();
 //        $tools = new JsApiPay();
