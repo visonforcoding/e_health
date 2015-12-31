@@ -136,6 +136,7 @@ class LM_Input extends CI_Input {
 
     public function getData() {
         $postStr = file_get_contents("php://input");
+        return $postStr;
         if (!empty($postStr)) {
             /* libxml_disable_entity_loader is to prevent XML eXternal Entity Injection,
               the best way is to check the validity of xml by yourself */
