@@ -174,7 +174,8 @@ class Pay extends Home_Controller {
                 'jsApiParameters' => $jsApiParameters,
             ));
         }else{
-            var_dump($order);
+            lmdebug('微信支付：订单重复提交,订单ID'.$order_id,'pay');
+            echo $order['err_code_des'];
         }
     }
 
