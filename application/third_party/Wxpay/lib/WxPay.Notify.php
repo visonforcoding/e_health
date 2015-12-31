@@ -1,4 +1,5 @@
 <?php
+require_once 'Wxpay.Data.php';
 /**
  * 
  * 回调基础类
