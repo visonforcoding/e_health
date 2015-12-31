@@ -134,18 +134,4 @@ class LM_Input extends CI_Input {
         return strtolower($this->server('REQUEST_METHOD')) === 'get';
     }
 
-    public function getData() {
-        $postStr = file_get_contents("php://input");
-        return $postStr;
-        if (!empty($postStr)) {
-            /* libxml_disable_entity_loader is to prevent XML eXternal Entity Injection,
-              the best way is to check the validity of xml by yourself */
-            libxml_disable_entity_loader(true);
-            $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
-            return $postObj;
-        } else {
-            return false;
-        }
-    }
-
 }

@@ -166,33 +166,74 @@ class Pay extends Home_Controller {
         $input->SetTrade_type("JSAPI");
         $input->SetOpenid($openId);
         $order = WxPayApi::unifiedOrder($input);
-        if($order['return_code']=='SUCCESS'&&$order['result_code']=='SUCCESS'){
+        if ($order['return_code'] == 'SUCCESS' && $order['result_code'] == 'SUCCESS') {
             //echo '<font color="#f00"><b>统一下单支付单信息</b></font><br/>';
             $tools = new JsApiPay();
             $jsApiParameters = $tools->GetJsApiParameters($order);
             $this->twig->render('home/pay/pay.twig', array(
                 'jsApiParameters' => $jsApiParameters,
             ));
-        }else{
-            lmdebug('微信支付：订单重复提交,订单ID:'.$order_id,'pay');
+        } else {
+            lmdebug('微信支付：订单重复提交,订单ID:' . $order_id, 'pay');
             echo $order['err_code_des'];
         }
     }
 
+    /**
+     * 微信支付后异步通知
+     * @return type
+     */
     public function wxorderNotify() {
         ini_set('date.timezone', 'Asia/Shanghai');
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.Api.php';
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.JsApiPay.php';
-        $callback_data = $this->input->getData();
-        $postStr = file_get_contents("php://input");
-        lmdebug('微信支付回调', 'pay');
-        lmdebug('微信支付回调'.$postStr, 'pay');
-        lmdebug('微信支付回调'.  var_export($callback_data), 'pay');
-        exit();
-//        $tools = new JsApiPay();
-//        $this->twig->render('home/pay/pay.twig', array(
-////            'jsApiParameters' => $jsApiParameters,
-//        ));
+        $xmlData = file_get_contents("php://input");
+        $data = WxPayResults::Init($xmlData); //验证签名 获取数组类型回到数据
+        if (!is_array($data)) {
+            lmdebug('回调数据异常：' . var_export($data), 'pay');
+            return;
+        }
+        if ($data['return_code'] == 'SUCCESS' && $data['result_code'] == 'SUCCESS') {
+            $order_no = $data['out_trade_no']; //订单号
+            $total_fee = $data['total_fee'];   //支付金额
+            $transaction_id = $data['transaction_id'];   //支付金额
+            //微信端交易交易成功
+            //本端更改订单状态
+            $query_order = $this->db->select('*')
+                    ->where("`orderNo` = '$order_no' and `payStatus` = '1' and `orderStatus` = '1' ")
+                    ->get('order');
+            $order = $query_order->row_array();
+            if (!$order) {
+                //数据错误 或者 已成功 执行业务回调
+                lmdebug('微信支付本端订单异常:订单号' . $order_no, 'pay');
+                $WxPayNotify = new WxPayNotify();
+                $WxPayNotify->SetReturn_code('SUCCESS');
+                $WxPayNotify->ReplyNotify();
+                return;
+            }
+            $order_id = $order['id'];
+            $update_order = $this->db->where("`id` = '$order_id'")->update('order', [
+                'payStatus' => '2',
+                'orderStatus' => '3',
+                'payType' => '1', //支付方式 微信
+                'payTime' => date('Y-m-d H:i:s'),
+                'true_amount' => $total_fee,
+                'out_trade_no' => $transaction_id,
+                'utime' => date('Y-m-d H:i:s')
+            ]);
+            if ($update_order) {
+                $WxPayNotify = new WxPayNotify();
+                $WxPayNotify->SetReturn_code('SUCCESS');
+                $WxPayNotify->ReplyNotify();
+                lmdebug('微信支付本端数据更新成功:' .$WxPayNotify->GetReturn_code(), 'pay');
+                return;
+            } else {
+                lmdebug('微信支付本端数据更新失败:' . $this->db->last_query(), 'pay');
+                return;
+            }
+        } else {
+            lmdebug('微信支付请求异常:' . $data['return_msg'], 'pay');
+        }
     }
 
     public function getOpenid() {
