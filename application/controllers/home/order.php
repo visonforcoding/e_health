@@ -177,7 +177,6 @@ class Order extends Home_Controller {
                     ->get('order');
         }
         $orders = $query_orders->result_array();
-        echo $this->db->last_query();exit();
         $this->twig->render('home/order/order_list.twig', array(
             'orders' => $orders,
             'type' => $type,
