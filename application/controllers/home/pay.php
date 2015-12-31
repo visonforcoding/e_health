@@ -241,7 +241,7 @@ class Pay extends Home_Controller {
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.Api.php';
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.JsApiPay.php';
         $xmlData = file_get_contents("php://input");
-        $data = WxPayResults::Init($xmlData); //验证签名 获取数组类型回到数据
+        $data = WxPayResults::Init($xmlData); //验证签名 获取数组类型回调数据
         if (!is_array($data)) {
             lmdebug('回调数据异常：' . var_export($data), 'pay');
             return;
@@ -289,6 +289,9 @@ class Pay extends Home_Controller {
         }
     }
 
+    /**
+     * 发起微信支付 需获取的用户openid
+     */
     public function getOpenid() {
         $order_id = $this->input->get('id');
         ini_set('date.timezone', 'Asia/Shanghai');
