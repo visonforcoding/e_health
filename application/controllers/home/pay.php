@@ -187,7 +187,6 @@ class Pay extends Home_Controller {
         ini_set('date.timezone', 'Asia/Shanghai');
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.Api.php';
         require_once APPPATH . '/third_party/Wxpay/lib/WxPay.JsApiPay.php';
-        require_once APPPATH . '/third_party/Wxpay/lib/WxPay.Notify.php';
         $xmlData = file_get_contents("php://input");
         $data = WxPayResults::Init($xmlData); //验证签名 获取数组类型回到数据
         if (!is_array($data)) {
@@ -207,9 +206,9 @@ class Pay extends Home_Controller {
             if (!$order) {
                 //数据错误 或者 已成功 执行业务回调
                 lmdebug('微信支付本端订单异常:订单号' . $order_no, 'pay');
-                $WxPayNotify = new WxPayNotify();
+                $WxPayNotify = new WxPayNotifyReply();
                 $WxPayNotify->SetReturn_code('SUCCESS');
-                $WxPayNotify->ReplyNotify();
+                WxPayApi::replyNotify($WxPayNotify->ToXml());
                 return;
             }
             $order_id = $order['id'];
@@ -223,9 +222,9 @@ class Pay extends Home_Controller {
                 'utime' => date('Y-m-d H:i:s')
             ]);
             if ($update_order) {
-                $WxPayNotify = new WxPayNotify();
+               $WxPayNotify = new WxPayNotifyReply();
                 $WxPayNotify->SetReturn_code('SUCCESS');
-                $WxPayNotify->ReplyNotify();
+                WxPayApi::replyNotify($WxPayNotify->ToXml());
                 lmdebug('微信支付本端数据更新成功:' .$WxPayNotify->GetReturn_code(), 'pay');
                 return;
             } else {
