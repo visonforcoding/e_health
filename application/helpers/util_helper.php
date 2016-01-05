@@ -332,3 +332,4 @@ function phpexcelExport($filename, array $header, array $data) {
     // Write file to the browser
     $objWriter->save('php://output');
 }
+

@@ -9,6 +9,7 @@ class Pay extends Home_Controller {
     public function submitPay() {
         header("Content-type:text/html;charset=utf-8");
         $order_id = $this->input->get('id');
+        $coupon = $this->input->get('coupon');
         $payType = $this->input->get('paytype');
         $query_order = $this->db->select('*,store_service.name,store.storeName')
                 ->join('store_service', 'store_service.id = order.serviceId')
@@ -16,7 +17,6 @@ class Pay extends Home_Controller {
                 ->where("`order`.`id` = '$order_id' and `order`.`payStatus` = '1' and `order`.`orderStatus` = '1' ")
                 ->get('order');
         $order = $query_order->row_array();
-        $payType = 'wx';
         if (empty($order)) {
             show_error('该订单不存在！');
         }
