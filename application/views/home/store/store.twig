@@ -169,4 +169,28 @@
             return theRequest;
         }
     </script>
+    {% if pos_address =='未定位成功!' %}
+        <script src="http://api.map.baidu.com/api?v=2&ak=REAZ3A4MUALZ78fO1jl7Gnx1"></script>
+        <script src="/static/Js/mobile.js"></script>
+        <script src="/static/Js/pgwCookie.js"></script>
+        <script>
+            $(function () {
+                var bm = new BmapPos('REAZ3A4MUALZ78fO1jl7Gnx1', handlePos);
+                bm.init();
+            });
+            function handlePos(res) {
+                if (res.status === 0) {
+                    //成功
+                    var city = res.result.addressComponent.city;
+                    var lng = res.result.location.lng;
+                    var lat = res.result.location.lat;
+                    $.pgwCookie({name: 'pos_city', city: city, path: '/'});
+                    $.pgwCookie({name: 'pos_location', json: true, value: {lng: lng, lat: lat}, path: '/'});
+                    $.pgwCookie({name: 'pos_address', value: res.result.formatted_address, path: '/'});
+            {#                window.location.reload();#}
+                    $('.shop-location p').html(res.result.formatted_address);
+                    }
+                }
+        </script>
+    {%  endif %}
 {% endblock %}

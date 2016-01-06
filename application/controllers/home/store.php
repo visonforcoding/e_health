@@ -107,6 +107,8 @@ class Store extends Home_Controller {
                 array_multisort($distance, SORT_ASC, $stores); 
             }
         }
+
+
         $this->twig->render('home/store/store.twig', array(
             'stores' => $stores,
             'areas' => $sub_areas,
@@ -223,7 +225,7 @@ class Store extends Home_Controller {
             }
 
         }else{
-            $new_promo_stores = $sub_areas = array();
+            $new_promo_stores = array();
         }
 
         //var_dump($new_promo_stores);exit;

@@ -105,7 +105,12 @@
                         });
             }
             function confirmPos() {
-                window.history.go(-1);
+                //window.history.go(-1);
+                var url = document.referrer;
+                var arr = url.split('?');
+                var ar = arr[0];
+                window.location.href= ar;
+
             }
 
             function posMsg() {
