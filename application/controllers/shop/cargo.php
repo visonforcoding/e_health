@@ -103,6 +103,44 @@ class Cargo extends Shop_Controller {
             'realTimeInfo' => $this->getRealtimeInfo()
         ));
     }
+
+    public function cargoDel() {
+        if ($this->input->isPost()) {
+            $id = $this->input->post('id');
+
+            //查找当前店铺下的服务是否绑定当前耗材
+            $store = $this->user;
+            $store_id = $store['id'];
+            $service_query = $this->db->where("storeId = '$store_id'")->get('store_service');
+            $serviceInfo = $service_query->result_array();
+            $service_cargos = array();
+            foreach ($serviceInfo as $value) {
+                $service_cargos = unserialize($value['cargo']);
+                foreach ($service_cargos as $k => $v) {
+                    if($v['cargo_id'] == $id && $v['nums']>0){
+                         $response['status'] = false;
+                         $response['msg'] = "有服务项目绑定，不能删除当前耗材";
+                          $this->output->set_content_type('application/json')
+                                    ->set_output(json_encode($response));
+                          return;
+                    }
+                }
+            } 
+            
+            $ck = $this->db->delete('store_cargo',array('id'=>$id));
+            if ($ck) {
+                $response['status'] = true;
+                $response['msg'] = '删除成功';
+            } else {
+                $response['status'] = false;
+                $response['msg'] = '删除失败';
+            }
+            $this->output->set_content_type('application/json')
+                    ->set_output(json_encode($response));
+            return;
+        }
+    }
+    
     
     /**
      * 入库
