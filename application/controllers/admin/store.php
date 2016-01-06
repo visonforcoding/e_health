@@ -118,10 +118,10 @@ class Store extends LM_Controller {
         if ($this->input->isPost()) {
             $post = $this->input->posts();
             $id = $post['id'];
-            $regionId = $post['regionId'];
-            $regionId = empty($regionId) ? -1 : $regionId;
+            $areaId = $post['areaId'];
+            $areaId = empty($areaId) ? -1 : $areaId;
             $this->load->model('Area_model', 'area_model');
-            $area = $this->area_model->findAreaById($regionId);
+            $area = $this->area_model->findAreaById($areaId);
             if (!$area) {
                 $response['status'] = 0;
                 $response['msg'] = '区域类型错误！';
@@ -149,10 +149,8 @@ class Store extends LM_Controller {
                         ->set_output(json_encode($response));
                 return;
             }
-            $areaId = $this->area_model->findPidByAreaId($regionId);
             $cityId = $this->area_model->findPidByAreaId($areaId);
             $data = array(
-                'regionId' => $regionId,
                 'areaId' => $areaId,
                 'cityId' => $cityId,
                 'storeName' => $post['storeName'],
