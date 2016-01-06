@@ -76,7 +76,6 @@ class Store extends Home_Controller {
             'comment' => "人气最高",
             'score' => "评价最好",
         );
-        
         $where['store.status'] = 1;
         if (!empty($service_id) && !empty($service_stores_ids)) {
             $query_stores = $this->db->select('area.name,store.id,store.storeName,store.cover,store.commentNums,'
