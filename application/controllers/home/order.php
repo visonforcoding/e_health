@@ -197,7 +197,7 @@ class Order extends Home_Controller {
         $where['order.uid'] = $userId;
         $query_order = $this->db
                 ->select('order.provider,order.type,order.serviceTime,order.orderNo,order.ctime,'
-                        . 'order.isVisit,order.id,store_service.cover,order.address,store_service.price,store_service.name,'
+                        . 'order.isVisit,order.id,store_service.cover,order.address,order.price,store_service.name,'
                         . 'order.payStatus,order.orderStatus')
                 ->join('store_service', 'store_service.id = order.serviceId')
                 ->where($where)
@@ -224,7 +224,6 @@ class Order extends Home_Controller {
         if ($order['orderStatus'] != 5 && $order['payStatus'] == 5) {
             $orderType = 'cancel';
         }
-        //var_dump($orderType);exit;
         $this->twig->render('home/order/order_detail.twig', array(
             'order' => $order,
             'orderType' => $orderType

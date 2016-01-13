@@ -471,7 +471,7 @@ class Order extends Shop_Controller {
                 ->join('store_service', 'store_service.id = order.serviceId')
                 ->join('store_employee_order', 'store_employee_order.order_id = order.id', 'left')
                 ->join('store_employee', 'store_employee_order.employee_id = store_employee.id', 'left')
-                ->where("date(order.ctime) = date(now()) and sid = '$store_id'")
+                ->where("order.orderStatus ='3' and sid = '$store_id'")
                 ->order_by('store_employee_order.status desc,order.ctime desc')
                 ->get('order');
         $orders = $query_today_orders->result_array();

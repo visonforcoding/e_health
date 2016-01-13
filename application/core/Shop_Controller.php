@@ -123,7 +123,7 @@ class Shop_Controller extends CI_Controller {
         $unDoOrder = $this->db->where("(`orderStatus` = '3' or `orderStatus` = '40') and `sid` = '$store_id' and `type` = '1'")->count_all_results('order');
         //未处理的线下今日订单
         $unDoOffOrder = $this->db
-                ->where("`status` = '0'  and `store_id` = '$store_id' and date(ctime) = date(now())")
+                ->where("`status` = '0'  and `store_id` = '$store_id'")
                 ->count_all_results('store_employee_order');
         return array(
             'unReadMsgNums' => $unReadMsg,
