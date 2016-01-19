@@ -79,7 +79,7 @@ class Store extends Home_Controller {
         $where['store.status'] = 1;
         if (!empty($service_id) && !empty($service_stores_ids)) {
             $query_stores = $this->db->select('area.name,store.id,store.storeName,store.cover,store.commentNums,'
-                            . 'store.coordinate')
+                            . 'store.coordinate,store.score')
                     ->join('area', 'area.id = store.regionId', 'left')
                     ->where($where)
                     ->where_in('store.id', $service_stores_ids)
@@ -87,7 +87,7 @@ class Store extends Home_Controller {
                     ->get('store');
         } else {
             $query_stores = $this->db->select('area.name,store.id,store.storeName,store.cover,store.commentNums,'
-                            . 'store.coordinate')
+                            . 'store.coordinate,store.score')
                     ->join('area', 'area.id = store.regionId', 'left')
                     ->where($where)
                     ->order_by($order,$sort)
